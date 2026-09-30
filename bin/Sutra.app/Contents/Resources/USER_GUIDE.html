@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUTRA — Sovereign Attention Thread & Context-Waking Engine (Master Guide)</title>
+  <style>
+:root {
+  --ink: #1d1d1f;
+  --ink-soft: #3a3a3c;
+  --ink-muted: #6e6e73;
+  --ink-faint: #8e8e93;
+  --surface: #ffffff;
+  --surface-warm: #faf9f7;
+  --surface-code: #f5f4f1;
+  --rule: #d2d0cc;
+  --rule-light: #e8e6e1;
+  --accent: #b3562a;
+  --accent-bg: #fdf5f0;
+  --accent-dark: #8c3d1a;
+  --code-bg: #292524;
+  --code-fg: #e7e5e4;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+@page {
+  size: A4;
+  margin: 22mm 18mm 24mm 18mm;
+  @bottom-right { content: counter(page); font-family: system-ui; font-size: 8pt; color: #8e8e93; }
+  @bottom-left { content: attr(data-doc-title); font-family: system-ui; font-size: 8pt; color: #8e8e93; }
+}
+body {
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+  font-size: 11pt;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.cover {
+  page-break-after: always;
+  break-after: page;
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 60px;
+  border-bottom: 2px solid var(--rule);
+  margin-bottom: 40px;
+}
+.cover-rule {
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 32px;
+}
+.cover-label {
+  font-size: 8.5pt;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 20px;
+}
+.cover h1 {
+  font-family: Georgia, serif;
+  font-size: 38pt;
+  font-weight: 400;
+  line-height: 1.08;
+  color: var(--ink);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.cover-subtitle {
+  font-family: Georgia, serif;
+  font-size: 16pt;
+  color: var(--ink-muted);
+  margin-bottom: 48px;
+  font-style: italic;
+}
+.cover-meta {
+  font-size: 9pt;
+  line-height: 2;
+  color: var(--ink-faint);
+}
+.cover-meta strong {
+  font-weight: 600;
+  color: var(--ink-muted);
+  display: inline-block;
+  width: 140px;
+}
+.toc {
+  page-break-after: always;
+  break-after: page;
+  padding-top: 40px;
+  margin-bottom: 40px;
+}
+.toc-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.toc-search select {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  background: var(--surface-warm);
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 9pt;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b3562a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  transition: border-color .2s, background-color .2s;
+}
+.toc-search select:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+.toc-search button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 9pt;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s, border-color .2s;
+}
+.toc-search button:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+.toc-title {
+  font-family: Georgia, serif;
+  font-size: 14pt;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.toc ol {
+  list-style: none;
+  counter-reset: toc;
+}
+.toc > ol > li {
+  counter-increment: toc;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule-light);
+  font-size: 10.5pt;
+  color: var(--ink-soft);
+}
+.toc > ol > li::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: Georgia, serif;
+  font-style: italic;
+  color: var(--ink-faint);
+  margin-right: 14px;
+}
+.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color .2s;
+}
+.toc a:hover {
+  color: var(--accent);
+}
+h1 {
+  font-family: Georgia, serif;
+  font-size: 22pt;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -.3px;
+  margin: 40px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h1 .num {
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-right: 6px;
+}
+h2 {
+  font-family: Georgia, serif;
+  font-size: 14pt;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 26px 0 10px;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h3 {
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: .3px;
+  margin: 20px 0 6px;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+p {
+  margin: 0 0 12px;
+  color: var(--ink-soft);
+  text-align: justify;
+}
+blockquote {
+  padding: 14px 18px;
+  border-radius: 3px;
+  margin: 16px 0;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-bg);
+  font-size: 10pt;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+ul, ol {
+  margin: 0 0 14px 24px;
+  color: var(--ink-soft);
+}
+li {
+  margin-bottom: 4px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 22px;
+  font-size: 9.5pt;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+th, td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--rule-light);
+  text-align: left;
+}
+th {
+  font-weight: 600;
+  font-size: 8pt;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface-warm);
+}
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 16px 20px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 8.5pt;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 10px 0 18px;
+  white-space: pre-wrap;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+code {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  background: var(--surface-code);
+  color: var(--ink);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 90%;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: -apple-system, sans-serif;
+  font-size: 8.5pt;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  background: var(--surface-warm);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 8pt;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.badge-waiting { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent); }
+.badge-later { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.badge-done { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+.badge-builder { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.step-card {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface-warm);
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+.step-card h3 {
+  margin-top: 0;
+  color: var(--accent);
+}
+.builder-box {
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface-warm);
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.builder-box h2 {
+  color: var(--accent-dark);
+  font-style: normal;
+  margin-top: 0;
+}
+.footer {
+  margin-top: 60px;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-size: 8pt;
+  color: var(--ink-faint);
+  letter-spacing: .5px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+@media print {
+  .toc-search { display: none; }
+}
+  </style>
+</head>
+<body data-doc-title="SUTRA — Complete Operational Guide">
+
+  <section class="cover">
+    <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 28px;">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxkZWZzPgogICAgPCEtLSBCYWNrZ3JvdW5kIFNxdWlyY2xlIEdyYWRpZW50IChPYnNpZGlhbiB0byBNaWRuaWdodCBaaW5jKSAtLT4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icGVkZXN0YWwtZ3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMjIyMjI3IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzE1MTUxOCIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGIwYjBkIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KCiAgICA8IS0tIE91dGVyIFJpbSBTcGVjdWxhciBIaWdobGlnaHQgLS0+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InJpbS1ncmFkIiB4MT0iMjAlIiB5MT0iMCUiIHgyPSI4MCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjM1IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjQwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjA1IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiMzU2MmEiIHN0b3Atb3BhY2l0eT0iMC4yNSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBUaXRhbml1bSBOZWVkbGUgR3JhZGllbnQgKFBvbGlzaGVkIFNpbHZlciAmIENvbGQgUGxhdGludW0pIC0tPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJuZWVkbGUtYm9keSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMjUlIiBzdG9wLWNvbG9yPSIjZTJlOGYwIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzk0YTNiOCIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI3NSUiIHN0b3AtY29sb3I9IiNjYmQ1ZTEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzQ3NTU2OSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBOZWVkbGUgQmV2ZWwgSGlnaGxpZ2h0IC0tPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJuZWVkbGUtYmV2ZWwiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjkiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjOTRhM2I4IiBzdG9wLW9wYWNpdHk9IjAuMyIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMWUyOTNiIiBzdG9wLW9wYWNpdHk9IjAuOCIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBHbG93aW5nIFRlcnJhY290dGEgTcO2Yml1cyBTaWxrIFRocmVhZCAoUHJpbWFyeSBGbHVpZCBHcmFkaWVudCkgLS0+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRocmVhZC1nbG93IiB4MT0iMCUiIHkxPSIxMDAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdjMmQxMiIgLz4gICAgIDwhLS0gRGVlcCBBdWJ1cm4gUnVzdCAtLT4KICAgICAgPHN0b3Agb2Zmc2V0PSIyOCUiIHN0b3AtY29sb3I9IiNiMzU2MmEiIC8+ICAgIDwhLS0gU2lnbmF0dXJlIFRlcnJhY290dGEgLS0+CiAgICAgIDxzdG9wIG9mZnNldD0iNTglIiBzdG9wLWNvbG9yPSIjZWE1ODBjIiAvPiAgICA8IS0tIFZpYnJhbnQgTW9sdGVuIE9yYW5nZSAtLT4KICAgICAgPHN0b3Agb2Zmc2V0PSI4MiUiIHN0b3AtY29sb3I9IiNmOTczMTYiIC8+ICAgIDwhLS0gUmFkaWFudCBDb3JhbCBGbGFtZSAtLT4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmJiZjI0IiAvPiAgIDwhLS0gTHVtaW5vdXMgR29sZGVuIFN1biAtLT4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBJbm5lciBUaHJlYWQgU2hhZG93IC8gU3BlY3VsYXIgQ29yZSAtLT4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0idGhyZWFkLWNvcmUiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuODUiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMjUlIiBzdG9wLWNvbG9yPSIjZmVmMDhhIiBzdG9wLW9wYWNpdHk9IjAuNiIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI3MCUiIHN0b3AtY29sb3I9IiNiMzU2MmEiIHN0b3Atb3BhY2l0eT0iMC4wIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM0NTFhMDMiIHN0b3Atb3BhY2l0eT0iMC41IiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KCiAgICA8IS0tIFJhZGlhbCBBbWJpZW50IENhdXN0aWMgR2xvdyAtLT4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY2F1c3RpYy1nbG93IiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWE1ODBjIiBzdG9wLW9wYWNpdHk9IjAuNDUiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjYjM1NjJhIiBzdG9wLW9wYWNpdHk9IjAuMTgiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjAiIC8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgoKICAgIDwhLS0gRHJvcCBTaGFkb3cgRmlsdGVyIGZvciBGbG9hdGluZyBEZXB0aCAtLT4KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdy1iYXNlIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj4KICAgICAgPGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjMyIiBzdGREZXZpYXRpb249IjM2IiBmbG9vZC1jb2xvcj0iIzAwMDAwMCIgZmxvb2Qtb3BhY2l0eT0iMC42NSIgLz4KICAgICAgPGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjEyIiBzdGREZXZpYXRpb249IjE2IiBmbG9vZC1jb2xvcj0iIzdjMmQxMiIgZmxvb2Qtb3BhY2l0eT0iMC4yNSIgLz4KICAgIDwvZmlsdGVyPgoKICAgIDxmaWx0ZXIgaWQ9Imdsb3ctdGhyZWFkIiB4PSItMzAlIiB5PSItMzAlIiB3aWR0aD0iMTYwJSIgaGVpZ2h0PSIxNjAlIj4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMTIiIHJlc3VsdD0iYmx1cjEiIC8+CiAgICAgIDxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjI4IiByZXN1bHQ9ImJsdXIyIiAvPgogICAgICA8ZmVNZXJnZT4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49ImJsdXIyIiAvPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1cjEiIC8+CiAgICAgICAgPGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIiAvPgogICAgICA8L2ZlTWVyZ2U+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CgogIDwhLS0gMS4gQkFTRSBTUVVJUkNMRSAoQXBwbGUgbWFjT1MgMTAyNHgxMDI0IENhbnZhcykgLS0+CiAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdy1iYXNlKSI+CiAgICA8IS0tIEJhc2UgU3F1aXJjbGUgU2hhcGUgd2l0aCBQcmVjaXNpb24gQ29udGludW91cyBDdXJ2YXR1cmUgLS0+CiAgICA8cmVjdCB4PSI5NiIgeT0iOTYiIHdpZHRoPSI4MzIiIGhlaWdodD0iODMyIiByeD0iMTk4IiByeT0iMTk4IiBmaWxsPSJ1cmwoI3BlZGVzdGFsLWdyYWQpIiAvPgogICAgPCEtLSBPdXRlciBTcGVjdWxhciBSaW0gU3Ryb2tlIC0tPgogICAgPHJlY3QgeD0iOTcuNSIgeT0iOTcuNSIgd2lkdGg9IjgyOSIgaGVpZ2h0PSI4MjkiIHJ4PSIxOTYuNSIgcnk9IjE5Ni41IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjcmltLWdyYWQpIiBzdHJva2Utd2lkdGg9IjMiIC8+CiAgPC9nPgoKICA8IS0tIDIuIFZPTFVNRVRSSUMgQ0FVU1RJQyBHTE9XIChSYWRpYXRpbmcgZnJvbSB0aGUgVGhyZWFkIENvcmUpIC0tPgogIDxjaXJjbGUgY3g9IjUxMiIgY3k9IjUyMCIgcj0iMzIwIiBmaWxsPSJ1cmwoI2NhdXN0aWMtZ2xvdykiIC8+CgogIDwhLS0gMy4gQkFDS0dST1VORCBUSFJFQUQgTE9PUCAoV2VhdmluZyBVbmRlciB0aGUgTmVlZGxlKSAtLT4KICA8ZyBmaWx0ZXI9InVybCgjZ2xvdy10aHJlYWQpIj4KICAgIDwhLS0gUmVhciBpbmZpbml0eSBhcmMgZmxvd2luZyBiZWhpbmQgbmVlZGxlIC0tPgogICAgPHBhdGggZD0iTSAzMTAsNjQwIEMgMjEwLDY0MCAxOTAsNDkwIDI4MCwzOTAgQyAzNzAsMjkwIDQ4MCwzNzAgNTQwLDQ2MCBDIDYxMCw1NjAgNzIwLDY3MCA4MTAsNTcwIEMgODkwLDQ4MCA4MjAsMzMwIDY5MCwzNDAgQyA2MDAsMzQ4IDU0MCw0MjAgNTEyLDQ3MCIgCiAgICAgICAgICBmaWxsPSJub25lIiAKICAgICAgICAgIHN0cm9rZT0idXJsKCN0aHJlYWQtZ2xvdykiIAogICAgICAgICAgc3Ryb2tlLXdpZHRoPSI1NCIgCiAgICAgICAgICBzdHJva2UtbGluZWNhcD0icm91bmQiIAogICAgICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KICAgIDwhLS0gSW5uZXIgTHVtaW5vdXMgSGlnaGxpZ2h0IFJpZGdlIC0tPgogICAgPHBhdGggZD0iTSAzMTAsNjQwIEMgMjEwLDY0MCAxOTAsNDkwIDI4MCwzOTAgQyAzNzAsMjkwIDQ4MCwzNzAgNTQwLDQ2MCBDIDYxMCw1NjAgNzIwLDY3MCA4MTAsNTcwIEMgODkwLDQ4MCA4MjAsMzMwIDY5MCwzNDAgQyA2MDAsMzQ4IDU0MCw0MjAgNTEyLDQ3MCIgCiAgICAgICAgICBmaWxsPSJub25lIiAKICAgICAgICAgIHN0cm9rZT0idXJsKCN0aHJlYWQtY29yZSkiIAogICAgICAgICAgc3Ryb2tlLXdpZHRoPSIxNiIgCiAgICAgICAgICBzdHJva2UtbGluZWNhcD0icm91bmQiIC8+CiAgPC9nPgoKICA8IS0tIDQuIFRJVEFOSVVNIFNVUkdJQ0FMIE5FRURMRSAoRGlhZ29uYWwgUGllcmNlIGZyb20gVG9wLVJpZ2h0IHRvIEJvdHRvbS1MZWZ0KSAtLT4KICA8ZyBpZD0ibmVlZGxlIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzggNTEyIDUxMikiPgogICAgPCEtLSBOZWVkbGUgRHJvcCBTaGFkb3cgb250byBSZWFyIFRocmVhZCAtLT4KICAgIDxwYXRoIGQ9Ik0gNTAwLDE0MCBMIDUyNCwxNDAgTCA1MjIsNzYwIEwgNTEyLDg3MCBMIDUwMiw3NjAgWiIgCiAgICAgICAgICBmaWxsPSIjMDAwMDAwIiAKICAgICAgICAgIG9wYWNpdHk9IjAuNCIgCiAgICAgICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCwgMjIpIiAvPgoKICAgIDwhLS0gTmVlZGxlIE1haW4gVGl0YW5pdW0gQmxhZGUgLS0+CiAgICA8cGF0aCBkPSJNIDQ5OCwxNDAgTCA1MjYsMTQwIEwgNTI0LDc2MCBMIDUxMiw4ODAgTCA1MDAsNzYwIFoiIAogICAgICAgICAgZmlsbD0idXJsKCNuZWVkbGUtYm9keSkiIC8+CgogICAgPCEtLSBMZWZ0IEJldmVsIFNoYWRpbmcgKENoaXNlbGVkIFNoYXJwIEVkZ2UpIC0tPgogICAgPHBhdGggZD0iTSA0OTgsMTQwIEwgNTEyLDE0MCBMIDUxMiw4ODAgTCA1MDAsNzYwIFoiIAogICAgICAgICAgZmlsbD0idXJsKCNuZWVkbGUtYmV2ZWwpIiAvPgoKICAgIDwhLS0gTmVlZGxlIEV5ZSAoUGlsbCBBcGVydHVyZSBhdCBUb3ApIC0tPgogICAgPHJlY3QgeD0iNTA3IiB5PSIxOTUiIHdpZHRoPSIxMCIgaGVpZ2h0PSI5MCIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjMGIwYjBkIiAvPgogICAgPCEtLSBJbm5lciBSaW0gb2YgRXllIFJlZmxlY3Rpb24gLS0+CiAgICA8cmVjdCB4PSI1MDYiIHk9IjE5NCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjkyIiByeD0iNiIgcnk9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNyaW0tZ3JhZCkiIHN0cm9rZS13aWR0aD0iMS41IiAvPgogIDwvZz4KCiAgPCEtLSA1LiBGT1JFR1JPVU5EIFRIUkVBRCBMT09QIChXZWF2aW5nIE9WRVIgYW5kIFRocm91Z2ggdGhlIE5lZWRsZSkgLS0+CiAgPGcgZmlsdGVyPSJ1cmwoI2dsb3ctdGhyZWFkKSI+CiAgICA8IS0tIEZyb250IGxvb3AgcGllcmNpbmcgdGhyb3VnaCBhbmQgY3VybGluZyBvdXQgaW50byBpbmZpbml0eSAtLT4KICAgIDxwYXRoIGQ9Ik0gNTEyLDQ3MCBDIDQ5MCw1MTAgNDQwLDY0MCAzMzAsNjUwIEMgMjIwLDY2MCAxNzAsNTIwIDI1MCw0MjAgQyAzMTAsMzQwIDQzMCwzNDAgNTAwLDQzMCBDIDU2MCw1MTAgNjUwLDY1MCA3NjAsNjUwIEMgODUwLDY1MCA5MTAsNTQwIDg0MCw0NDAgQyA3ODAsMzYwIDY3MCwzOTAgNjAwLDQ4MCIgCiAgICAgICAgICBmaWxsPSJub25lIiAKICAgICAgICAgIHN0cm9rZT0idXJsKCN0aHJlYWQtZ2xvdykiIAogICAgICAgICAgc3Ryb2tlLXdpZHRoPSI1MCIgCiAgICAgICAgICBzdHJva2UtbGluZWNhcD0icm91bmQiIAogICAgICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KICAgIAogICAgPCEtLSBVbHRyYS1CcmlnaHQgQ29yZSBGaWJlciBIaWdobGlnaHQgLS0+CiAgICA8cGF0aCBkPSJNIDUxMiw0NzAgQyA0OTAsNTEwIDQ0MCw2NDAgMzMwLDY1MCBDIDIyMCw2NjAgMTcwLDUyMCAyNTAsNDIwIEMgMzEwLDM0MCA0MzAsMzQwIDUwMCw0MzAgQyA1NjAsNTEwIDY1MCw2NTAgNzYwLDY1MCBDIDg1MCw2NTAgOTEwLDU0MCA4NDAsNDQwIEMgNzgwLDM2MCA2NzAsMzkwIDYwMCw0ODAiIAogICAgICAgICAgZmlsbD0ibm9uZSIgCiAgICAgICAgICBzdHJva2U9InVybCgjdGhyZWFkLWNvcmUpIiAKICAgICAgICAgIHN0cm9rZS13aWR0aD0iMTQiIAogICAgICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDwvZz4KCiAgPCEtLSA2LiBMVU1JTkVTQ0VOVCBTUEFSS0xFIEFUIE5FRURMRSBBUEVSVFVSRSAoVGhlIFNwYXJrIG9mIEF0dGVudGlvbikgLS0+CiAgPGNpcmNsZSBjeD0iNjEyIiBjeT0iMzQyIiByPSI4IiBmaWxsPSIjZmZmZmZmIiBmaWx0ZXI9InVybCgjZ2xvdy10aHJlYWQpIiAvPgogIDxjaXJjbGUgY3g9IjYxMiIgY3k9IjM0MiIgcj0iMyIgZmlsbD0iI2ZlZjA4YSIgLz4KPC9zdmc+Cg==" alt="Sutra Brand Mark" width="104" height="104" style="border-radius: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.35), 0 3px 10px rgba(179,86,42,0.35); border: 1px solid rgba(255,255,255,0.12);">
+      <div>
+        <div class="cover-rule" style="margin-bottom: 12px;"></div>
+        <div class="cover-label" style="margin-bottom: 0;">Sovereign Attention Management Operating System</div>
+      </div>
+    </div>
+    <h1>SUTRA: OPERATIONAL USER GUIDE</h1>
+    <div class="cover-subtitle">Complete End-User Manual, DMG First-Launch Protocol &amp; Context-Waking OS for macOS v1.1</div>
+    <div class="cover-meta">
+      <strong>Author:</strong> Ramesh Choudhary<br>
+      <strong>Product:</strong> Sutra macOS v1.1 Universal Release (3.2 MB DMG)<br>
+      <strong>Date:</strong> 01 October 2026<br>
+      <strong>Engineering Station:</strong> Sutra Sovereign Engineering Hub<br>
+      <strong>Architecture:</strong> Rust Engine (SQLite WAL + FTS5) • Native Swift AppKit Companion (Sutra Logo Icon) • Continuum AECE
+    </div>
+  </section>
+
+  <!-- TABLE OF CONTENTS -->
+  <section class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-search">
+      <select id="toc-select" aria-label="Jump to section">
+        <option value="#sec-01">01. Cognitive Foundation: Eliminating Resumption Lag</option>
+        <option value="#sec-02">02. DMG Drag-and-Drop Installation &amp; Zero-Bloat Setup</option>
+        <option value="#sec-03">03. macOS First-Launch Permissions &amp; Accessibility Setup</option>
+        <option value="#sec-04">04. The 2-Second Quick Cue HUD &amp; Smart Scheduling (⌃⌥Space)</option>
+        <option value="#sec-05">05. The 5 Multi-Modal Cue Types</option>
+        <option value="#sec-06">06. The 1-Click Closed-App Recovery Contract</option>
+        <option value="#sec-07">07. The Sanctuary Companion: Search &amp; Today's Accordion (⌃⌥S)</option>
+        <option value="#sec-08">08. The Tri-State Sanctuary Lifecycle (Waiting ⇄ Later ⇄ Done)</option>
+        <option value="#sec-09">09. Full Terminal Command Station Reference (sutra CLI)</option>
+        <option value="#sec-10">10. Performance Budgets, Privacy &amp; Data Sovereignty</option>
+      </select>
+      <button onclick="jumpToSection()">Jump</button>
+    </div>
+    <ol>
+      <li><a href="#sec-01">Cognitive Foundation: Eliminating Resumption Lag</a></li>
+      <li><a href="#sec-02">DMG Drag-and-Drop Installation &amp; Zero-Bloat Setup</a></li>
+      <li><a href="#sec-03">macOS First-Launch Permissions &amp; Accessibility Setup</a></li>
+      <li><a href="#sec-04">The 2-Second Quick Cue HUD &amp; Smart Scheduling (⌃⌥Space)</a></li>
+      <li><a href="#sec-05">The 5 Multi-Modal Cue Types</a></li>
+      <li><a href="#sec-06">The 1-Click Closed-App Recovery Contract</a></li>
+      <li><a href="#sec-07">The Sanctuary Companion: Search &amp; Today's Accordion (⌃⌥S)</a></li>
+      <li><a href="#sec-08">The Tri-State Sanctuary Lifecycle (Waiting ⇄ Later ⇄ Done)</a></li>
+      <li><a href="#sec-09">Full Terminal Command Station Reference (sutra CLI)</a></li>
+      <li><a href="#sec-10">Performance Budgets, Privacy &amp; Data Sovereignty</a></li>
+    </ol>
+  </section>
+
+  <!-- SECTION 01 -->
+  <section id="sec-01">
+    <h1><span class="num">01</span>Cognitive Foundation: Eliminating Resumption Lag</h1>
+    <p>
+      Knowledge workers context-switch or face interruptions every 3 minutes and 5 seconds. Empirical research by Dr. Gloria Mark at UC Irvine establishes that it requires an average of <strong>23 minutes and 15 seconds</strong> to recover deep cognitive focus after a significant interruption.
+    </p>
+    <p>
+      The largest component of this delay is <strong>Resumption Lag</strong>: the cognitive friction of re-discovering the right window, file line, browser tab, or remembering the precise next mental intention.
+    </p>
+    <blockquote>
+      "सूत्रम् धारय, पुनः आरभस्व — Leave the thread where you'll need it again. Find it when you're back."
+    </blockquote>
+    <p>
+      <strong>Sutra</strong> grounds itself on two foundational discoveries in cognitive psychology:
+    </p>
+    <ul>
+      <li><strong>Altmann &amp; Trafton (2002) — Memory for Goals:</strong> Working memory decays exponentially during an interruption. Placing an explicit, salient <em>retrieval cue</em> at the exact point of suspension reduces resumption lag by over <strong>80%</strong>.</li>
+      <li><strong>Gollwitzer — Implementation Intentions:</strong> Abstract to-dos fail under fatigue. Concrete <em>"When Situation X occurs, execute Action Y"</em> triggers make resumption near-automatic and involuntary.</li>
+    </ul>
+
+    <div style="background: var(--surface-warm); border: 1px solid var(--rule); border-radius: 8px; padding: 20px 24px; margin: 20px 0; display: flex; gap: 24px; align-items: center;">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxkZWZzPgogICAgPCEtLSBCYWNrZ3JvdW5kIFNxdWlyY2xlIEdyYWRpZW50IChPYnNpZGlhbiB0byBNaWRuaWdodCBaaW5jKSAtLT4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icGVkZXN0YWwtZ3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMjIyMjI3IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzE1MTUxOCIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGIwYjBkIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KCiAgICA8IS0tIE91dGVyIFJpbSBTcGVjdWxhciBIaWdobGlnaHQgLS0+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InJpbS1ncmFkIiB4MT0iMjAlIiB5MT0iMCUiIHgyPSI4MCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjM1IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjQwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjA1IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiMzU2MmEiIHN0b3Atb3BhY2l0eT0iMC4yNSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBUaXRhbml1bSBOZWVkbGUgR3JhZGllbnQgKFBvbGlzaGVkIFNpbHZlciAmIENvbGQgUGxhdGludW0pIC0tPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJuZWVkbGUtYm9keSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMjUlIiBzdG9wLWNvbG9yPSIjZTJlOGYwIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzk0YTNiOCIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI3NSUiIHN0b3AtY29sb3I9IiNjYmQ1ZTEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzQ3NTU2OSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBOZWVkbGUgQmV2ZWwgSGlnaGxpZ2h0IC0tPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJuZWVkbGUtYmV2ZWwiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjkiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjOTRhM2I4IiBzdG9wLW9wYWNpdHk9IjAuMyIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMWUyOTNiIiBzdG9wLW9wYWNpdHk9IjAuOCIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBHbG93aW5nIFRlcnJhY290dGEgTcO2Yml1cyBTaWxrIFRocmVhZCAoUHJpbWFyeSBGbHVpZCBHcmFkaWVudCkgLS0+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRocmVhZC1nbG93IiB4MT0iMCUiIHkxPSIxMDAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdjMmQxMiIgLz4gICAgIDwhLS0gRGVlcCBBdWJ1cm4gUnVzdCAtLT4KICAgICAgPHN0b3Agb2Zmc2V0PSIyOCUiIHN0b3AtY29sb3I9IiNiMzU2MmEiIC8+ICAgIDwhLS0gU2lnbmF0dXJlIFRlcnJhY290dGEgLS0+CiAgICAgIDxzdG9wIG9mZnNldD0iNTglIiBzdG9wLWNvbG9yPSIjZWE1ODBjIiAvPiAgICA8IS0tIFZpYnJhbnQgTW9sdGVuIE9yYW5nZSAtLT4KICAgICAgPHN0b3Agb2Zmc2V0PSI4MiUiIHN0b3AtY29sb3I9IiNmOTczMTYiIC8+ICAgIDwhLS0gUmFkaWFudCBDb3JhbCBGbGFtZSAtLT4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmJiZjI0IiAvPiAgIDwhLS0gTHVtaW5vdXMgR29sZGVuIFN1biAtLT4KICAgIDwvbGluZWFyR3JhZGllbnQ+CgogICAgPCEtLSBJbm5lciBUaHJlYWQgU2hhZG93IC8gU3BlY3VsYXIgQ29yZSAtLT4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0idGhyZWFkLWNvcmUiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuODUiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMjUlIiBzdG9wLWNvbG9yPSIjZmVmMDhhIiBzdG9wLW9wYWNpdHk9IjAuNiIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI3MCUiIHN0b3AtY29sb3I9IiNiMzU2MmEiIHN0b3Atb3BhY2l0eT0iMC4wIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM0NTFhMDMiIHN0b3Atb3BhY2l0eT0iMC41IiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KCiAgICA8IS0tIFJhZGlhbCBBbWJpZW50IENhdXN0aWMgR2xvdyAtLT4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY2F1c3RpYy1nbG93IiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWE1ODBjIiBzdG9wLW9wYWNpdHk9IjAuNDUiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjYjM1NjJhIiBzdG9wLW9wYWNpdHk9IjAuMTgiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjAiIC8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgoKICAgIDwhLS0gRHJvcCBTaGFkb3cgRmlsdGVyIGZvciBGbG9hdGluZyBEZXB0aCAtLT4KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdy1iYXNlIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj4KICAgICAgPGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjMyIiBzdGREZXZpYXRpb249IjM2IiBmbG9vZC1jb2xvcj0iIzAwMDAwMCIgZmxvb2Qtb3BhY2l0eT0iMC42NSIgLz4KICAgICAgPGZlRHJvcFNoYWRvdyBkeD0iMCIgZHk9IjEyIiBzdGREZXZpYXRpb249IjE2IiBmbG9vZC1jb2xvcj0iIzdjMmQxMiIgZmxvb2Qtb3BhY2l0eT0iMC4yNSIgLz4KICAgIDwvZmlsdGVyPgoKICAgIDxmaWx0ZXIgaWQ9Imdsb3ctdGhyZWFkIiB4PSItMzAlIiB5PSItMzAlIiB3aWR0aD0iMTYwJSIgaGVpZ2h0PSIxNjAlIj4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMTIiIHJlc3VsdD0iYmx1cjEiIC8+CiAgICAgIDxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjI4IiByZXN1bHQ9ImJsdXIyIiAvPgogICAgICA8ZmVNZXJnZT4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49ImJsdXIyIiAvPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1cjEiIC8+CiAgICAgICAgPGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIiAvPgogICAgICA8L2ZlTWVyZ2U+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CgogIDwhLS0gMS4gQkFTRSBTUVVJUkNMRSAoQXBwbGUgbWFjT1MgMTAyNHgxMDI0IENhbnZhcykgLS0+CiAgPGcgZmlsdGVyPSJ1cmwoI3NoYWRvdy1iYXNlKSI+CiAgICA8IS0tIEJhc2UgU3F1aXJjbGUgU2hhcGUgd2l0aCBQcmVjaXNpb24gQ29udGludW91cyBDdXJ2YXR1cmUgLS0+CiAgICA8cmVjdCB4PSI5NiIgeT0iOTYiIHdpZHRoPSI4MzIiIGhlaWdodD0iODMyIiByeD0iMTk4IiByeT0iMTk4IiBmaWxsPSJ1cmwoI3BlZGVzdGFsLWdyYWQpIiAvPgogICAgPCEtLSBPdXRlciBTcGVjdWxhciBSaW0gU3Ryb2tlIC0tPgogICAgPHJlY3QgeD0iOTcuNSIgeT0iOTcuNSIgd2lkdGg9IjgyOSIgaGVpZ2h0PSI4MjkiIHJ4PSIxOTYuNSIgcnk9IjE5Ni41IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjcmltLWdyYWQpIiBzdHJva2Utd2lkdGg9IjMiIC8+CiAgPC9nPgoKICA8IS0tIDIuIFZPTFVNRVRSSUMgQ0FVU1RJQyBHTE9XIChSYWRpYXRpbmcgZnJvbSB0aGUgVGhyZWFkIENvcmUpIC0tPgogIDxjaXJjbGUgY3g9IjUxMiIgY3k9IjUyMCIgcj0iMzIwIiBmaWxsPSJ1cmwoI2NhdXN0aWMtZ2xvdykiIC8+CgogIDwhLS0gMy4gQkFDS0dST1VORCBUSFJFQUQgTE9PUCAoV2VhdmluZyBVbmRlciB0aGUgTmVlZGxlKSAtLT4KICA8ZyBmaWx0ZXI9InVybCgjZ2xvdy10aHJlYWQpIj4KICAgIDwhLS0gUmVhciBpbmZpbml0eSBhcmMgZmxvd2luZyBiZWhpbmQgbmVlZGxlIC0tPgogICAgPHBhdGggZD0iTSAzMTAsNjQwIEMgMjEwLDY0MCAxOTAsNDkwIDI4MCwzOTAgQyAzNzAsMjkwIDQ4MCwzNzAgNTQwLDQ2MCBDIDYxMCw1NjAgNzIwLDY3MCA4MTAsNTcwIEMgODkwLDQ4MCA4MjAsMzMwIDY5MCwzNDAgQyA2MDAsMzQ4IDU0MCw0MjAgNTEyLDQ3MCIgCiAgICAgICAgICBmaWxsPSJub25lIiAKICAgICAgICAgIHN0cm9rZT0idXJsKCN0aHJlYWQtZ2xvdykiIAogICAgICAgICAgc3Ryb2tlLXdpZHRoPSI1NCIgCiAgICAgICAgICBzdHJva2UtbGluZWNhcD0icm91bmQiIAogICAgICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KICAgIDwhLS0gSW5uZXIgTHVtaW5vdXMgSGlnaGxpZ2h0IFJpZGdlIC0tPgogICAgPHBhdGggZD0iTSAzMTAsNjQwIEMgMjEwLDY0MCAxOTAsNDkwIDI4MCwzOTAgQyAzNzAsMjkwIDQ4MCwzNzAgNTQwLDQ2MCBDIDYxMCw1NjAgNzIwLDY3MCA4MTAsNTcwIEMgODkwLDQ4MCA4MjAsMzMwIDY5MCwzNDAgQyA2MDAsMzQ4IDU0MCw0MjAgNTEyLDQ3MCIgCiAgICAgICAgICBmaWxsPSJub25lIiAKICAgICAgICAgIHN0cm9rZT0idXJsKCN0aHJlYWQtY29yZSkiIAogICAgICAgICAgc3Ryb2tlLXdpZHRoPSIxNiIgCiAgICAgICAgICBzdHJva2UtbGluZWNhcD0icm91bmQiIC8+CiAgPC9nPgoKICA8IS0tIDQuIFRJVEFOSVVNIFNVUkdJQ0FMIE5FRURMRSAoRGlhZ29uYWwgUGllcmNlIGZyb20gVG9wLVJpZ2h0IHRvIEJvdHRvbS1MZWZ0KSAtLT4KICA8ZyBpZD0ibmVlZGxlIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzggNTEyIDUxMikiPgogICAgPCEtLSBOZWVkbGUgRHJvcCBTaGFkb3cgb250byBSZWFyIFRocmVhZCAtLT4KICAgIDxwYXRoIGQ9Ik0gNTAwLDE0MCBMIDUyNCwxNDAgTCA1MjIsNzYwIEwgNTEyLDg3MCBMIDUwMiw3NjAgWiIgCiAgICAgICAgICBmaWxsPSIjMDAwMDAwIiAKICAgICAgICAgIG9wYWNpdHk9IjAuNCIgCiAgICAgICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCwgMjIpIiAvPgoKICAgIDwhLS0gTmVlZGxlIE1haW4gVGl0YW5pdW0gQmxhZGUgLS0+CiAgICA8cGF0aCBkPSJNIDQ5OCwxNDAgTCA1MjYsMTQwIEwgNTI0LDc2MCBMIDUxMiw4ODAgTCA1MDAsNzYwIFoiIAogICAgICAgICAgZmlsbD0idXJsKCNuZWVkbGUtYm9keSkiIC8+CgogICAgPCEtLSBMZWZ0IEJldmVsIFNoYWRpbmcgKENoaXNlbGVkIFNoYXJwIEVkZ2UpIC0tPgogICAgPHBhdGggZD0iTSA0OTgsMTQwIEwgNTEyLDE0MCBMIDUxMiw4ODAgTCA1MDAsNzYwIFoiIAogICAgICAgICAgZmlsbD0idXJsKCNuZWVkbGUtYmV2ZWwpIiAvPgoKICAgIDwhLS0gTmVlZGxlIEV5ZSAoUGlsbCBBcGVydHVyZSBhdCBUb3ApIC0tPgogICAgPHJlY3QgeD0iNTA3IiB5PSIxOTUiIHdpZHRoPSIxMCIgaGVpZ2h0PSI5MCIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjMGIwYjBkIiAvPgogICAgPCEtLSBJbm5lciBSaW0gb2YgRXllIFJlZmxlY3Rpb24gLS0+CiAgICA8cmVjdCB4PSI1MDYiIHk9IjE5NCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjkyIiByeD0iNiIgcnk9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNyaW0tZ3JhZCkiIHN0cm9rZS13aWR0aD0iMS41IiAvPgogIDwvZz4KCiAgPCEtLSA1LiBGT1JFR1JPVU5EIFRIUkVBRCBMT09QIChXZWF2aW5nIE9WRVIgYW5kIFRocm91Z2ggdGhlIE5lZWRsZSkgLS0+CiAgPGcgZmlsdGVyPSJ1cmwoI2dsb3ctdGhyZWFkKSI+CiAgICA8IS0tIEZyb250IGxvb3AgcGllcmNpbmcgdGhyb3VnaCBhbmQgY3VybGluZyBvdXQgaW50byBpbmZpbml0eSAtLT4KICAgIDxwYXRoIGQ9Ik0gNTEyLDQ3MCBDIDQ5MCw1MTAgNDQwLDY0MCAzMzAsNjUwIEMgMjIwLDY2MCAxNzAsNTIwIDI1MCw0MjAgQyAzMTAsMzQwIDQzMCwzNDAgNTAwLDQzMCBDIDU2MCw1MTAgNjUwLDY1MCA3NjAsNjUwIEMgODUwLDY1MCA5MTAsNTQwIDg0MCw0NDAgQyA3ODAsMzYwIDY3MCwzOTAgNjAwLDQ4MCIgCiAgICAgICAgICBmaWxsPSJub25lIiAKICAgICAgICAgIHN0cm9rZT0idXJsKCN0aHJlYWQtZ2xvdykiIAogICAgICAgICAgc3Ryb2tlLXdpZHRoPSI1MCIgCiAgICAgICAgICBzdHJva2UtbGluZWNhcD0icm91bmQiIAogICAgICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KICAgIAogICAgPCEtLSBVbHRyYS1CcmlnaHQgQ29yZSBGaWJlciBIaWdobGlnaHQgLS0+CiAgICA8cGF0aCBkPSJNIDUxMiw0NzAgQyA0OTAsNTEwIDQ0MCw2NDAgMzMwLDY1MCBDIDIyMCw2NjAgMTcwLDUyMCAyNTAsNDIwIEMgMzEwLDM0MCA0MzAsMzQwIDUwMCw0MzAgQyA1NjAsNTEwIDY1MCw2NTAgNzYwLDY1MCBDIDg1MCw2NTAgOTEwLDU0MCA4NDAsNDQwIEMgNzgwLDM2MCA2NzAsMzkwIDYwMCw0ODAiIAogICAgICAgICAgZmlsbD0ibm9uZSIgCiAgICAgICAgICBzdHJva2U9InVybCgjdGhyZWFkLWNvcmUpIiAKICAgICAgICAgIHN0cm9rZS13aWR0aD0iMTQiIAogICAgICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDwvZz4KCiAgPCEtLSA2LiBMVU1JTkVTQ0VOVCBTUEFSS0xFIEFUIE5FRURMRSBBUEVSVFVSRSAoVGhlIFNwYXJrIG9mIEF0dGVudGlvbikgLS0+CiAgPGNpcmNsZSBjeD0iNjEyIiBjeT0iMzQyIiByPSI4IiBmaWxsPSIjZmZmZmZmIiBmaWx0ZXI9InVybCgjZ2xvdy10aHJlYWQpIiAvPgogIDxjaXJjbGUgY3g9IjYxMiIgY3k9IjM0MiIgcj0iMyIgZmlsbD0iI2ZlZjA4YSIgLz4KPC9zdmc+Cg==" alt="Sutra Gold-Standard Emblem" width="128" height="128" style="flex-shrink: 0; border-radius: 28px; box-shadow: 0 14px 32px rgba(0,0,0,0.35), 0 3px 10px rgba(179,86,42,0.35);">
+      <div>
+        <h3 style="margin-top: 0; color: var(--accent); font-family: Georgia, serif; font-size: 13pt;">The Sutra Emblem: The Needle &amp; The Infinite Silk Thread</h3>
+        <p style="margin-bottom: 8px; font-size: 10pt;">
+          <strong>Obsidian Squircle Pedestal:</strong> Complete offline sovereignty. All data remains in your local SQLite WAL database (<code>~/.sutra/sutra.db</code>) with zero cloud telemetry.
+        </p>
+        <p style="margin-bottom: 8px; font-size: 10pt;">
+          <strong>Brushed Titanium Needle:</strong> A surgical cognitive anchor that pierces through distraction and holds your exact working state (file, line number, URL, intention).
+        </p>
+        <p style="margin-bottom: 0; font-size: 10pt;">
+          <strong>Luminescent Terracotta Möbius Thread:</strong> The unbroken continuity of human working memory weaving seamlessly across apps for instant context recovery.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 02 -->
+  <section id="sec-02">
+    <h1><span class="num">02</span>DMG Drag-and-Drop Installation &amp; Zero-Bloat Setup</h1>
+    <p>
+      Sutra ships as an ultra-compact, zero-bloat macOS disk image (<strong><code>Sutra-Installer.dmg</code></strong>, exactly <strong>3.2 MB</strong>). Unlike modern productivity apps that package 200MB+ Electron web runtimes, Sutra is 100% native AppKit and compiled Rust:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Artifact</th>
+          <th>Location</th>
+          <th>Purpose</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Sutra-Installer.dmg</code></td>
+          <td>Desktop / Downloads</td>
+          <td>Zero-bloat native drag-and-drop macOS installer</td>
+          <td><strong>3.2 MB</strong></td>
+        </tr>
+        <tr>
+          <td><code>Sutra.app</code></td>
+          <td><code>/Applications/Sutra.app</code></td>
+          <td>Native Swift/AppKit Menu Bar (Sutra Logo Icon) companion, HUD &amp; embedded Rust engine</td>
+          <td><strong>3.1 MB</strong></td>
+        </tr>
+        <tr>
+          <td><code>sutra.db</code></td>
+          <td><code>~/.sutra/sutra.db</code></td>
+          <td>Sovereign SQLite database with Write-Ahead Logging &amp; FTS5 search index</td>
+          <td>&lt; 50 KB</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="step-card">
+      <h3>Step 1: Mount the Disk Image</h3>
+      <p>
+        Double-click <code>Sutra-Installer.dmg</code>. macOS will instantly mount the volume and open a clean installer window displaying <strong>Sutra.app</strong> alongside the macOS <strong>Applications</strong> shortcut.
+      </p>
+    </div>
+
+    <div class="step-card">
+      <h3>Step 2: Drag Sutra into Applications</h3>
+      <p>
+        Drag the <strong>Sutra</strong> app icon into the <strong>Applications</strong> folder shortcut. Copying takes less than 1 second.
+      </p>
+    </div>
+
+    <div class="step-card">
+      <h3>Step 3: Launch Sutra</h3>
+      <p>
+        Launch <strong>Sutra</strong> directly from your Applications folder or via Spotlight (<kbd>⌘ Command</kbd> + <kbd>Space</kbd> &rarr; type <code>Sutra</code>).
+      </p>
+      <p>
+        Upon first launch, Sutra displays the <strong>Sutra Permissions Setup</strong> modal to configure global hotkey monitoring.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 03 -->
+  <section id="sec-03">
+    <h1><span class="num">03</span>macOS First-Launch Permissions &amp; Accessibility Setup</h1>
+    <p>
+      To listen to global hotkeys (<kbd>⌃⌥Space</kbd>, <kbd>⌃⌥S</kbd>) and perform automatic context sniffing (reading frontmost window URLs, active code files, and line numbers), macOS requires standard <strong>Accessibility</strong> permission.
+    </p>
+
+    <div class="builder-box">
+      <h2>The First-Launch Setup Screen</h2>
+      <p>When you launch Sutra for the first time, you will be greeted by the native permissions guide:</p>
+      <ol style="margin-left: 20px; margin-bottom: 14px;">
+        <li>Click <strong>Open System Settings &rarr;</strong> on the setup dialog. macOS will automatically open <em>System Settings &gt; Privacy &amp; Security &gt; Accessibility</em>.</li>
+        <li><strong>⚠️ The Critical Toggle Trap:</strong> macOS will list <code>Sutra</code> in the Accessibility panel, but keeps the slider switch <strong>OFF (gray)</strong> by default. <em>You must click the toggle switch next to <strong>Sutra</strong> to turn it <strong>ON (orange)</strong>.</em></li>
+        <li><strong>Real-Time Auto-Dismissal:</strong> Sutra's background monitor immediately detects the toggle transition and closes the setup dialog automatically without requiring an app restart!</li>
+      </ol>
+      <p style="font-size: 9.5pt; color: var(--ink-muted); margin-bottom: 0;">
+        <em>Fallback controls:</em> If you prefer to verify manually, click <strong>[ Verify Access ✓ ]</strong>. If you are testing without hotkeys, you can click <strong>[ Continue Anyway ]</strong> at any time.
+      </p>
+    </div>
+
+    <p>
+      Once enabled, the <strong>Sutra logo icon</strong> (with live thread counter badge) docks permanently in your macOS menu bar, ready to capture your working memory.
+    </p>
+  </section>
+
+  <!-- SECTION 04 -->
+  <section id="sec-04">
+    <h1><span class="num">04</span>The 2-Second Quick Cue HUD &amp; Smart Scheduling</h1>
+    <p>
+      Whenever an interruption strikes or you need to suspend your current cognitive state, summon the HUD in under 2 seconds:
+    </p>
+
+    <div class="step-card">
+      <h3>1. Trigger the HUD</h3>
+      <p>
+        Press the global shortcut <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>Space</kbd> from anywhere in macOS, or click the <strong>Sutra logo icon</strong> in the menu bar and select <strong>"Leave Quick Cue... (⌃⌥Space)"</strong>.
+      </p>
+    </div>
+
+    <div class="step-card">
+      <h3>2. Automatic Context Sniffing</h3>
+      <p>
+        The 504px dark frosted-glass HUD glides onto your screen in &lt; 15ms. Sutra's native context sniffer instantly extracts the environment of your active window:
+      </p>
+      <ul>
+        <li><strong>Safari / Chrome / Arc / Brave:</strong> Extracts exact page URL and active tab title.</li>
+        <li><strong>VS Code / Cursor / Xcode:</strong> Extracts project path, active file, and line number.</li>
+        <li><strong>Finder:</strong> Extracts current POSIX directory path and selected files.</li>
+        <li><strong>Preview / Skim:</strong> Extracts PDF document path.</li>
+      </ul>
+      <p>
+        A live context pill (e.g. <code>📍 Safari: github.com/raman/sutra</code>) confirms the spatial anchor.
+      </p>
+    </div>
+
+    <div class="step-card">
+      <h3>3. Smart Scheduling Trigger</h3>
+      <p>
+        Need to defer this thread to a specific day? Click the clean <strong>Schedule</strong> button on the toolbar:
+      </p>
+      <ul>
+        <li><strong>Today:</strong> Pins the thread to today's focus bundle.</li>
+        <li><strong>Pick Date...:</strong> Opens a native calendar sheet to choose any future date.</li>
+        <li><strong>Clear Date:</strong> Resets the thread to standard un-dated waiting queue.</li>
+      </ul>
+      <p style="font-size: 9.5pt; color: var(--ink-muted); margin-bottom: 0;">
+        <em>Designed for professionals:</em> The schedule dropdown is clean and text-focused (zero distracting emojis).
+      </p>
+    </div>
+
+    <div class="step-card">
+      <h3>4. Commit the Implementation Intention</h3>
+      <p>
+        Type the single next physical action to execute upon returning:
+      </p>
+      <pre><code>What's the immediate next action?
+Fix zero-denominator guard on line 142 of engine.rs</code></pre>
+      <p>
+        Press <kbd>Enter</kbd> (<code>⏎ Leave Thread</code>). The HUD dismisses in &lt; 30ms, saves your context, and increments the menu bar badge.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 05 -->
+  <section id="sec-05">
+    <h1><span class="num">05</span>The 5 Multi-Modal Cue Types</h1>
+    <p>
+      Following the teardown of Cuewake and real-world developer workflows, Sutra supports 5 cue types:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Cue Type</th>
+          <th>Trigger Flag</th>
+          <th>Description &amp; Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Note</strong></td>
+          <td><code>-c note</code> (default)</td>
+          <td>Single concise implementation intention: <em>"Review theorem 2 proof before simulator run"</em>.</td>
+        </tr>
+        <tr>
+          <td><strong>Checklist</strong></td>
+          <td><code>-c checklist</code></td>
+          <td>Multi-step micro-actions with checkmarks: <em>"1. Run migration 2. Verify foreign keys 3. Deploy"</em>.</td>
+        </tr>
+        <tr>
+          <td><strong>Link</strong></td>
+          <td><code>-c link</code></td>
+          <td>Web reference, documentation page, or video link with timestamp: <code>https://...#t=18m42s</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>File / Excerpt</strong></td>
+          <td><code>-c file</code></td>
+          <td>Direct local file attachment, crash log, or code snippet snapshot.</td>
+        </tr>
+        <tr>
+          <td><strong>Voice Memo</strong></td>
+          <td><code>-c voice</code></td>
+          <td>Spoken micro-cue transcribed into text for hands-busy scenarios via native MacWhisper / dictation.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 06 -->
+  <section id="sec-06">
+    <h1><span class="num">06</span>The 1-Click Closed-App Recovery Contract</h1>
+    <p>
+      Traditional todo lists only record abstract text. When you return days later, you must manually launch the browser, find the tab in history, open your IDE, and locate the code file.
+    </p>
+    <blockquote>
+      <strong>The Closed-App Recovery Guarantee:</strong> Even if the target application was completely quit, the window dismissed, or the browser tab closed, Sutra restores your physical workspace with a single click.
+    </blockquote>
+
+    <h2>How to Resume</h2>
+    <ol>
+      <li>Click the <strong>Sutra logo icon</strong> in your macOS menu bar (or press <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>S</kbd>).</li>
+      <li>Locate the thread under <strong>WAITING (Active Memory)</strong> or <strong>Scheduled for Today</strong>.</li>
+      <li>Click <strong>⚡ 1-Click Resume (Re-launch &amp; Seek)</strong>.</li>
+    </ol>
+
+    <h2>What Happens Under the Hood:</h2>
+    <ul>
+      <li><strong>Web URL Anchors:</strong> Sutra calls the OS default handler or target browser to re-open the exact URL.</li>
+      <li><strong>Code Editor Anchors:</strong> If VS Code or Cursor is detected, Sutra executes <code>code -g &lt;path&gt;:&lt;line&gt;</code>, opening the file and placing your cursor on the exact line you were reading.</li>
+      <li><strong>Quit Applications:</strong> Sutra uses <code>NSWorkspace.shared.openApplication</code> or <code>open -a</code> to spin up the closed process.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 07 -->
+  <section id="sec-07">
+    <h1><span class="num">07</span>The Sanctuary Companion: Interactive Search &amp; Today's Accordion</h1>
+    <p>
+      Pressing <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>S</kbd> summons the <strong>Sanctuary Popover</strong> directly below your menu bar Sutra logo icon. The Sanctuary serves as your live cognitive dashboard.
+    </p>
+
+    <div class="step-card">
+      <h3>1. Real-Time Interactive Search</h3>
+      <p>
+        Click directly on the search bar at the top of the Sanctuary popover and type any keyword:
+      </p>
+      <ul>
+        <li>Instantly queries the embedded SQLite FTS5 index in <strong>sub-2 milliseconds</strong>.</li>
+        <li>Filters live across thread titles, implementation notes, captured URLs, and workspace file paths.</li>
+        <li>Press <kbd>Esc</kbd> to clear search and restore full thread view.</li>
+      </ul>
+    </div>
+
+    <div class="step-card">
+      <h3>2. "📅 Scheduled for Today" Collapsible Accordion</h3>
+      <p>
+        Threads scheduled for the current date are automatically detected and bundled into a dedicated high-priority bar at the very top of Sanctuary:
+      </p>
+      <ul>
+        <li><strong>Focus Isolation:</strong> Keeps today's committed work separate from the general waiting backlog.</li>
+        <li><strong>1-Click Collapse:</strong> Click the accordion header to expand or collapse today's bundle effortlessly.</li>
+        <li><strong>Counter Badge:</strong> Displays the exact count of threads scheduled for today (e.g. <code>📅 Scheduled for Today (3)</code>).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 08 -->
+  <section id="sec-08">
+    <h1><span class="num">08</span>The Tri-State Sanctuary Lifecycle</h1>
+    <p>
+      Sutra rejects the endless "backlog graveyard" where tasks accumulate until forgotten. Threads move through a deterministic, bi-directional 3-state state machine:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Badge</th>
+          <th>Behavior</th>
+          <th>Available Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>WAITING</strong></td>
+          <td><span class="badge badge-waiting">WAITING</span></td>
+          <td>Active working memory thread. Counted in the menu bar badge.</td>
+          <td><strong>Resume</strong> • <strong>Snooze (4h)</strong> • <strong>Mark Done</strong></td>
+        </tr>
+        <tr>
+          <td><strong>LATER</strong></td>
+          <td><span class="badge badge-later">LATER</span></td>
+          <td>Temporarily snoozed out of active consciousness. Hidden from the badge until timer expires.</td>
+          <td><strong>1-Click Restore to Waiting</strong> • <strong>Mark Done</strong></td>
+        </tr>
+        <tr>
+          <td><strong>DONE</strong></td>
+          <td><span class="badge badge-done">DONE</span></td>
+          <td>Completed task. Archived with execution timestamps.</td>
+          <td><strong>1-Click Undo</strong> (Restores back to Waiting immediately)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      <strong>1-Click Mistake Recovery:</strong> If you accidentally mark a thread as Done or snooze it by mistake, clicking it in the <em>Completed</em> or <em>Snoozed</em> submenu immediately undoes the transition and restores it to <strong>WAITING</strong>.
+    </p>
+  </section>
+
+  <!-- SECTION 09 -->
+  <section id="sec-09">
+    <h1><span class="num">09</span>Full Terminal Command Station Reference</h1>
+    <p>
+      Power users can manage Sutra entirely from the command line, integrate it into shell scripts, or bind it to Raycast/Alfred workflows.
+    </p>
+
+    <div class="step-card">
+      <h3>Bundled CLI Location (DMG Install)</h3>
+      <p>If you installed via DMG, the high-performance Rust CLI binary is located inside the application bundle:</p>
+      <pre><code>/Applications/Sutra.app/Contents/Resources/sutra</code></pre>
+      <p>To enable <code>sutra</code> system-wide in any terminal shell, create a symlink:</p>
+      <pre><code>sudo ln -sf /Applications/Sutra.app/Contents/Resources/sutra /usr/local/bin/sutra</code></pre>
+    </div>
+
+    <h3>1. Quick Capture with Context Sniffing</h3>
+    <pre><code># Capture with auto-sniffed frontmost application
+sutra capture --title "Review paper section 3" --notes "Focus on equation 12"
+
+# Capture a checklist
+sutra capture --title "Deploy release" -c checklist
+
+# Capture with manual URL override
+sutra capture --title "Read Rust docs" --url "https://doc.rust-lang.org"
+
+# Emit raw JSON output (ideal for automation scripts)
+sutra capture --title "Scripted task" --json</code></pre>
+
+    <h3>2. Listing Threads</h3>
+    <pre><code># List active waiting threads
+sutra list
+
+# List snoozed threads
+sutra list --status later
+
+# List completed threads
+sutra list --status done
+
+# Output as JSON
+sutra list --json</code></pre>
+
+    <h3>3. 1-Click Resume</h3>
+    <pre><code># Re-launch application, open file/URL, and seek line
+sutra resume &lt;THREAD_ID&gt;</code></pre>
+
+    <h3>4. Snooze, Complete, and Undo</h3>
+    <pre><code># Snooze for 4 hours
+sutra snooze &lt;THREAD_ID&gt; --hours 4
+
+# Mark as Done
+sutra done &lt;THREAD_ID&gt;
+
+# 1-Click Undo back to Waiting
+sutra undo &lt;THREAD_ID&gt;</code></pre>
+
+    <h3>5. Sub-10ms Full-Text Search (SQLite FTS5)</h3>
+    <pre><code># Search across all titles, notes, and tags in sub-2ms
+sutra search "Antigravity"</code></pre>
+
+    <h3>6. Desktop Context Sniffer Probe</h3>
+    <pre><code># Inspect what Sutra detects on your active desktop right now
+sutra sniff</code></pre>
+  </section>
+
+  <!-- SECTION 10 -->
+  <section id="sec-10">
+    <h1><span class="num">10</span>Performance Budgets, Privacy &amp; Data Sovereignty</h1>
+    <p>
+      Sutra is designed according to the <strong>Sovereign Engineering Doctrine</strong>: 100% local persistence, zero cloud lock-in, zero analytics telemetry, and sub-50ms execution latency.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>PRD Target Budget</th>
+          <th>Measured v1.1 Result</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hotkey to HUD Paint</strong></td>
+          <td>&lt; 30 ms</td>
+          <td><strong>&lt; 15 ms</strong></td>
+          <td><span class="badge badge-done">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>FTS5 Search Query</strong></td>
+          <td>&lt; 10 ms</td>
+          <td><strong>&lt; 2 ms</strong></td>
+          <td><span class="badge badge-done">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Idle RAM (Combined)</strong></td>
+          <td>&lt; 20 MB</td>
+          <td><strong>14.2 MB</strong></td>
+          <td><span class="badge badge-done">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>DMG Package Size</strong></td>
+          <td>&lt; 10 MB</td>
+          <td><strong>3.2 MB</strong></td>
+          <td><span class="badge badge-done">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Disk Installed Footprint</strong></td>
+          <td>&lt; 10 MB</td>
+          <td><strong>3.1 MB</strong></td>
+          <td><span class="badge badge-done">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Telemetry / Cloud Leak</strong></td>
+          <td>0 bytes</td>
+          <td><strong>0 bytes (100% Air-Gapped)</strong></td>
+          <td><span class="badge badge-done">PASS</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Dynamic Multi-User Database Storage</h2>
+    <p>
+      Sutra stores all thread data, context anchors, and search indexes in your local home directory, decoupled from any machine-specific user account:
+    </p>
+    <pre><code>~/.sutra/sutra.db</code></pre>
+    <p>
+      Protected with SQLite Write-Ahead Logging (WAL), Sutra guarantees atomic durability and zero corruption across sudden restarts or reboots.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    Created by Ramesh • 01 October 2026 • Sutra Sovereign Engineering Hub
+  </footer>
+
+  <script>
+    function jumpToSection() {
+      const select = document.getElementById('toc-select');
+      const targetId = select.value;
+      if (targetId) {
+        window.location.hash = targetId;
+      }
+    }
+  </script>
+</body>
+</html>

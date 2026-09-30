@@ -1,0 +1,20 @@
+<Application
+    x:Class="SutraWindows.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Terracotta Accent Design Tokens -->
+            <SolidColorBrush x:Key="SutraAccentBrush" Color="#B3562A" />
+            <SolidColorBrush x:Key="SutraAccentHoverBrush" Color="#8C3D1A" />
+            <SolidColorBrush x:Key="SutraBackgroundDark" Color="#17171A" />
+            <SolidColorBrush x:Key="SutraCardBackground" Color="#222226" />
+            <SolidColorBrush x:Key="SutraTextPrimary" Color="#EDEDED" />
+            <SolidColorBrush x:Key="SutraTextMuted" Color="#8E8E93" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

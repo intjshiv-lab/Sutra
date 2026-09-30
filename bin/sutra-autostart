@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PLIST_PATH="$HOME/Library/LaunchAgents/com.sutra.app.plist"
+APP_BIN="/Users/raman/Desktop/AI/Sutra/bin/Sutra.app/Contents/MacOS/SutraMac"
+
+case "${1:-status}" in
+  enable)
+    mkdir -p "$HOME/Library/LaunchAgents"
+    cat > "$PLIST_PATH" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sutra.app</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$APP_BIN</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Interactive</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/sutra.err</string>
+    <key>StandardOutPath</key>
+    <string>/tmp/sutra.out</string>
+</dict>
+</plist>
+EOF
+    launchctl unload "$PLIST_PATH" 2>/dev/null || true
+    launchctl load -w "$PLIST_PATH"
+    echo "Sutra LaunchAgent enabled and loaded."
+    ;;
+  disable)
+    launchctl unload -w "$PLIST_PATH" 2>/dev/null || true
+    rm -f "$PLIST_PATH"
+    echo "Sutra LaunchAgent disabled."
+    ;;
+  restart)
+    launchctl unload "$PLIST_PATH" 2>/dev/null || true
+    launchctl load -w "$PLIST_PATH"
+    echo "Sutra LaunchAgent restarted."
+    ;;
+  status)
+    if [ -f "$PLIST_PATH" ]; then
+      echo "LaunchAgent Plist: Installed ($PLIST_PATH)"
+    else
+      echo "LaunchAgent Plist: Not installed"
+    fi
+    if pgrep -f "SutraMac" >/dev/null; then
+      echo "Process State: RUNNING (PID: $(pgrep -f "SutraMac" | head -n 1))"
+    else
+      echo "Process State: STOPPED"
+    fi
+    ;;
+  *)
+    echo "Usage: sutra-autostart {enable|disable|restart|status}"
+    exit 1
+    ;;
+esac

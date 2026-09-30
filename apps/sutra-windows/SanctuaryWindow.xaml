@@ -1,0 +1,46 @@
+<Window
+    x:Class="SutraWindows.SanctuaryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Sutra Sanctuary">
+
+    <!-- 460px Studio Obsidian Popover -->
+    <Grid Background="{StaticResource SutraBackgroundDark}" Padding="16" Width="460" Height="580">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header: Title + Thread Counter Capsule -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Sutra Sanctuary" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SutraTextPrimary}" />
+                <Border Margin="10,0,0,0" Background="#26262B" CornerRadius="10" Padding="8,2">
+                    <TextBlock x:Name="CountBadge" Text="● 0 Waiting" FontSize="11" Foreground="{StaticResource SutraAccentBrush}" />
+                </Border>
+            </StackPanel>
+            <Button Content="+ Cue" HorizontalAlignment="Right" Click="OnAddCueClick" />
+        </Grid>
+
+        <!-- Interactive Search Bar -->
+        <TextBox Grid.Row="1" x:Name="SearchBox" PlaceholderText="Search threads..." FontSize="12" Margin="0,0,0,10" TextChanged="OnSearchTextChanged" />
+
+        <!-- Collapsible Today Accordion -->
+        <Border Grid.Row="2" Background="{StaticResource SutraCardBackground}" CornerRadius="6" Padding="10,8" Margin="0,0,0,10">
+            <StackPanel>
+                <Grid>
+                    <TextBlock Text="📅 Scheduled for Today" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource SutraAccentBrush}" VerticalAlignment="Center" />
+                    <Button Content="▾" HorizontalAlignment="Right" Padding="4,0" Click="OnToggleTodayAccordion" />
+                </Grid>
+                <ItemsControl x:Name="TodayItemsList" Margin="0,8,0,0" Visibility="Collapsed" />
+            </StackPanel>
+        </Border>
+
+        <!-- Active Waiting Threads List -->
+        <ScrollViewer Grid.Row="3">
+            <ItemsControl x:Name="WaitingThreadsList" />
+        </ScrollViewer>
+    </Grid>
+</Window>
