@@ -1,0 +1,13 @@
+[package]
+name = "sutra-voice"
+version = "0.1.0"
+edition = "2024"
+description = "On-device voice cue transcription scaffold for Sutra (whisper.rs integration)"
+
+[dependencies]
+# ponytail: whisper-rs integration deferred — add when --features whisper is enabled
+# whisper-rs = { version = "0.11", optional = true }
+
+[features]
+# default = []
+# whisper = ["whisper-rs"]

@@ -1,0 +1,7 @@
+Target dependency graph (3 targets)
+Target 'AllExcludingTests' in project 'Aggregate'
+➜ Explicit dependency on target 'SutraIOS-product' in project 'SutraIOS'
+➜ Explicit dependency on target 'SutraIOS' in project 'SutraIOS'
+Target 'SutraIOS-product' in project 'SutraIOS'
+➜ Explicit dependency on target 'SutraIOS' in project 'SutraIOS'
+Target 'SutraIOS' in project 'SutraIOS' (no dependencies)

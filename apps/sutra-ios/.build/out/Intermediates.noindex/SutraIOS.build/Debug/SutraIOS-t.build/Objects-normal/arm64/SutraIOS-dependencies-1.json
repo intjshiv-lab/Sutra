@@ -1,0 +1,679 @@
+[
+  {
+    "isFramework" : true,
+    "moduleName" : "Accessibility",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Accessibility-219YYDMLOTTC3.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "AppKit",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/AppKit-3A24RDZDPCSA0.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "ColorSync",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ColorSync-15W37B4KZS4UR.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "Combine",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Combine-UGUT9JUBQEU0.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "CoreAudio",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreAudio-VNUUBP7LX4RE.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "CoreData",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreData-V05UKYCRGD4H.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "CoreFoundation",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreFoundation-1N58BO4PSJ0XP.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "CoreGraphics",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreGraphics-3VJNEKY28ZVWB.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "CoreImage",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreImage-18T8HTTHU3WRF.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "CoreMedia",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreMedia-2SG5KIHOP8W02.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "CoreText",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreText-34G3HRXLDZR5.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "CoreTransferable",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreTransferable-283W6KJL4HRAM.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "CoreVideo",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreVideo-2LNZOWGUCBH8K.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Darwin",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Darwin-23MYGC4F3XP2V.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "DataDetection",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/DataDetection-1APAV4EY6GKYS.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "DeveloperToolsSupport",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/DeveloperToolsSupport-27W5FS15HOZXI.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Dispatch",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Dispatch-12V9KML2WQFSS.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "Foundation",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Foundation-1PM0LPOIWJ216.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "IOKit",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/IOKit-1TJVYN4QX2B6K.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "ImageIO",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ImageIO-26DC6QAWNCFID.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Metal",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Metal-331VH8EBB2XO4.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "OSLog",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/OSLog-3G2G91H45R31P.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "ObjectiveC",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ObjectiveC-3H72NGIRLVG1Q.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Observation",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Observation-G8AN6JCS2SGU.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "QuartzCore",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/QuartzCore-17CLY696J2HGD.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Spatial",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Spatial-1KOH5DGE0UPK6.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Swift",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Swift-D082PAOOKWM.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "SwiftOnoneSupport",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/SwiftOnoneSupport-2NZQK4BU7T2FJ.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "SwiftUI",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/SwiftUI-34F0TPBS7MF82.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "SwiftUICore",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/SwiftUICore-15N5AZRWUWQKH.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "Symbols",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Symbols-2A4BZ5XLDQ8X6.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Synchronization",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Synchronization-39KM1PZ9Q7N4D.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "System",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/System-DJNCXQF8FDBL.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "UniformTypeIdentifiers",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/UniformTypeIdentifiers-TVE3LGC88I70.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "XPC",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/XPC-Z7EKLLHFQ9CT.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_Builtin_float",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_float-2912BCQ472M8Y.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_Concurrency",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Concurrency-2EJQVLQBEHJUI.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation1",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_DarwinFoundation1-WJJ8FY61BYMK.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation2",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_DarwinFoundation2-2JL5R6D4O4VMB.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation3",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_DarwinFoundation3-8UQ7T67PIU3B.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_StringProcessing",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_StringProcessing-6KBAWPKYIMGT.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "os",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/os-2JXEZRACL9R86.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "simd",
+    "modulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/simd-3S33T420NQ5N.swiftmodule"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/Accessibility.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Accessibility-388B7Q4ZM76Z7QPMFRI130LNP.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Accessibility"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/AppKit.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/AppKit-AF9KU38OJMHSYVWV88W4Y1GD1.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "AppKit"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/ApplicationServices.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ApplicationServices-9Y5XVIEUVSCCARBHIZ4VHGF0E.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ApplicationServices"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CFNetwork.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CFNetwork-9B4GDX09G73U4A6IS4CPKWFRE.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CFNetwork"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/cups.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CUPS-CCXODWU17IHYWE5KEZGVI69J7.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CUPS"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/ColorSync.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ColorSync-6H7J1LXHP7UM2J7UH5NBPWQ5E.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ColorSync"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreAudio.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreAudio-C1W9WFQ399MT225USGN0X4Z0V.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreAudio"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreAudioTypes.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreAudioTypes-FEXTQ1TLJX9RK0QJDA6HZTL7.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreAudioTypes"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreData.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreData-BS2KAKTU52R2J5GAAGJZSGAHF.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreData"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreFoundation.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreFoundation-6B1H3V021W8Y6MJJZFF4PDXZS.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreFoundation"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreGraphics.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreGraphics-4HQ0VHWZ44WRO0VJNDVF1ZA98.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreGraphics"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreImage.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreImage-ARRZG5TCTQLZSFUD6FZ0HS5D0.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreImage"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreMedia.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreMedia-5V61GPO4AWX590JI4R2Q4XAIK.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreMedia"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreServices.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreServices-8G5T4W6H19I77UJT4KSQS3TTA.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreServices"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreText.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreText-4MZOMMXF2K8OXDJ1IVBCYAQ09.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreText"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreTransferable.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreTransferable-79LWL8346YW0JMOVLRU37IJP7.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreTransferable"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/CoreVideo.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/CoreVideo-5G8W6ALOAEE76L64U1TAXGE53.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreVideo"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/Darwin.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Darwin-7TAEIJYIHS2FXG2OS0YJ76N74.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Darwin"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/DataDetection.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/DataDetection-3SCHP0W0VJOX0RZKREKQ9OEQZ.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "DataDetection"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/DeveloperToolsSupport.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/DeveloperToolsSupport-3FVDRV5PG9FGIXB4O231BLNXR.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "DeveloperToolsSupport"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/DiskArbitration.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/DiskArbitration-D1S0BIBKRATERA2T87M67GMTX.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "DiskArbitration"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/dispatch.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Dispatch-82EF72PNUCZ0QW6ZJJVDXBT7T.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Dispatch"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Foundation-6RCAF0VQ4Z0ZPK9PCZBP8QI0D.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Foundation"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/IOKit.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/IOKit-DNDM7LF4ESHNWKFQQBNWO2PXW.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "IOKit"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/IOSurface.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/IOSurface-5FPICA6QNQQIBSW623SWPXLOR.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "IOSurface"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/ImageIO.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ImageIO-9PMU292TG82P1VJYMLXOZ2EVB.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ImageIO"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/DarwinBasic.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/MachO-1S0BHAOBWCE7DOBXWU4VU9NU5.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "MachO"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/Metal.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Metal-DWQVKI7PYFBJLWU0LPRS9EN8L.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Metal"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/OSLog.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/OSLog-QJG5HN8EPGFTXTXL5FJC8EE3.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "OSLog"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/ObjectiveC.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ObjectiveC-AAOLG54R64J8L2D49O9O1EGJQ.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ObjectiveC"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/OpenGL.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/OpenGL-3EK0L47109F7N3RYKSWKUHFFG.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "OpenGL"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/QuartzCore.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/QuartzCore-9E4F3TQO3T68PKZAE1I6D4M91.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "QuartzCore"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/Security.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Security-AYCZ12PVJDCPM7M9F2I2A15U9.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Security"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/Spatial\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Spatial-BG1WC31KCRT6OCU556XC6Y3PO.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Spatial"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/lib\/swift\/shims\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/SwiftShims-2LV6GA4R8WRR879YE6QQNHN26.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "SwiftShims"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/SwiftUI.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/SwiftUI-B9HBEVWHQ2AA1R4BD0QT8IO6R.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "SwiftUI"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/SwiftUICore.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/SwiftUICore-CK2RKKFFQVRKKXIZ5YZR24S4Y.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "SwiftUICore"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/Symbols.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/Symbols-2Z2SY7MBO9X4Z9HL6OPIQ0NBG.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Symbols"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/System\/Library\/Frameworks\/UniformTypeIdentifiers.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/UniformTypeIdentifiers-7Z2MGN27XZ15DTCLDMFAOU7YP.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "UniformTypeIdentifiers"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/xpc.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/XPC-16V59ES6JRXZF562E7FYNLWNE.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "XPC"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/DarwinFoundation1.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_AvailabilityInternal-DVDGJ4YJTZZZRKZVPUDTS646Z.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_AvailabilityInternal"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_float-ELZS7EH6B9NO2GF5YJJBV965M.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_float"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_intrinsics-CMDBQJP261U17Z9YRY9OT5ZSG.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_intrinsics"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_inttypes-901DPQ8NXWI4RXHBFHF4B9S79.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_inttypes"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_limits-9K6A61XW1IP6FSRC7UFWPCVYL.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_limits"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_stdarg-3B2M23BCCIPQ10LDQM74QQIRY.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdarg"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_stdatomic-9ZEHBRKBH6E933U4KK09ND8L6.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdatomic"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_stdbool-EPLCI9T3A8T8BFUEJWCZ47FWL.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdbool"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_stddef-EJZ41D3CWJUVYEMJJDAN2XUXQ.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stddef"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_stdint-5ZH2H1XRW6VCR09AX6MKZT7RW.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdint"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_Builtin_tgmath-7NRFBZIXXMYQ13F8LJM0XCV5E.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_tgmath"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/DarwinFoundation1.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_DarwinFoundation1-8U8PUUDAUR0G89JD2Y68NMTQ3.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation1"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/DarwinFoundation2.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_DarwinFoundation2-7ZT6LT1PGTW2QFW382YEAKSA1.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation2"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/DarwinFoundation3.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_DarwinFoundation3-CLPGTJCF63LOGSH00ZZ3QGSKT.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation3"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/lib\/swift\/shims\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/_SwiftConcurrencyShims-7CC3UA1LL4OWHYPWT7CYP9MRF.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_SwiftConcurrencyShims"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/launch.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/launch-B8KPEYQC7MXW4DUR8Q6N6AJXB.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "launch"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/libDER\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/libDER-8F974BC78WJUQ8USZX2GY2HF4.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "libDER"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/libkern.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/libkern-CU0BDBSDQOZ9Y3WNH71S6Z8R6.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "libkern"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/os.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/os-36A9S68JNIPD9CZFRCJ5WHB8Z.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "os"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/os.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/os_object-C1YRJ4IZ6JGPJO1JANROA9V65.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "os_object"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/os.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/os_workgroup-4CNNYB2B5WJZ2MJVF07BTB5ED.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "os_workgroup"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ptrauth-3YK4A1KLDK90285PLNB44TT9.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ptrauth"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/ptrcheck-62T197GOBKM4ZLGJN2QOXR15X.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ptrcheck"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/simd\/module.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/simd-AZMJUVDIT9PSA50Q6FLI6UDJ8.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "simd"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/c_standard_library.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/string_h-1754DA1Q7XHWXFYT9OQQQBXH1.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "string_h"
+  },
+  {
+    "clangModuleMapPath" : "\/Library\/Developer\/CommandLineTools\/SDKs\/MacOSX27.0.sdk\/usr\/include\/DarwinFoundation2.modulemap",
+    "clangModulePath" : "\/Users\/raman\/Desktop\/AI\/Sutra\/apps\/sutra-ios\/.build\/out\/SDKExplicitPrecompiledModules\/sys_types-1RK1RNSGEGANOYD1MBZGF25VC.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "sys_types"
+  }
+]

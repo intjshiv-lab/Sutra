@@ -1,0 +1,59 @@
+{
+  "" : {
+    "diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOS-primary.dia",
+    "emit-module-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOS-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOS-primary-emit-module.dia",
+    "pch" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOS-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOS-primary.swiftdeps"
+  },
+  "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/Sources/SutraIOS/Bridge/SutraIOSBridge.swift" : {
+    "const-values" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.swiftconstvalues",
+    "dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.d",
+    "diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.dia",
+    "index-unit-output-path" : "/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.o",
+    "llvm-bc" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.bc",
+    "object" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.o",
+    "swift-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge.swiftdeps",
+    "swiftmodule" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraIOSBridge~partial.swiftmodule"
+  },
+  "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/Sources/SutraIOS/LiveActivity/SutraLiveActivity.swift" : {
+    "const-values" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.swiftconstvalues",
+    "dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.d",
+    "diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.dia",
+    "index-unit-output-path" : "/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.o",
+    "llvm-bc" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.bc",
+    "object" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.o",
+    "swift-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity.swiftdeps",
+    "swiftmodule" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraLiveActivity~partial.swiftmodule"
+  },
+  "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/Sources/SutraIOS/SutraApp.swift" : {
+    "const-values" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.swiftconstvalues",
+    "dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.d",
+    "diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.dia",
+    "index-unit-output-path" : "/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.o",
+    "llvm-bc" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.bc",
+    "object" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.o",
+    "swift-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp.swiftdeps",
+    "swiftmodule" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SutraApp~partial.swiftmodule"
+  },
+  "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/Sources/SutraIOS/Views/QuickCueSheet.swift" : {
+    "const-values" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.swiftconstvalues",
+    "dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.d",
+    "diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.dia",
+    "index-unit-output-path" : "/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.o",
+    "llvm-bc" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.bc",
+    "object" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.o",
+    "swift-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet.swiftdeps",
+    "swiftmodule" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/QuickCueSheet~partial.swiftmodule"
+  },
+  "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/Sources/SutraIOS/Views/SanctuaryView.swift" : {
+    "const-values" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.swiftconstvalues",
+    "dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.d",
+    "diagnostics" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.dia",
+    "index-unit-output-path" : "/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.o",
+    "llvm-bc" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.bc",
+    "object" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.o",
+    "swift-dependencies" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView.swiftdeps",
+    "swiftmodule" : "/Users/raman/Desktop/AI/Sutra/apps/sutra-ios/.build/out/Intermediates.noindex/SutraIOS.build/Debug/SutraIOS-t.build/Objects-normal/arm64/SanctuaryView~partial.swiftmodule"
+  }
+}

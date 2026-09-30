@@ -1,0 +1,16 @@
+[package]
+name = "sutra-sync"
+version = "0.1.0"
+edition = "2024"
+description = "Local-first P2P CRDT sync engine for Sutra — mDNS discovery, LWW merge, TCP transport"
+
+[dependencies]
+sutra-core = { path = "../sutra-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "net", "sync", "time", "io-util"] }
+uuid = { version = "1", features = ["v4"] }
+
+# ponytail: XChaCha20 mutual TLS + mDNS crate deferred — add when QR pairing UI is built
+# mdns-sd = "0.10"
+# chacha20poly1305 = "0.10"

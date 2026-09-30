@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "crates/sutra-core",
+    "crates/sutra-cli",
+    "crates/sutra-sync",
+    "crates/sutra-voice",
+    "crates/sutra-ffi",
+]
+resolver = "2"

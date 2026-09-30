@@ -1,0 +1,143 @@
+name: Multiplatform Release (macOS, Windows, iOS)
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # 1. Build macOS Native DMG
+  build-macos:
+    name: 🍏 Build macOS DMG
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build macOS App & DMG
+        run: |
+          cargo build --release -p sutra-cli
+          mkdir -p bin
+          cp -f target/release/sutra bin/sutra
+          chmod +x bin/sutra
+          swift build -c release --package-path apps/sutra-macos
+          mkdir -p bin/Sutra.app/Contents/MacOS
+          cp -f apps/sutra-macos/.build/release/SutraMac bin/Sutra.app/Contents/MacOS/SutraMac
+          chmod +x ./scripts/package-dmg.sh || true
+          bash ./scripts/package-dmg.sh
+      - name: Upload macOS DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sutra-macOS-Installer
+          path: dist/Sutra-Installer.dmg
+
+  # 2. Build Windows Standalone WinUI 3
+  build-windows:
+    name: 🪟 Build Windows 11 WinUI 3
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - name: Build Rust FFI DLL
+        run: |
+          cargo build --release -p sutra-ffi --target x86_64-pc-windows-msvc
+          if (Test-Path "target/x86_64-pc-windows-msvc/release/sutra_ffi.dll") {
+            Copy-Item "target/x86_64-pc-windows-msvc/release/sutra_ffi.dll" "apps/sutra-windows/sutra_ffi.dll" -Force
+          } elseif (Test-Path "target/release/sutra_ffi.dll") {
+            Copy-Item "target/release/sutra_ffi.dll" "apps/sutra-windows/sutra_ffi.dll" -Force
+          }
+      - name: Build WinUI 3 Standalone via MSBuild
+        run: |
+          msbuild apps/sutra-windows/SutraWindows.csproj -restore -p:Configuration=Release -p:Platform=x64 -p:WindowsPackageType=None -p:OutDir=../../dist/windows/
+          cd dist
+          Compress-Archive -Path windows/* -DestinationPath Sutra-Windows-x64.zip -Force
+      - name: Upload Windows Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sutra-Windows-x64
+          path: dist/Sutra-Windows-x64.zip
+
+  # 3. Build iOS / iPadOS Package
+  build-ios:
+    name: 📱 Build iOS / iPadOS
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dynamically Resolve and Select Xcode
+        run: |
+          XCODE_APP=$(find /Applications -maxdepth 1 -name "Xcode*.app" | sort -V | tail -n 1)
+          if [ -n "$XCODE_APP" ]; then
+            echo "Selected Xcode: $XCODE_APP"
+            sudo xcode-select -s "$XCODE_APP"
+          fi
+          xcodebuild -version 2>/dev/null || echo "Using system Swift toolchain"
+      - name: Build iOS Package
+        run: |
+          chmod +x ./scripts/build-ios.sh || true
+          bash ./scripts/build-ios.sh
+          mkdir -p dist/ios
+          cd dist
+          zip -r Sutra-iOS.zip ios/
+      - name: Upload iOS Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sutra-iOS
+          path: dist/Sutra-iOS.zip
+
+  # 4. Automated Multiplatform Release Publishing
+  publish-release:
+    name: 🚀 Publish GitHub Release
+    needs: [build-macos, build-windows, build-ios]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download macOS DMG
+        uses: actions/download-artifact@v4
+        with:
+          name: Sutra-macOS-Installer
+          path: release-binaries
+
+      - name: Download Windows Executable
+        uses: actions/download-artifact@v4
+        with:
+          name: Sutra-Windows-x64
+          path: release-binaries
+
+      - name: Download iOS Package
+        uses: actions/download-artifact@v4
+        with:
+          name: Sutra-iOS
+          path: release-binaries
+
+      - name: Create or Update GitHub Release v1.1.0
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.1.0
+          name: "Sutra v1.1.0 — Sovereign Multiplatform Release"
+          body: |
+            ### 🧵 Sutra v1.1.0 Sovereign Multiplatform Release
+            
+            Zero-bloat native binaries compiled automatically in the cloud:
+            - **macOS:** `Sutra-Installer.dmg` (3.2 MB DMG, native Swift AppKit companion + embedded Rust engine).
+            - **Windows 11:** `Sutra-Windows-x64.zip` (Standalone portable unpackaged WinUI 3 with embedded Rust FFI).
+            - **iOS / iPadOS:** `Sutra-iOS.zip` (SwiftUI Multi-Surface framework).
+          draft: false
+          prerelease: false
+          files: |
+            release-binaries/Sutra-Installer.dmg
+            release-binaries/Sutra-Windows-x64.zip
+            release-binaries/Sutra-iOS.zip
