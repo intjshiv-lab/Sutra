@@ -1,6 +1,6 @@
 [package]
 name = "sutra-desktop"
-version = "0.2.0"
+version = "1.2.0"
 edition = "2024"
 authors = ["Ramesh Choudhary"]
 description = "Sovereign OS-Agnostic Desktop Attention Hub for Sutra"

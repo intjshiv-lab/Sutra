@@ -123,17 +123,17 @@ jobs:
           name: Sutra-iOS
           path: release-binaries
 
-      - name: Create or Update GitHub Release v1.1.0
+      - name: Create or Update GitHub Release v1.2.0
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.1.0
-          name: "Sutra v1.1.0 — Sovereign Multiplatform Release"
+          tag_name: v1.2.0
+          name: "Sutra v1.2.0 — Sovereign Multiplatform Release (Jet Matte Black Craft Edition)"
           body: |
-            ### 🧵 Sutra v1.1.0 Sovereign Multiplatform Release
+            ### 🧵 Sutra v1.2.0 Sovereign Multiplatform Release (Jet Matte Black Craft Edition)
             
             Zero-bloat native binaries compiled automatically in the cloud:
-            - **macOS:** `Sutra-Installer.dmg` (3.2 MB DMG, native Swift AppKit companion + embedded Rust engine).
-            - **Windows 11:** `Sutra-Windows-x64.zip` (Standalone portable unpackaged WinUI 3 with embedded Rust FFI).
+            - **macOS:** `Sutra-Installer.dmg` (Native Swift AppKit Companion with Steve Jobs Jet Matte Black aesthetic, 12pt dynamic grab handle, and embedded Rust engine).
+            - **Windows 11:** `Sutra-Windows-x64.zip` (Standalone portable unpackaged WinUI 3 with embedded Rust FFI and auto-launch support).
             - **iOS / iPadOS:** `Sutra-iOS.zip` (SwiftUI Multi-Surface framework).
           draft: false
           prerelease: false

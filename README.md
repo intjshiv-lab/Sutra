@@ -7,9 +7,9 @@
 
 **Eliminate the 23-minute resumption lag. Capture working memory in < 2 seconds. Restore your exact physical workspace with 1 click.**
 
-[![Release](https://img.shields.io/badge/Release-v1.1%20Sovereign-b3562a.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
-[![macOS DMG](https://img.shields.io/badge/macOS%20DMG-3.2%20MB-blue.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
-[![Windows 11](https://img.shields.io/badge/Windows%2011-WinUI%203%20Native%20AOT-0078d4.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
+[![Release](https://img.shields.io/badge/Release-v1.2.0%20Sovereign%20Jet%20Matte%20Black-09090b.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
+[![macOS DMG](https://img.shields.io/badge/macOS%20DMG-v1.2.0%20AppKit-blue.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
+[![Windows 11](https://img.shields.io/badge/Windows%2011-NSIS%20.exe%20%7C%20WinUI%203-0078d4.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
 [![iOS / iPadOS](https://img.shields.io/badge/iOS%20%2F%20iPadOS-SwiftUI%20Multi--Surface-000000.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
 [![Idle RAM](https://img.shields.io/badge/Idle%20RAM-14.2%20MB-2ea44f.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
 [![Storage](https://img.shields.io/badge/Storage-100%25%20Offline%20SQLite%20WAL-2ea44f.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
@@ -17,9 +17,9 @@
 
 <br />
 
-### 📥 Instant 1-Click Multiplatform Downloads
+### 📥 Instant 1-Click Multiplatform Downloads (v1.2.0)
 
-[🍏 **Download macOS DMG (3.2 MB)**](https://github.com/intjshiv-lab/Sutra/releases/download/v1.1.0/Sutra-Installer.dmg) &nbsp;|&nbsp; [🪟 **Download Windows 11 (~14 MB)**](https://github.com/intjshiv-lab/Sutra/releases/download/v1.1.0/Sutra-Windows-x64.zip) &nbsp;|&nbsp; [📱 **Download iOS Package**](https://github.com/intjshiv-lab/Sutra/releases/download/v1.1.0/Sutra-iOS.zip)
+[🍏 **Download macOS DMG (v1.2.0)**](https://github.com/intjshiv-lab/Sutra/releases/download/v1.2.0/Sutra-Installer.dmg) &nbsp;|&nbsp; [🪟 **Download Windows 11 NSIS .exe / Zip**](https://github.com/intjshiv-lab/Sutra/releases/download/v1.2.0/Sutra-Windows-x64.zip) &nbsp;|&nbsp; [📱 **Download iOS Package**](https://github.com/intjshiv-lab/Sutra/releases/download/v1.2.0/Sutra-iOS.zip)
 
 <br />
 
@@ -133,9 +133,23 @@ Sutra strictly rejects Electron, Chromium runtimes, Node.js sidecars, and web wr
 
 | Platform | Native Technology Stack | Binary Size | Idle RAM | Architectural Highlights |
 | :--- | :--- | :--- | :--- | :--- |
-| **macOS** | Swift / AppKit Companion + Rust Engine | **3.2 MB DMG** | **14.2 MB** | Menu Bar Sutra icon, 504px Studio Obsidian HUD, Native Apple Accessibility Context Sniffer. |
-| **Windows 11** | C# .NET 9 Native AOT + WinUI 3 + Rust FFI | **~14 MB .exe** | **22.0 MB** | Standalone single `.exe` (no .NET runtime installation required), DesktopAcrylic backdrop blur, Windows UIAutomation sniffer. |
-| **iPadOS & iOS** | SwiftUI Multi-Surface Framework | **~4.0 MB** | **Minimal** | Stage Manager support, Magic Keyboard shortcuts (<kbd>⌘⌥Space</kbd>), Share Sheet Extension, Lock Screen & Dynamic Island Live Activity. |
+| **macOS (Native)** | Swift / AppKit Companion + Rust Engine | **3.2 MB DMG** | **14.2 MB** | Menu Bar Sutra icon, Jet Matte Black HUD, 12pt dynamic vertical grab handle, Apple Accessibility Context Sniffer. |
+| **Windows 11 (Agnostic)** | Rust 2024 + Tauri 2.0 / WinUI 3 + Native AOT | **~8–14 MB .exe** | **18–22 MB** | Standalone NSIS single-click `.exe` installer, 3-step gated permissions wizard, Registry Auto-Start (`HKCU\Run`), Win32 UIAutomation sniffer. |
+| **Linux (X11 / Wayland)** | Rust 2024 + WebKitGTK / Slint | **~6.5 MB** | **16.0 MB** | Frameless transparent window, libappindicator tray, low-level global shortcut dispatcher. |
+| **iPadOS & iOS** | SwiftUI Multi-Surface Framework | **~4.0 MB** | **Minimal** | Stage Manager support, Magic Keyboard shortcuts (<kbd>⌘⌥Space</kbd>), Share Sheet Extension, Lock Screen Live Activity. |
+
+---
+
+## 🪟 Windows Standalone `.exe` Installation & Gated Permissions
+
+Sutra for Windows is built for frictionless end-user distribution with zero technical friction:
+
+1. **Single-Click NSIS Installer:** The user downloads `Sutra_1.2.0_x64-setup.exe` directly from [GitHub Actions Releases](https://github.com/intjshiv-lab/Sutra/releases). No terminal commands, no prerequisites, and no source code exposure.
+2. **First-Run Gated Permission Flow:** Upon first launch, Sutra displays an Apple-grade 3-step permission modal:
+   - **Step 1: Background & Auto-Launch:** Registers Sutra silently in the Windows Startup Registry (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`) so cognitive threads wake in `< 5ms`.
+   - **Step 2: Context Sniffing:** Enables Win32 foreground window tracking to associate open files, browser tabs, and VS Code workspaces with attention cues.
+   - **Step 3: Keyboard Mastery:** Confirms global hotkeys (`Alt+Space` for Quick Cue, `Alt+S` for Sanctuary, `Alt+A` for Wake Bar).
+3. **Automated Cloud Builds:** Every push to `main` triggers [.github/workflows/build-windows.yml](.github/workflows/build-windows.yml) on GitHub's native `windows-latest` runner to compile signed release installers.
 
 ---
 
@@ -214,6 +228,14 @@ Modern software increasingly acts as spyware masquerading as productivity tools.
 > - **Zero Cloud Telemetry:** Sutra contains no Google Analytics, no Mixpanel, no PostHog, and no network pingbacks. It makes zero HTTP requests upon boot, runtime, or capture.
 > - **Local-First SQLite WAL:** All your tasks, notes, window states, and context history reside in an open, standard SQLite database at `~/.sutra/sutra.db`. You own your data forever.
 > - **Zero Mandatory Subscriptions:** No cloud lock-in. No remote kill-switches. No proprietary cloud file formats.
+
+## 🏷️ Release History & Version Matrix
+
+| Version | Status | Key Milestones & Capabilities |
+| :--- | :--- | :--- |
+| **v1.2.0** *(Current)* | 🟢 **Stable** | • **Steve Jobs "Jet Matte Black Craft" Aesthetic:** Unified `#09090b` palette, subtle micro-noise texture, pure white typography, and complete emoji removal.<br/>• **Dynamic Resizing Engine:** 12pt grab handle strip in Sanctuary & Floating Wake Bar with continuous dragging and 460pt/680pt double-click toggle.<br/>• **Right Option Single-Tap Trigger:** Spacebar completely freed; single physical tap of Right Option opens Quick Cue in `< 10ms`.<br/>• **OS-Agnostic Desktop Engine (`crates/sutra-desktop`):** Tauri 2.0 Rust engine with 3-step gated onboarding wizard for Windows/Linux.<br/>• **Automated Windows CI:** GitHub Actions workflow compiling standalone NSIS `.exe` installers in the cloud. |
+| **v1.1.0** | ⚪ Archive | • Standalone Native AOT WinUI 3 companion for Windows 11.<br/>• iOS Live Activity & Dynamic Island surface.<br/>• P2P encrypted synchronizer prototype (`crates/sutra-sync`). |
+| **v1.0.0** | ⚪ Archive | • Initial sovereign offline SQLite engine with WAL mode (`crates/sutra-core`).<br/>• Native Swift AppKit companion with menu bar HUD. |
 
 ---
 
