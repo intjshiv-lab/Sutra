@@ -44,11 +44,11 @@ public struct SutraThread: Codable, Identifiable {
 
     public var cueIcon: String {
         switch cue_type.lowercased() {
-        case "checklist": return "✅"
-        case "url", "link": return "🔗"
-        case "file": return "📁"
-        case "voice": return "🎙️"
-        default: return "📝"
+        case "checklist": return "✓"
+        case "url", "link": return "↗"
+        case "file": return "▤"
+        case "voice": return "●"
+        default: return "—"
         }
     }
 
@@ -81,15 +81,17 @@ public struct SutraThread: Codable, Identifiable {
         switch cue_type.lowercased() {
         case "checklist":
             let items = checklistItems
-            if items.isEmpty { return ("✅ Checklist", nil) }
+            if items.isEmpty { return ("Checklist", nil) }
             let completed = items.filter { $0.isDone }.count
-            return ("✅ Checklist", "\(completed)/\(items.count)")
+            return ("Checklist", "\(completed)/\(items.count)")
         case "url", "link":
-            return ("🔗 Link", nil)
+            return ("Link", nil)
         case "file":
-            return ("📁 File", nil)
+            return ("File", nil)
+        case "voice":
+            return ("Voice", nil)
         default:
-            return ("📝 Note", nil)
+            return ("Note", nil)
         }
     }
 
@@ -106,7 +108,7 @@ public struct SutraThread: Codable, Identifiable {
     public var originDisplay: String {
         var parts: [String] = []
         if let app = anchor?.app_name, !app.isEmpty {
-            parts.append("📍 \(app)")
+            parts.append(app)
         }
         if let url = anchor?.url, let host = URL(string: url)?.host {
             parts.append(host)

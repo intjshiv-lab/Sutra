@@ -70,10 +70,10 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         card = NSView(frame: panel.contentView!.bounds)
         card.autoresizingMask = [.width, .height]
         card.wantsLayer = true
-        card.layer?.backgroundColor = NSColor(calibratedRed: 0.10, green: 0.10, blue: 0.12, alpha: 1.0).cgColor
+        card.layer?.backgroundColor = NSColor(calibratedWhite: 0.05, alpha: 0.98).cgColor
         card.layer?.cornerRadius = 16
         card.layer?.masksToBounds = true
-        card.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
+        card.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
         card.layer?.borderWidth = 1.0
 
         // ==========================================
@@ -90,16 +90,16 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let headerLabel = NSTextField(labelWithString: "Sutra Cue")
         headerLabel.frame = NSRect(x: 56, y: headerY + 8, width: 92, height: 20)
         headerLabel.font = NSFont.systemFont(ofSize: 12, weight: .bold)
-        headerLabel.textColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0)
+        headerLabel.textColor = NSColor(calibratedWhite: 0.98, alpha: 1.0)
         card.addSubview(headerLabel)
 
         // Dynamic Active App Identity Pill (Center-Right)
         let pillW: CGFloat = w - 195
         pillContainer = NSView(frame: NSRect(x: 152, y: headerY + 6, width: pillW, height: 26))
         pillContainer.wantsLayer = true
-        pillContainer.layer?.backgroundColor = NSColor(calibratedWhite: 0.14, alpha: 1.0).cgColor
+        pillContainer.layer?.backgroundColor = NSColor(calibratedWhite: 0.10, alpha: 1.0).cgColor
         pillContainer.layer?.cornerRadius = 13
-        pillContainer.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
+        pillContainer.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
         pillContainer.layer?.borderWidth = 1.0
 
         // Active App Icon
@@ -132,7 +132,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         closeBtn.font = NSFont.systemFont(ofSize: 11, weight: .medium)
         closeBtn.isBordered = false
         closeBtn.wantsLayer = true
-        closeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.2, alpha: 0.6).cgColor
+        closeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 0.8).cgColor
         closeBtn.layer?.cornerRadius = 11
         card.addSubview(closeBtn)
 
@@ -145,7 +145,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let actionLabel = NSTextField(labelWithString: "Immediate Next Action")
         actionLabel.frame = NSRect(x: contentX, y: h - 76, width: contentW, height: 16)
         actionLabel.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        actionLabel.textColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0)
+        actionLabel.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         card.addSubview(actionLabel)
 
         titleField = createInputField(
@@ -154,8 +154,8 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
             fontSize: 13,
             weight: .medium
         )
-        titleField.layer?.borderColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.4).cgColor
-        titleField.layer?.backgroundColor = NSColor(calibratedWhite: 0.14, alpha: 0.85).cgColor
+        titleField.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
+        titleField.layer?.backgroundColor = NSColor(calibratedWhite: 0.08, alpha: 0.95).cgColor
         titleField.delegate = self
         card.addSubview(titleField)
 
@@ -179,14 +179,14 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let tabsContainer = NSView(frame: NSRect(x: contentX, y: 11, width: 236, height: 26))
 
         let tabs = [
-            ("note", "📝 Note"),
-            ("checklist", "✅ Checklist"),
-            ("link", "🔗 Link"),
-            ("file", "📁 File")
+            ("note", "Note"),
+            ("checklist", "Checklist"),
+            ("link", "Link"),
+            ("file", "File")
         ]
         var tabX: CGFloat = 0
         for (key, title) in tabs {
-            let btnWidth: CGFloat = key == "checklist" ? 72 : (key == "note" ? 52 : 48)
+            let btnWidth: CGFloat = key == "checklist" ? 64 : (key == "note" ? 46 : 42)
             let btn = NSButton(frame: NSRect(x: tabX, y: 1, width: btnWidth, height: 24))
             btn.isBordered = false
             btn.wantsLayer = true
@@ -234,11 +234,13 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let submitBtn = ClosureButton(frame: NSRect(x: w - 96, y: 11, width: 86, height: 26)) { [weak self] in
             self?.submit()
         }
-        submitBtn.title = "Leave Thread ↩"
-        submitBtn.font = NSFont.systemFont(ofSize: 10, weight: .bold)
+        submitBtn.attributedTitle = NSAttributedString(string: "Leave Thread ↩", attributes: [
+            .foregroundColor: NSColor(calibratedWhite: 0.05, alpha: 1.0),
+            .font: NSFont.systemFont(ofSize: 10, weight: .bold)
+        ])
         submitBtn.isBordered = false
         submitBtn.wantsLayer = true
-        submitBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0).cgColor
+        submitBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 1.0).cgColor
         submitBtn.layer?.cornerRadius = 13
         card.addSubview(submitBtn)
 
@@ -253,7 +255,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let heading = NSTextField(labelWithString: "Context / Reason")
         heading.frame = NSRect(x: 0, y: 80, width: width, height: 16)
         heading.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        heading.textColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0)
+        heading.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         noteView.addSubview(heading)
 
         notesField = createInputField(
@@ -274,7 +276,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let heading = NSTextField(labelWithString: "Checklist")
         heading.frame = NSRect(x: 0, y: 80, width: width, height: 16)
         heading.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        heading.textColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0)
+        heading.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         checklistView.addSubview(heading)
 
         let rowH: CGFloat = 23
@@ -314,7 +316,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let label = NSTextField(labelWithString: "Reference Web Link")
         label.frame = NSRect(x: 0, y: 80, width: width, height: 16)
         label.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        label.textColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0)
+        label.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         linkView.addSubview(label)
 
         linkField = createInputField(
@@ -333,7 +335,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         let label = NSTextField(labelWithString: "Attached File / Directory")
         label.frame = NSRect(x: 0, y: 80, width: width, height: 16)
         label.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        label.textColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0)
+        label.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         fileView.addSubview(label)
 
         fileField = createInputField(
@@ -352,7 +354,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         browseBtn.font = NSFont.systemFont(ofSize: 11, weight: .semibold)
         browseBtn.isBordered = false
         browseBtn.wantsLayer = true
-        browseBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.22, alpha: 0.9).cgColor
+        browseBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 0.9).cgColor
         browseBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
         browseBtn.layer?.borderWidth = 1.0
         browseBtn.layer?.cornerRadius = 8
@@ -402,16 +404,16 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         for (key, btn) in tabButtons {
             let isSelected = (key == selectedCueType)
             if isSelected {
-                btn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0).cgColor
-                btn.layer?.borderColor = NSColor(calibratedRed: 0.98, green: 0.55, blue: 0.25, alpha: 1.0).cgColor
+                btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 1.0).cgColor
+                btn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.25).cgColor
                 btn.layer?.borderWidth = 1.0
                 btn.attributedTitle = NSAttributedString(string: btn.title, attributes: [
-                    .foregroundColor: NSColor.white,
+                    .foregroundColor: NSColor(calibratedWhite: 0.05, alpha: 1.0),
                     .font: NSFont.systemFont(ofSize: 10.5, weight: .bold)
                 ])
             } else {
-                btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
-                btn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
+                btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
+                btn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
                 btn.layer?.borderWidth = 1.0
                 btn.attributedTitle = NSAttributedString(string: btn.title, attributes: [
                     .foregroundColor: NSColor(calibratedWhite: 0.7, alpha: 1.0),
@@ -523,8 +525,8 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
             title = df.string(from: date)
         }
         datePickerBtn.title = title
-        datePickerBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.25).cgColor
-        datePickerBtn.layer?.borderColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.8).cgColor
+        datePickerBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 0.15).cgColor
+        datePickerBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.35).cgColor
     }
 
     private func createInputField(frame: NSRect, placeholder: String, fontSize: CGFloat, weight: NSFont.Weight) -> NSTextField {

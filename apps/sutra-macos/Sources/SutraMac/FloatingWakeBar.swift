@@ -43,10 +43,10 @@ public final class FloatingWakeBar: NSObject {
         visualEffect = NSView(frame: panel.contentView!.bounds)
         visualEffect.autoresizingMask = [.width, .height]
         visualEffect.wantsLayer = true
-        visualEffect.layer?.backgroundColor = NSColor(calibratedRed: 0.10, green: 0.10, blue: 0.12, alpha: 1.0).cgColor
+        visualEffect.layer?.backgroundColor = NSColor(calibratedWhite: 0.05, alpha: 0.98).cgColor
         visualEffect.layer?.cornerRadius = 14
         visualEffect.layer?.masksToBounds = true
-        visualEffect.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
+        visualEffect.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
         visualEffect.layer?.borderWidth = 1.0
 
         containerView = HoverTrackingView(frame: visualEffect.bounds)
@@ -257,11 +257,11 @@ public final class FloatingWakeBar: NSObject {
         titleLabel.cell?.lineBreakMode = .byTruncatingTail
         row.addSubview(titleLabel)
 
-        // Time ago (Amber / Orange)
+        // Time ago (Zinc)
         let timeLabel = NSTextField(labelWithString: thread.timeAgo)
         timeLabel.frame = NSRect(x: 230, y: 7, width: 44, height: 18)
         timeLabel.font = NSFont.systemFont(ofSize: 11.5, weight: .medium)
-        timeLabel.textColor = NSColor(calibratedRed: 0.92, green: 0.55, blue: 0.28, alpha: 1.0)
+        timeLabel.textColor = NSColor(calibratedWhite: 0.70, alpha: 1.0)
         timeLabel.alignment = .right
         row.addSubview(timeLabel)
 
@@ -275,9 +275,9 @@ public final class FloatingWakeBar: NSObject {
         resumeBtn.isBordered = false
         resumeBtn.wantsLayer = true
         resumeBtn.layer?.cornerRadius = 10
-        resumeBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0).cgColor
+        resumeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 1.0).cgColor
         resumeBtn.attributedTitle = NSAttributedString(string: "+ Resume", attributes: [
-            .foregroundColor: NSColor.white,
+            .foregroundColor: NSColor(calibratedWhite: 0.05, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 10.5, weight: .bold)
         ])
         row.addSubview(resumeBtn)
@@ -353,7 +353,7 @@ public final class FloatingWakeBar: NSObject {
         }
         let fallback = NSImage(size: size)
         fallback.lockFocus()
-        NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0).setFill()
+        NSColor(calibratedWhite: 0.95, alpha: 1.0).setFill()
         let path = NSBezierPath(ovalIn: NSRect(origin: .zero, size: size))
         path.fill()
         fallback.unlockFocus()
@@ -438,7 +438,7 @@ final class BottomResizeHandleView: NSView {
     }
 
     override func mouseEntered(with event: NSEvent) {
-        pillLayer.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.95).cgColor
+        pillLayer.backgroundColor = NSColor(calibratedWhite: 0.85, alpha: 0.95).cgColor
     }
 
     override func mouseExited(with event: NSEvent) {
@@ -455,7 +455,7 @@ final class BottomResizeHandleView: NSView {
         isDragging = true
         startMouseScreenY = NSEvent.mouseLocation.y
         startRows = FloatingWakeBar.sessionPreferredVisibleRows
-        pillLayer.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.95).cgColor
+        pillLayer.backgroundColor = NSColor(calibratedWhite: 0.85, alpha: 0.95).cgColor
         onDragStart?()
     }
 
@@ -547,7 +547,7 @@ final class TerracottaScroller: NSScroller {
         var knobRect = rect(for: .knob).insetBy(dx: 2, dy: 1)
         if knobRect.width < 4 { knobRect.size.width = 4 }
         let path = NSBezierPath(roundedRect: knobRect, xRadius: knobRect.width / 2, yRadius: knobRect.width / 2)
-        NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.95).setFill()
+        NSColor(calibratedWhite: 0.80, alpha: 0.85).setFill()
         path.fill()
     }
 }

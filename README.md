@@ -139,14 +139,26 @@ Sutra strictly rejects Electron, Chromium runtimes, Node.js sidecars, and web wr
 
 ---
 
+## 🎨 The Steve Jobs "Jet Matte Black Craft" Aesthetic
+
+Sutra rejects garish colors, cluttered cards, and distracting emojis. Built with pure product craft inspired by Steve Jobs' aesthetic principles:
+
+- **Jet Matte Black Surface:** Deep `#09090b` obsidian ground (`NSColor(calibratedWhite: 0.05, alpha: 0.98)`) with subtle tactile micro-grain. Zero gloss, zero distraction.
+- **Monochrome Pure White Typography:** Clean `#ffffff` primary headlines, `#a1a1aa` secondary metadata, and `#71717a` muted labels. Zero mismatched terracotta accents in Sanctuary or Quick Cue.
+- **Sub-Pixel Hairline Borders:** Razor-sharp 1px `rgba(255, 255, 255, 0.08)` micro-borders with smooth hover interactions.
+- **Zero Emojis:** Replaced all noisy emojis with crisp, distraction-free typographic glyphs (`✓` Checklist, `↗` Link, `▤` File, `●` Voice).
+- **Dynamic Vertical Resizing:** Dedicated 12pt bottom grab handle strip in both Floating Wake Bar and Sanctuary with 60fps continuous dragging and double-click toggle between 460pt and 680pt.
+
+---
+
 ## ⌨️ Global Hotkey Command Center
 
-| Shortcut (macOS) | Shortcut (Windows) | Context | System Behavior |
+| Shortcut (macOS) | Shortcut (Windows) | Trigger Target | System Behavior |
 | :--- | :--- | :--- | :--- |
-| <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>Space</kbd> | <kbd>Win</kbd> + <kbd>Alt</kbd> + <kbd>Space</kbd> | Anywhere | Open **Sutra Cue** HUD (Instant auto-sniff & 2-second capture) |
-| <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>S</kbd> | <kbd>Win</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> | Anywhere | Open **Sutra Sanctuary** Popover with real-time FTS5 search & Today accordion |
-| <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>W</kbd> | <kbd>Win</kbd> + <kbd>Alt</kbd> + <kbd>W</kbd> | Anywhere | Toggle ambient **Floating Wake Bar** anchor |
-| <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>R</kbd> | <kbd>Win</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd> | Anywhere | Soft-restart Sutra companion background daemon |
+| **Right Option (Tap)** or <kbd>⌥ Option</kbd> + <kbd>Space</kbd> | <kbd>Alt</kbd> + <kbd>Space</kbd> | Anywhere | Open **Sutra Cue** HUD (Instant auto-sniff & 2-second capture) |
+| <kbd>⌥ Option</kbd> + <kbd>S</kbd> | <kbd>Alt</kbd> + <kbd>S</kbd> | Anywhere | Open **Sutra Sanctuary** Popover with real-time FTS5 search & Today focus bar |
+| <kbd>⌥ Option</kbd> + <kbd>A</kbd> | <kbd>Alt</kbd> + <kbd>A</kbd> | Anywhere | Toggle ambient **Floating Wake Bar** with vertical drag resize |
+| <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>R</kbd> | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd> | Anywhere | Soft-restart Sutra companion background daemon |
 | <kbd>Esc</kbd> | <kbd>Esc</kbd> | HUD / Popover | Dismiss HUD instantly in `< 10ms` without losing state |
 
 ---

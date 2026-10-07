@@ -49,10 +49,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         visualEffect = NSView(frame: panel.contentView!.bounds)
         visualEffect.autoresizingMask = [.width, .height]
         visualEffect.wantsLayer = true
-        visualEffect.layer?.backgroundColor = NSColor(calibratedRed: 0.10, green: 0.10, blue: 0.12, alpha: 1.0).cgColor
+        visualEffect.layer?.backgroundColor = NSColor(calibratedWhite: 0.05, alpha: 0.98).cgColor
         visualEffect.layer?.cornerRadius = 14
         visualEffect.layer?.masksToBounds = true
-        visualEffect.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
+        visualEffect.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
         visualEffect.layer?.borderWidth = 1.0
 
         containerView = NSView(frame: visualEffect.bounds)
@@ -174,7 +174,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         // 1. Header (y: height - 48 ... height)
         headerView = NSView(frame: NSRect(x: 0, y: height - 48, width: width, height: 48))
         headerView.wantsLayer = true
-        headerView.layer?.backgroundColor = NSColor(calibratedWhite: 0.13, alpha: 1.0).cgColor
+        headerView.layer?.backgroundColor = NSColor(calibratedWhite: 0.07, alpha: 1.0).cgColor
 
         // Logo
         // Logo (Bigger 32x32)
@@ -201,7 +201,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         // Integrated Brand Capsule (Option 1: ● 28 Waiting)
         let countText = NSMutableAttributedString()
         countText.append(NSAttributedString(string: "● ", attributes: [
-            .foregroundColor: NSColor(calibratedRed: 0.88, green: 0.45, blue: 0.18, alpha: 1.0),
+            .foregroundColor: NSColor(calibratedWhite: 0.95, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 7.5, weight: .bold)
         ]))
         countText.append(NSAttributedString(string: "\(allThreads.count) ", attributes: [
@@ -221,8 +221,8 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         let countBadgeBtn = ClosureButton(frame: NSRect(x: pillX, y: pillY, width: pillW, height: pillH)) { }
         countBadgeBtn.isBordered = false
         countBadgeBtn.wantsLayer = true
-        countBadgeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
-        countBadgeBtn.layer?.borderColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.65).cgColor
+        countBadgeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
+        countBadgeBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
         countBadgeBtn.layer?.borderWidth = 1.0
         countBadgeBtn.layer?.cornerRadius = pillH / 2
         countBadgeBtn.attributedTitle = countText
@@ -475,19 +475,19 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
             chip.layer?.cornerRadius = 11
 
             if isSelected {
-                chip.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0).cgColor
-                chip.layer?.borderColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0).cgColor
+                chip.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 1.0).cgColor
+                chip.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.25).cgColor
                 chip.layer?.borderWidth = 1.0
                 chip.attributedTitle = NSAttributedString(string: title, attributes: [
-                    .foregroundColor: NSColor.white,
+                    .foregroundColor: NSColor(calibratedWhite: 0.05, alpha: 1.0),
                     .font: NSFont.systemFont(ofSize: 9.5, weight: .bold)
                 ])
             } else {
-                chip.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
-                chip.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
+                chip.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
+                chip.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
                 chip.layer?.borderWidth = 1.0
                 chip.attributedTitle = NSAttributedString(string: title, attributes: [
-                    .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
+                    .foregroundColor: NSColor(calibratedWhite: 0.75, alpha: 1.0),
                     .font: NSFont.systemFont(ofSize: 9.5, weight: .medium)
                 ])
             }
@@ -558,14 +558,14 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         let titleStr = NSMutableAttributedString(
             string: "Scheduled for Today ",
             attributes: [
-                .foregroundColor: count > 0 ? NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0) : NSColor(calibratedWhite: 0.6, alpha: 1.0),
+                .foregroundColor: count > 0 ? NSColor(calibratedWhite: 0.98, alpha: 1.0) : NSColor(calibratedWhite: 0.6, alpha: 1.0),
                 .font: NSFont.systemFont(ofSize: 11, weight: .bold)
             ]
         )
         let countBadgeStr = NSAttributedString(
             string: "(\(count))  \(chevron)",
             attributes: [
-                .foregroundColor: count > 0 ? NSColor(calibratedRed: 0.9, green: 0.7, blue: 0.5, alpha: 1.0) : NSColor(calibratedWhite: 0.45, alpha: 1.0),
+                .foregroundColor: count > 0 ? NSColor(calibratedWhite: 0.70, alpha: 1.0) : NSColor(calibratedWhite: 0.45, alpha: 1.0),
                 .font: NSFont.systemFont(ofSize: 10.5, weight: .medium)
             ]
         )
@@ -664,7 +664,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         if isTodayAccent {
             let accentBar = NSView(frame: NSRect(x: 0, y: 0, width: 3, height: h))
             accentBar.wantsLayer = true
-            accentBar.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.9).cgColor
+            accentBar.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 0.9).cgColor
             row.addSubview(accentBar)
         }
 
@@ -695,15 +695,15 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         badgeBtn.wantsLayer = true
         badgeBtn.layer?.cornerRadius = 4
         if isExpanded {
-            badgeBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.35).cgColor
-            badgeBtn.layer?.borderColor = NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 0.7).cgColor
+            badgeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.25, alpha: 0.8).cgColor
+            badgeBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.25).cgColor
         } else {
-            badgeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.2, alpha: 0.4).cgColor
-            badgeBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
+            badgeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.15, alpha: 0.6).cgColor
+            badgeBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
         }
         badgeBtn.layer?.borderWidth = 1.0
         badgeBtn.attributedTitle = NSAttributedString(string: badgeText, attributes: [
-            .foregroundColor: isExpanded ? NSColor(calibratedWhite: 0.95, alpha: 1.0) : NSColor(calibratedWhite: 0.88, alpha: 1.0),
+            .foregroundColor: isExpanded ? NSColor(calibratedWhite: 0.98, alpha: 1.0) : NSColor(calibratedWhite: 0.85, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 8.5, weight: .semibold)
         ])
         textContainer.addSubview(badgeBtn)
@@ -730,10 +730,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
             subtitleText = "Checklist (\(done)/\(items.count) done)\(dueTag) · \(thread.timeAgo)"
         case "url", "link":
             let host = URL(string: thread.notes ?? "")?.host ?? "Web Link"
-            subtitleText = "🔗 \(host)\(dueTag) · \(thread.timeAgo)"
+            subtitleText = "\(host)\(dueTag) · \(thread.timeAgo)"
         case "file":
             let name = URL(fileURLWithPath: thread.notes ?? "").lastPathComponent
-            subtitleText = "📁 \(name.isEmpty ? "File" : name)\(dueTag) · \(thread.timeAgo)"
+            subtitleText = "\(name.isEmpty ? "File" : name)\(dueTag) · \(thread.timeAgo)"
         default:
             let n = thread.notes?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             let preview = n.isEmpty ? (thread.anchor?.app_name ?? "General") : n
@@ -760,11 +760,11 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         }
         resumeBtn.isBordered = false
         resumeBtn.wantsLayer = true
-        resumeBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.85).cgColor
+        resumeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 1.0).cgColor
         resumeBtn.layer?.cornerRadius = 4
-        resumeBtn.attributedTitle = NSAttributedString(string: "⚡ Resume", attributes: [
-            .foregroundColor: NSColor.white,
-            .font: NSFont.systemFont(ofSize: 9, weight: .semibold)
+        resumeBtn.attributedTitle = NSAttributedString(string: "Resume", attributes: [
+            .foregroundColor: NSColor(calibratedWhite: 0.05, alpha: 1.0),
+            .font: NSFont.systemFont(ofSize: 9, weight: .bold)
         ])
         row.addSubview(resumeBtn)
 
@@ -807,8 +807,8 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
             let drawerHeight = h - 54
             let drawer = NSView(frame: NSRect(x: 44, y: 6, width: frame.width - 60, height: drawerHeight))
             drawer.wantsLayer = true
-            drawer.layer?.backgroundColor = NSColor(calibratedWhite: 0.14, alpha: 1.0).cgColor
-            drawer.layer?.borderColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.35).cgColor
+            drawer.layer?.backgroundColor = NSColor(calibratedWhite: 0.08, alpha: 1.0).cgColor
+            drawer.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
             drawer.layer?.borderWidth = 1.0
             drawer.layer?.cornerRadius = 6
 
@@ -1003,7 +1003,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         copyBtn.wantsLayer = true
         copyBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.2, alpha: 0.6).cgColor
         copyBtn.layer?.cornerRadius = 4
-        copyBtn.attributedTitle = NSAttributedString(string: "📋 Copy", attributes: [
+        copyBtn.attributedTitle = NSAttributedString(string: "Copy", attributes: [
             .foregroundColor: NSColor(calibratedWhite: 0.9, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 9, weight: .medium)
         ])
@@ -1041,7 +1041,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         }
         let fallback = NSImage(size: size)
         fallback.lockFocus()
-        NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 1.0).setFill()
+        NSColor(calibratedWhite: 0.95, alpha: 1.0).setFill()
         let path = NSBezierPath(ovalIn: NSRect(origin: .zero, size: size))
         path.fill()
         fallback.unlockFocus()
