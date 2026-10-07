@@ -36,13 +36,8 @@ public struct QuickCueSheet: View {
                             Text(opt.rawValue).tag(opt)
                         }
                     }
-                    .onChange(of: scheduleMode) { newOpt in
-                        if newOpt == .pickDate {
-                            showingDatePicker = true
-                        }
-                    }
 
-                    if showingDatePicker || scheduleMode == .pickDate {
+                    if scheduleMode == .pickDate {
                         DatePicker("Date", selection: $selectedDate, displayedComponents: [.date])
                     }
                 }

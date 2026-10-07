@@ -11,7 +11,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     private var chipsContainer: NSView!
     private var scrollView: NSScrollView!
     private var threadListView: NSView!
-    private var countBadgeBtn: NSButton!
+    private var headerView: NSView!
+    private var footerView: NSView!
+    private var bottomDragBar: BottomResizeHandleView!
+    public static var sessionPreferredHeight: CGFloat = 460
     
     private var allThreads: [SutraThread] = []
     private var filteredThreads: [SutraThread] = []
@@ -29,7 +32,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
 
     private func setupPanel() {
         panel = KeyFocusPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 460, height: 460),
+            contentRect: NSRect(x: 0, y: 0, width: 460, height: SanctuaryPopover.sessionPreferredHeight),
             styleMask: [.nonactivatingPanel, .fullSizeContentView, .titled],
             backing: .buffered,
             defer: false
@@ -140,7 +143,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     private func positionPanel(relativeTo button: NSStatusBarButton?) {
         let screen = button?.window?.screen ?? NSScreen.main ?? NSScreen.screens[0]
         let panelWidth: CGFloat = 460
-        let panelHeight: CGFloat = 460
+        let panelHeight: CGFloat = SanctuaryPopover.sessionPreferredHeight
 
         if let btnWindow = button?.window, let btnFrame = button?.frame {
             let btnScreenRect = btnWindow.convertToScreen(btnFrame)
@@ -169,7 +172,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         let height = containerView.bounds.height
 
         // 1. Header (y: height - 48 ... height)
-        let headerView = NSView(frame: NSRect(x: 0, y: height - 48, width: width, height: 48))
+        headerView = NSView(frame: NSRect(x: 0, y: height - 48, width: width, height: 48))
         headerView.wantsLayer = true
         headerView.layer?.backgroundColor = NSColor(calibratedWhite: 0.13, alpha: 1.0).cgColor
 
@@ -215,7 +218,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         let pillW: CGFloat = ceil(countText.size().width) + 18
         let pillY = (48 - pillH) / 2
 
-        countBadgeBtn = ClosureButton(frame: NSRect(x: pillX, y: pillY, width: pillW, height: pillH)) { }
+        let countBadgeBtn = ClosureButton(frame: NSRect(x: pillX, y: pillY, width: pillW, height: pillH)) { }
         countBadgeBtn.isBordered = false
         countBadgeBtn.wantsLayer = true
         countBadgeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
@@ -237,7 +240,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         cueBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.15).cgColor
         cueBtn.layer?.borderWidth = 1.0
         cueBtn.layer?.cornerRadius = 6
-        cueBtn.attributedTitle = NSAttributedString(string: "+ Cue (⌃⌥Space)", attributes: [
+        cueBtn.attributedTitle = NSAttributedString(string: "+ Cue (Right ⌥)", attributes: [
             .foregroundColor: NSColor(calibratedWhite: 0.92, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 9.5, weight: .semibold)
         ])
@@ -296,9 +299,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         containerView.addSubview(chipsScrollView)
         renderChips()
 
-        // 4. Thread List Scroll View (y: 38 ... height - 124)
-        let listHeight = (height - 124) - 38
-        scrollView = NSScrollView(frame: NSRect(x: 0, y: 38, width: width, height: listHeight))
+        // 4. Thread List Scroll View (y: 50 ... height - 124)
+        let footerTotalHeight: CGFloat = 38 + 12
+        let listHeight = (height - 124) - footerTotalHeight
+        scrollView = NSScrollView(frame: NSRect(x: 0, y: footerTotalHeight, width: width, height: listHeight))
         scrollView.drawsBackground = false
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = false
@@ -311,8 +315,8 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
 
         renderThreadList()
 
-        // 5. Footer (y: 0 ... 38)
-        let footerView = NSView(frame: NSRect(x: 0, y: 0, width: width, height: 38))
+        // 5. Footer (y: 12 ... 50)
+        footerView = NSView(frame: NSRect(x: 0, y: 12, width: width, height: 38))
         footerView.wantsLayer = true
         footerView.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
 
@@ -372,6 +376,71 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         footerView.addSubview(quitBtn)
 
         containerView.addSubview(footerView)
+
+        // 6. Bottom Resize Handle Bar (y: 0 ... 12)
+        bottomDragBar = BottomResizeHandleView(frame: NSRect(x: 0, y: 0, width: width, height: 12))
+        var dragStartHeight: CGFloat = SanctuaryPopover.sessionPreferredHeight
+        bottomDragBar.onDragStart = { [weak self] in
+            guard let self = self else { return }
+            dragStartHeight = self.panel.frame.height
+        }
+        bottomDragBar.onPixelDragDelta = { [weak self] deltaY in
+            guard let self = self else { return }
+            self.applyDynamicHeight(dragStartHeight + deltaY)
+        }
+        bottomDragBar.onDragEnd = { [weak self] in
+            guard let self = self else { return }
+            SanctuaryPopover.sessionPreferredHeight = self.panel.frame.height
+        }
+        bottomDragBar.onDoubleClick = { [weak self] in
+            guard let self = self else { return }
+            let screen = self.anchorButton?.window?.screen ?? NSScreen.main ?? NSScreen.screens[0]
+            let maxH = min(720, screen.visibleFrame.height - 40)
+            if self.panel.frame.height > 520 {
+                self.applyDynamicHeight(460)
+            } else {
+                self.applyDynamicHeight(maxH)
+            }
+        }
+        containerView.addSubview(bottomDragBar)
+    }
+
+    private func applyDynamicHeight(_ newHeight: CGFloat) {
+        let screen = anchorButton?.window?.screen ?? NSScreen.main ?? NSScreen.screens[0]
+        let maxAllowed = min(800, max(460, screen.visibleFrame.height - 40))
+        let clampedHeight = max(380, min(maxAllowed, newHeight))
+
+        let width: CGFloat = 460
+        let topY: CGFloat
+        var originX: CGFloat
+        if let btnWindow = anchorButton?.window, let btnFrame = anchorButton?.frame {
+            let btnScreenRect = btnWindow.convertToScreen(btnFrame)
+            originX = btnScreenRect.midX - (width / 2)
+            if originX + width > screen.visibleFrame.maxX - 10 { originX = screen.visibleFrame.maxX - width - 10 }
+            if originX < screen.visibleFrame.minX + 10 { originX = screen.visibleFrame.minX + 10 }
+            topY = btnScreenRect.minY - 8
+        } else {
+            originX = screen.visibleFrame.maxX - width - 20
+            topY = screen.visibleFrame.maxY - 10
+        }
+
+        let originY = topY - clampedHeight
+        panel.setFrame(NSRect(x: originX, y: originY, width: width, height: clampedHeight), display: true)
+        SanctuaryPopover.sessionPreferredHeight = clampedHeight
+
+        // Update layout frames
+        let h = clampedHeight
+        headerView.frame = NSRect(x: 0, y: h - 48, width: width, height: 48)
+        searchField.frame = NSRect(x: 16, y: h - 82, width: width - 32, height: 26)
+        chipsScrollView.frame = NSRect(x: 16, y: h - 116, width: width - 32, height: 26)
+
+        let footerTotalHeight: CGFloat = 50
+        let listHeight = (h - 124) - footerTotalHeight
+        scrollView.frame = NSRect(x: 0, y: footerTotalHeight, width: width, height: listHeight)
+        footerView.frame = NSRect(x: 0, y: 12, width: width, height: 38)
+        bottomDragBar.frame = NSRect(x: 0, y: 0, width: width, height: 12)
+
+        renderThreadList()
     }
 
     // MARK: - Chips Rendering

@@ -1,0 +1,84 @@
+namespace sutra_core {};
+
+/// Anchor context — the precise location where a thread was captured
+dictionary AnchorDTO {
+  string? app_name;
+  string? bundle_id;
+  string? url;
+  string? file_path;
+  i32?    line_number;
+  string? window_title;
+  f64?    timestamp_seconds;
+  i32?    slide_index;
+  string? selected_text;
+};
+
+/// Lightweight thread DTO for cross-language surface
+dictionary ThreadDTO {
+  string     id;
+  string     title;
+  string     notes;
+  string     status;       // "waiting" | "later" | "done"
+  string     cue_type;     // "note" | "checklist" | "link" | "file" | "voice"
+  i64        created_at;
+  i64        updated_at;
+  i64?       due_at;
+  i64?       snoozed_until;
+  AnchorDTO? anchor;
+  string     device_origin;
+};
+
+/// Thread capture input
+dictionary CaptureInput {
+  string     title;
+  string?    notes;
+  string     cue_type;     // default: "note"
+  AnchorDTO? anchor;
+};
+
+/// Primary Sutra database interface — shared by macOS, iOS, and Android
+interface SutraDB {
+  /// Open (or create) the SQLite database at db_path
+  [Throws=SutraError]
+  constructor(string db_path);
+
+  /// List all threads with the given status
+  sequence<ThreadDTO> list_threads(string status);
+
+  /// Capture a new thread — returns the created thread with generated ID
+  [Throws=SutraError]
+  ThreadDTO capture(CaptureInput input);
+
+  /// Move thread to Done
+  [Throws=SutraError]
+  void mark_done(string id);
+
+  /// Snooze thread for N hours (moves to Later, sets snoozed_until)
+  [Throws=SutraError]
+  void snooze(string id, u32 hours);
+
+  /// Resume thread (moves from Later/Done back to Waiting)
+  [Throws=SutraError]
+  void resume(string id);
+
+  /// Undo last status change
+  [Throws=SutraError]
+  void undo(string id);
+
+  /// Full-text search across thread titles and notes
+  sequence<ThreadDTO> search(string query);
+
+  /// Return threads not updated in the last `days` days (stale detection)
+  sequence<ThreadDTO> list_stale(u32 days);
+
+  /// Count threads by status
+  u64 count(string status);
+};
+
+[Error]
+enum SutraError {
+  "Database",
+  "InvalidState",
+  "NotFound",
+  "Serialization",
+};

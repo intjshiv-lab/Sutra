@@ -9,27 +9,28 @@ public struct SanctuaryView: View {
 
     public var body: some View {
         List {
-            // "Scheduled for Today" Collapsible Accordion
-            Section(isExpanded: $isTodayExpanded) {
-                if bridge.todayThreads.isEmpty {
-                    Text("No threads scheduled for today")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                } else {
-                    ForEach(bridge.todayThreads) { thread in
-                        ThreadRowView(thread: thread)
+            Section {
+                DisclosureGroup(isExpanded: $isTodayExpanded) {
+                    if bridge.todayThreads.isEmpty {
+                        Text("No threads scheduled for today")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(bridge.todayThreads) { thread in
+                            ThreadRowView(thread: thread)
+                        }
                     }
-                }
-            } header: {
-                HStack {
-                    Text("📅 Scheduled for Today")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color(red: 179/255, green: 86/255, blue: 42/255))
-                    Spacer()
-                    Text("(\(bridge.todayThreads.count))")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                } label: {
+                    HStack {
+                        Text("📅 Scheduled for Today")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color(red: 179/255, green: 86/255, blue: 42/255))
+                        Spacer()
+                        Text("(\(bridge.todayThreads.count))")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
 

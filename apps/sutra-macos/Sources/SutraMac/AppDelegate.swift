@@ -12,6 +12,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
     private var hotKeyRefRestart: EventHotKeyRef?
     private var hotKeyRefSanctuary: EventHotKeyRef?
     private var hotKeyRefWake: EventHotKeyRef?
+    private var rightOptionDownTime: TimeInterval = 0
+    private var rightOptionAlone: Bool = false
 
     public func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
@@ -378,42 +380,71 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
             return noErr
         }, 1, &eventType, nil, nil)
 
-        // ⌃⌥Space -> Quick Cue HUD
-        let hotKeyIDSpace = EventHotKeyID(signature: OSType(0x53545241), id: 1) // 'STRA'
-        RegisterEventHotKey(UInt32(kVK_Space), UInt32(controlKey | optionKey), hotKeyIDSpace, GetApplicationEventTarget(), 0, &hotKeyRefSpace)
-
-        // ⌃⌥R -> Restart Sutra
+        // ⌃⌥R -> Restart Sutra (guarded)
         let hotKeyIDRestart = EventHotKeyID(signature: OSType(0x53545242), id: 2) // 'STRB'
         RegisterEventHotKey(UInt32(kVK_ANSI_R), UInt32(controlKey | optionKey), hotKeyIDRestart, GetApplicationEventTarget(), 0, &hotKeyRefRestart)
 
-        // ⌃⌥S -> Toggle Sutra Sanctuary
+        // ⌥S -> Toggle Sutra Sanctuary
         let hotKeyIDS = EventHotKeyID(signature: OSType(0x53545243), id: 3) // 'STRC'
-        RegisterEventHotKey(UInt32(kVK_ANSI_S), UInt32(controlKey | optionKey), hotKeyIDS, GetApplicationEventTarget(), 0, &hotKeyRefSanctuary)
+        RegisterEventHotKey(UInt32(kVK_ANSI_S), UInt32(optionKey), hotKeyIDS, GetApplicationEventTarget(), 0, &hotKeyRefSanctuary)
 
-        // ⌃⌥W -> Toggle Floating Wake Bar
+        // ⌥A -> Toggle Floating Wake Bar (Wake Alert)
         let hotKeyIDWake = EventHotKeyID(signature: OSType(0x53545244), id: 4) // 'STRD'
-        RegisterEventHotKey(UInt32(kVK_ANSI_W), UInt32(controlKey | optionKey), hotKeyIDWake, GetApplicationEventTarget(), 0, &hotKeyRefWake)
+        RegisterEventHotKey(UInt32(kVK_ANSI_A), UInt32(optionKey), hotKeyIDWake, GetApplicationEventTarget(), 0, &hotKeyRefWake)
 
-        // Local event monitor fallback
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            if event.modifierFlags.contains([.control, .option]) {
-                if event.keyCode == UInt16(kVK_Space) {
-                    QuickCueHUD.shared.show()
-                    return nil
-                } else if event.keyCode == UInt16(kVK_ANSI_R) {
-                    self.restartSutra()
-                    return nil
-                } else if event.keyCode == UInt16(kVK_ANSI_S) {
-                    if let btn = self.statusItem.button {
+        // Dedicated Right Option Tap Detector (Global Monitor)
+        NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
+            self?.handleFlagsChanged(event: event)
+        }
+        NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] _ in
+            self?.rightOptionAlone = false
+        }
+
+        // Local event monitor fallback (when Sutra windows are focused)
+        NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
+            self?.handleFlagsChanged(event: event)
+            return event
+        }
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            self?.rightOptionAlone = false
+            let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            if flags == .option {
+                if event.keyCode == UInt16(kVK_ANSI_S) {
+                    if let btn = self?.statusItem.button {
                         SanctuaryPopover.shared.toggle(relativeTo: btn)
                     }
                     return nil
-                } else if event.keyCode == UInt16(kVK_ANSI_W) {
+                } else if event.keyCode == UInt16(kVK_ANSI_A) {
                     FloatingWakeBar.shared.toggleForFrontmostApp()
                     return nil
                 }
+            } else if flags == [.control, .option] && event.keyCode == UInt16(kVK_ANSI_R) {
+                self?.restartSutra()
+                return nil
             }
             return event
+        }
+    }
+
+    private func handleFlagsChanged(event: NSEvent) {
+        // macOS Right Option key code is 61 (kVK_RightOption)
+        // NX_DEVICERALTKEYMASK is 0x00000040 in event.modifierFlags.rawValue
+        let isRightOption = (event.keyCode == 61) || ((event.modifierFlags.rawValue & 0x40) != 0)
+        let isOptionActive = event.modifierFlags.contains(.option)
+
+        if isRightOption && isOptionActive {
+            rightOptionDownTime = CACurrentMediaTime()
+            rightOptionAlone = true
+        } else if isRightOption && !isOptionActive {
+            if rightOptionAlone {
+                let duration = CACurrentMediaTime() - rightOptionDownTime
+                if duration > 0.03 && duration < 0.40 {
+                    DispatchQueue.main.async {
+                        QuickCueHUD.shared.show()
+                    }
+                }
+            }
+            rightOptionAlone = false
         }
     }
 

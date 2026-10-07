@@ -66,7 +66,7 @@ public final class PermissionManager {
         card.addSubview(titleLabel)
 
         // Subtitle / Explanation
-        let desc = NSTextField(wrappingLabelWithString: "Sutra requires macOS Accessibility permission to listen to global hotkeys (⌃⌥Space, ⌃⌥S, ⌃⌥W) and anchor threads to your active apps.\n\nOnce enabled in System Settings, this screen will close automatically.")
+        let desc = NSTextField(wrappingLabelWithString: "Sutra requires macOS Accessibility permission to listen to global hotkeys (Right ⌥ Option, ⌥S, ⌥A) and anchor threads to your active apps.\n\nOnce enabled in System Settings, this screen will close automatically.")
         desc.frame = NSRect(x: 24, y: h - 146, width: w - 48, height: 86)
         desc.font = NSFont.systemFont(ofSize: 11.5, weight: .regular)
         desc.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
