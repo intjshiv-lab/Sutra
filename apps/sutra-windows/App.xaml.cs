@@ -9,6 +9,7 @@ namespace SutraWindows
         public static SutraBridge Bridge { get; private set; } = null!;
         public static QuickCueWindow? QuickCueWin { get; private set; }
         public static SanctuaryWindow? SanctuaryWin { get; private set; }
+        public static ActivationWindow? ActivationWin { get; private set; }
 
         private TrayIconManager? _tray;
         private HotKeyManager? _hotkeys;
@@ -23,6 +24,22 @@ namespace SutraWindows
         private static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            // Hardware-Bound Licensing Gate
+            if (!LicenseManager.Shared.IsActivated())
+            {
+                ActivationWin = new ActivationWindow(onActivationSuccess: () =>
+                {
+                    StartApplicationServices();
+                });
+                ActivationWin.Activate();
+                return;
+            }
+
+            StartApplicationServices();
+        }
+
+        private void StartApplicationServices()
         {
             Bridge = new SutraBridge();
 
@@ -44,6 +61,9 @@ namespace SutraWindows
 
             _tray = new TrayIconManager(hwnd, hIcon, "Sutra (Active)");
             _hotkeys = new HotKeyManager(hwnd);
+
+            // Dispatch idempotent background telemetry heartbeat
+            _ = LicenseManager.Shared.SendHeartbeatIfNeededAsync();
         }
 
         public static void ShowQuickCue()
