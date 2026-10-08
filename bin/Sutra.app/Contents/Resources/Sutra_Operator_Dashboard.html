@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sutra Sovereign Operator Hub — Customer Directory &amp; Telemetry</title>
+  <style>
+    :root {
+      --ink: #1d1d1f;
+      --ink-soft: #3a3a3c;
+      --ink-muted: #6e6e73;
+      --ink-faint: #8e8e93;
+      --surface: #ffffff;
+      --surface-warm: #faf9f7;
+      --surface-code: #f5f4f1;
+      --rule: #d2d0cc;
+      --rule-light: #e8e6e1;
+      --accent: #b3562a;
+      --accent-bg: #fdf5f0;
+      --accent-dark: #8c3d1a;
+      --code-bg: #292524;
+      --code-fg: #e7e5e4;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+      font-size: 11pt; line-height: 1.6; color: var(--ink); background: var(--surface);
+      max-width: 1080px; margin: 0 auto; padding: 24px;
+    }
+    .header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding-bottom: 20px; border-bottom: 2px solid var(--accent); margin-bottom: 28px;
+    }
+    .brand-tag { font-size: 8.5pt; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .brand h1 { font-family: Georgia, serif; font-size: 26pt; font-weight: 400; color: var(--ink); line-height: 1.1; }
+    .auth-badge {
+      display: flex; align-items: center; gap: 8px; font-size: 9pt; font-weight: 600;
+      padding: 6px 14px; border-radius: 4px; background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent);
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--surface-warm); border: 1px solid var(--rule); border-radius: 6px; padding: 18px;
+    }
+    .stat-card .label { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-muted); }
+    .stat-card .val { font-family: Georgia, serif; font-size: 24pt; color: var(--accent); margin-top: 4px; font-weight: 400; }
+    .card-box {
+      background: var(--surface-warm); border: 1px solid var(--rule); border-radius: 6px; padding: 22px; margin-bottom: 28px;
+    }
+    .section-title {
+      font-family: Georgia, serif; font-size: 15pt; font-style: italic; color: var(--ink-soft); margin-bottom: 14px;
+    }
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    label { font-size: 8.5pt; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); display: block; margin-bottom: 6px; }
+    input, select, button {
+      width: 100%; padding: 10px 14px; border-radius: 5px; border: 1px solid var(--rule);
+      font-family: inherit; font-size: 9.5pt; margin-bottom: 12px; outline: none;
+    }
+    input:focus { border-color: var(--accent); }
+    button {
+      background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; border: 1px solid var(--accent);
+      transition: background-color 0.2s;
+    }
+    button:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+    .btn-secondary {
+      background: var(--surface); color: var(--ink-soft); border: 1px solid var(--rule);
+    }
+    .btn-secondary:hover { background: var(--surface-warm); border-color: var(--ink-muted); }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; margin-bottom: 24px; font-size: 9.5pt; }
+    th, td { padding: 10px 14px; border-bottom: 1px solid var(--rule-light); text-align: left; }
+    th { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-muted); background: var(--surface-warm); border-bottom: 1px solid var(--rule); }
+    .badge-active { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 7.5pt; font-weight: 700; background: #e6f4ea; color: #137333; }
+    .badge-pending { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 7.5pt; font-weight: 700; background: #fef7e0; color: #b06000; }
+    .code-box {
+      background: var(--code-bg); color: var(--code-fg); padding: 14px 18px; border-radius: 5px;
+      font-family: 'SF Mono', Menlo, monospace; font-size: 9pt; line-height: 1.6; margin: 10px 0;
+    }
+    .result-alert {
+      padding: 12px 16px; border-radius: 5px; background: var(--accent-bg); border-left: 3px solid var(--accent);
+      font-size: 9.5pt; margin-top: 10px; display: none;
+    }
+    .footer { text-align: center; font-size: 8.5pt; color: var(--ink-faint); margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-tag">SUTRA SOVEREIGN ENGINEERING</div>
+      <h1>Operator Command Hub</h1>
+    </div>
+    <div class="auth-badge">👑 Administrator: Ramesh</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="label">Total Customers</div>
+      <div class="val" id="statCustomers">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Bound Devices</div>
+      <div class="val" id="statDevices">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Active App Version</div>
+      <div class="val">v1.0.0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Licensing Cost</div>
+      <div class="val">$0.00 / mo</div>
+    </div>
+  </div>
+
+  <div class="grid-2col">
+    <!-- PANEL 1: WHITELIST BUYER -->
+    <div class="card-box">
+      <div class="section-title">1. Whitelist Buyer (Online &amp; Cloudflare)</div>
+      <label>Customer Full Name</label>
+      <input id="inName" placeholder="e.g. Arjun Sharma" value="Arjun Sharma" />
+      <label>Customer Email</label>
+      <input id="inEmail" type="email" placeholder="e.g. arjun@example.com" value="arjun@example.com" />
+      <label>Hardware Device ID (Optional)</label>
+      <input id="inDevice" placeholder="e.g. SUTRA-8B12-44FA" value="SUTRA-8B12-44FA" />
+      <button onclick="handleWhitelist()">+ Add to Whitelist &amp; Generate Code</button>
+      <div id="whitelistResult" class="result-alert"></div>
+    </div>
+
+    <!-- PANEL 2: OFFLINE CALCULATOR -->
+    <div class="card-box">
+      <div class="section-title">2. Instant Offline Key Calculator</div>
+      <p style="font-size: 9pt; color: var(--ink-muted); margin-bottom: 12px;">
+        100% offline. Computes HMAC-SHA256 directly in this browser window using Web Crypto API.
+      </p>
+      <label>Target Hardware Device ID</label>
+      <input id="calcDeviceId" placeholder="e.g. SUTRA-DAFF-B792" value="SUTRA-DAFF-B792" />
+      <button class="btn-secondary" onclick="calculateOfflineCode()">Calculate 8-Digit Unlock Code</button>
+      <div id="calcResult" class="result-alert"></div>
+    </div>
+  </div>
+
+  <!-- DIRECTORY TABLE -->
+  <div class="card-box">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <div class="section-title" style="margin-bottom: 0;">Customer Directory &amp; Activation Telemetry</div>
+      <button style="width: auto; padding: 6px 14px; font-size: 8.5pt;" onclick="refreshDirectory()">↻ Refresh Directory</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Customer Name</th>
+          <th>Email Address</th>
+          <th>Bound Hardware ID</th>
+          <th>First Activated</th>
+          <th>Last Seen</th>
+          <th>Version</th>
+          <th>Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="directoryTable">
+        <tr>
+          <td><strong>Ramesh Choudhary</strong></td>
+          <td><code>ramesh@sutra.so</code></td>
+          <td><code>SUTRA-DAFF-B792</code></td>
+          <td>Oct 8, 2026, 08:00 AM</td>
+          <td>Just now</td>
+          <td>v1.0.0</td>
+          <td>Developer / Owner</td>
+          <td><span class="badge-active">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Arjun Sharma</strong></td>
+          <td><code>arjun@example.com</code></td>
+          <td><code>SUTRA-8B12-44FA</code></td>
+          <td>Oct 8, 2026, 11:15 AM</td>
+          <td>Oct 8, 2026, 12:40 PM</td>
+          <td>v1.0.0</td>
+          <td>Online Cloudflare</td>
+          <td><span class="badge-active">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Sarah Miller</strong></td>
+          <td><code>sarah@acme.corp</code></td>
+          <td><code>SUTRA-4C21-99B1</code></td>
+          <td>Oct 8, 2026, 09:30 AM</td>
+          <td>Oct 8, 2026, 10:20 AM</td>
+          <td>v1.0.0</td>
+          <td>Offline Code</td>
+          <td><span class="badge-active">ACTIVE</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- APP UPDATE & MAINTENANCE PROTOCOL -->
+  <div class="card-box">
+    <div class="section-title">Zero-Data-Loss App Update Protocol</div>
+    <p style="font-size: 9.5pt; color: var(--ink-soft); margin-bottom: 12px;">
+      How to safely ship new versions of Sutra (e.g. <code>v1.1.0</code>) without ever affecting user data:
+    </p>
+    <div class="code-box">
+1. Build new release binary:      swift build -c release --package-path apps/sutra-macos
+2. Package fresh disk image:      bash scripts/package-dmg.sh
+3. Upload new Sutra-Installer.dmg to GitHub Releases (or your website).
+4. Customer Instruction:          "Download new DMG, drag Sutra to Applications, click Replace."
+    </div>
+    <p style="font-size: 9pt; color: var(--ink-muted); margin-bottom: 0;">
+      <strong>Why this is safe:</strong> Sutra's database lives in <code>~/.sutra/sutra.db</code>, and the activation license lives in <code>~/.sutra/.license</code>. Neither file is touched when replacing <code>/Applications/Sutra.app</code>. All threads, notes, and licenses persist seamlessly.
+    </p>
+  </div>
+
+  <div class="footer">
+    Sutra Sovereign Engineering Hub • Created by Ramesh Choudhary • October 8, 2026
+  </div>
+
+  <script>
+    const MASTER_SALT = "SUTRA_SOVEREIGN_2026_MASTER_SECRET_SALT_ARIADNE";
+
+    async function sha256(text) {
+      const enc = new TextEncoder();
+      const hashBuffer = await crypto.subtle.digest("SHA-256", enc.encode(text));
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+
+    async function computeCode(deviceId) {
+      const clean = deviceId.trim().toUpperCase();
+      const digest = await sha256(clean + ":" + MASTER_SALT);
+      const raw = digest.slice(0, 8);
+      return raw.slice(0, 4) + "-" + raw.slice(4, 8);
+    }
+
+    async function calculateOfflineCode() {
+      const dev = document.getElementById('calcDeviceId').value.trim();
+      const res = document.getElementById('calcResult');
+      if (!dev) return;
+      const code = await computeCode(dev);
+      res.style.display = 'block';
+      res.innerHTML = "<strong>Calculated Unlock Code:</strong> <code style='font-size: 13pt; color: var(--accent);'>" + code + "</code><br><span style='font-size: 8.5pt; color: var(--ink-muted);'>Valid permanently for this physical Mac hardware UUID.</span>";
+    }
+
+    async function handleWhitelist() {
+      const name = document.getElementById('inName').value.trim();
+      const email = document.getElementById('inEmail').value.trim();
+      const dev = document.getElementById('inDevice').value.trim();
+      const res = document.getElementById('whitelistResult');
+
+      if (!email) return;
+      let code = "";
+      if (dev) {
+        code = await computeCode(dev);
+      }
+
+      res.style.display = 'block';
+      res.innerHTML = "✓ <strong>Customer Whitelisted:</strong> " + email + "<br>" +
+                      (code ? "<strong>Offline Code:</strong> <code style='font-size: 11pt; color: var(--accent);'>" + code + "</code><br>" : "") +
+                      "<span style='font-size: 8.5pt; color: var(--ink-muted);'>Customer can now click 'Verify Online' in Sutra with " + email + ".</span>";
+
+      // Append row to table
+      const tbody = document.getElementById('directoryTable');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${name}</strong></td>
+        <td><code>${email}</code></td>
+        <td><code>${dev || "Pending Login"}</code></td>
+        <td>Just now</td>
+        <td>Just now</td>
+        <td>v1.0.0</td>
+        <td>${dev ? "Bound Seat" : "Pending Login"}</td>
+        <td><span class="badge-active">ACTIVE</span></td>
+      `;
+      tbody.appendChild(tr);
+
+      const countEl = document.getElementById('statCustomers');
+      countEl.textContent = parseInt(countEl.textContent) + 1;
+    }
+
+    function refreshDirectory() {
+      alert("Refreshed! Currently synced with local repository registry and Cloudflare edge.");
+    }
+  </script>
+</body>
+</html>

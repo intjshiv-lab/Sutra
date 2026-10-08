@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sutra</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="window-container" id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand-title">
+        <span class="brand-dot"></span>
+        <span>SUTRA</span>
+      </div>
+      <div class="badge-counter" id="activeCount">0 active</div>
+    </header>
+
+    <!-- Search -->
+    <section class="search-section">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search threads or press ⌥Space for Quick Cue..." />
+    </section>
+
+    <!-- Filter Chips -->
+    <nav class="chips-bar" id="chipsBar">
+      <div class="chip active" data-app="all">All</div>
+      <div class="chip" data-app="Obsidian">Obsidian</div>
+      <div class="chip" data-app="Code">Code</div>
+      <div class="chip" data-app="Terminal">Terminal</div>
+      <div class="chip" data-app="Chrome">Chrome</div>
+    </nav>
+
+    <!-- Thread List -->
+    <main class="thread-list" id="threadList">
+      <!-- Injected dynamically via app.js -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>⌥S Sanctuary • ⌥Space Cue • ⌥A Bar</span>
+      <button class="footer-btn" id="newCueBtn">+ Quick Cue</button>
+    </footer>
+
+    <!-- Bottom Grab Handle Resize Strip -->
+    <div class="bottom-drag-bar" id="dragHandle">
+      <div class="drag-pill"></div>
+    </div>
+  </div>
+
+  <!-- First-Run Gated Permission Modal -->
+  <div class="onboarding-overlay" id="onboardingModal" style="display: none;">
+    <div class="onboarding-card">
+      <div class="onboarding-header">
+        <span class="onboarding-tag" id="onboardingStepTag">STEP 1 OF 3</span>
+        <h2 class="onboarding-title" id="onboardingTitle">System Auto-Start</h2>
+      </div>
+      <p class="onboarding-desc" id="onboardingDesc">
+        Allow Sutra to launch automatically on Windows login so your cognitive threads are restored instantly in under 5 milliseconds.
+      </p>
+      <div class="onboarding-action-box" id="onboardingActionBox">
+        <div class="permission-status">
+          <svg class="glyph-icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Windows Startup Registry Integration</span>
+        </div>
+      </div>
+      <div class="onboarding-footer">
+        <button class="primary-btn" id="onboardingNextBtn">Enable & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

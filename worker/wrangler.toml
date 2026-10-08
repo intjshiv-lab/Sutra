@@ -1,0 +1,10 @@
+name = "sutra-licensing"
+main = "index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+ADMIN_SECRET = "SUTRA_ADMIN_SECRET_2026"
+
+[[kv_namespaces]]
+binding = "SUTRA_LICENSES"
+id = "sutra_licenses_kv"
