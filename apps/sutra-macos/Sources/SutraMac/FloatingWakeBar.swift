@@ -758,7 +758,7 @@ public final class FloatingWakeBar: NSObject {
 
         // Title Label
         let titleLabel = NSTextField(labelWithString: thread.title)
-        titleLabel.frame = NSRect(x: 26, y: 7, width: 175, height: 18)
+        titleLabel.frame = NSRect(x: 26, y: 7, width: 200, height: 18)
         titleLabel.font = NSFont.systemFont(ofSize: 12.5, weight: .medium)
         titleLabel.textColor = .white
         titleLabel.cell?.lineBreakMode = .byTruncatingTail
@@ -766,7 +766,7 @@ public final class FloatingWakeBar: NSObject {
 
         // Time ago (Zinc, or Terracotta Amber if Stale)
         let timeLabel = NSTextField(labelWithString: thread.timeAgo)
-        timeLabel.frame = NSRect(x: 205, y: 7, width: 44, height: 18)
+        timeLabel.frame = NSRect(x: 230, y: 7, width: 44, height: 18)
         timeLabel.font = NSFont.systemFont(ofSize: 11.5, weight: isStale ? .bold : .medium)
         timeLabel.textColor = isStale ? NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.22, alpha: 1.0) : NSColor(calibratedWhite: 0.70, alpha: 1.0)
         timeLabel.alignment = .right
@@ -774,29 +774,6 @@ public final class FloatingWakeBar: NSObject {
             timeLabel.toolTip = "Stale thread (> 24h old)"
         }
         row.addSubview(timeLabel)
-
-        // [👁] Peek Button - Opens Context Peek docked to Sanctuary
-        let peekBtn = ClosureButton(frame: NSRect(x: 254, y: 7, width: 24, height: 20)) {
-            if ContextPeekDrawer.shared.isVisible && ContextPeekDrawer.shared.activeThreadId == thread.id {
-                ContextPeekDrawer.shared.dismiss()
-            } else {
-                ContextPeekDrawer.shared.show(for: thread)
-            }
-        }
-        peekBtn.isBordered = false
-        peekBtn.wantsLayer = true
-        peekBtn.layer?.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 0.06).cgColor
-        peekBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
-        peekBtn.layer?.borderWidth = 1.0
-        peekBtn.layer?.cornerRadius = 4
-        peekBtn.toolTip = "Peek Context (opens at Sanctuary)"
-        if let sym = NSImage(systemSymbolName: "eye", accessibilityDescription: "Peek") {
-            let cfg = NSImage.SymbolConfiguration(pointSize: 10, weight: .medium)
-            peekBtn.image = sym.withSymbolConfiguration(cfg)
-            peekBtn.contentTintColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
-            peekBtn.imagePosition = .imageOnly
-        }
-        row.addSubview(peekBtn)
 
         // [Resume] Hero Action Pill - matches Sanctuary
         let resumeBtn = ClosureButton(frame: NSRect(x: 284, y: 7, width: 62, height: 20)) { [weak self] in

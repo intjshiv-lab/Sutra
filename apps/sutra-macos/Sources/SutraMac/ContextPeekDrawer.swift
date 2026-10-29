@@ -236,8 +236,8 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         wv.navigationDelegate = self
         // Eliminate white flash: dark transparent canvas
         wv.setValue(false, forKey: "drawsBackground")
-        // Responsive mobile viewport: loads Twitter/X, GitHub, Docs 3x faster without truncation
-        wv.customUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1"
+        // Desktop Safari User Agent: prevents mobile app deep-link redirects (x-safari-https:)
+        wv.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"
 
         contentContainer.addSubview(wv)
         self.webView = wv
@@ -253,6 +253,32 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
     }
 
     // WKNavigationDelegate
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.cancel)
+            return
+        }
+        let scheme = url.scheme?.lowercased() ?? ""
+        // Block external app breakout schemes (x-safari-https, twitter, etc.)
+        if scheme.contains("safari") || scheme.starts(with: "x-") || scheme == "twitter" {
+            if scheme.starts(with: "x-safari-") {
+                let clean = url.absoluteString.replacingOccurrences(of: "x-safari-", with: "")
+                if let cleanURL = URL(string: clean) {
+                    webView.load(URLRequest(url: cleanURL))
+                }
+            }
+            decisionHandler(.cancel)
+            return
+        }
+        // Keep target="_blank" links inside the embedded Peek drawer
+        if navigationAction.targetFrame == nil {
+            webView.load(navigationAction.request)
+            decisionHandler(.cancel)
+            return
+        }
+        decisionHandler(.allow)
+    }
+
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         loadTimeoutTimer?.invalidate()
         hideLoading()
