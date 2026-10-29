@@ -3,6 +3,9 @@ import AppKit
 public final class FloatingWakeBar: NSObject {
     public static let shared = FloatingWakeBar()
 
+    public var frame: NSRect { panel?.frame ?? .zero }
+    public var isPanelVisible: Bool { panel?.isVisible ?? false }
+
     private var panel: NSPanel!
     private var visualEffect: NSView!
     private var containerView: HoverTrackingView!
@@ -584,10 +587,12 @@ public final class FloatingWakeBar: NSObject {
                     ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
                     self.panel.animator().setFrame(targetFrame, display: true)
                     self.visualEffect.animator().layer?.cornerRadius = targetRadius
+                    AmbientPiPWindow.shared.repositionAdjacentToIsland(islandFrame: targetFrame, animated: true)
                 }
             } else {
                 panel.setFrame(targetFrame, display: true)
                 visualEffect.layer?.cornerRadius = targetRadius
+                AmbientPiPWindow.shared.repositionAdjacentToIsland(islandFrame: targetFrame, animated: false)
             }
         }
 

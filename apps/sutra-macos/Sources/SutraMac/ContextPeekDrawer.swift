@@ -63,6 +63,7 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         if event.charactersIgnoringModifiers?.lowercased() == "p" { // P: Pin to PiP
             if let thread = activeThread {
                 AmbientPiPWindow.shared.pin(thread: thread)
+                NSSound(named: "Tink")?.play()
             }
             return
         }
@@ -99,6 +100,7 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         let pinBtn = ClosureButton(frame: NSRect(x: 284, y: 9, width: 22, height: 22)) { [weak self] in
             guard let self = self, let thread = self.activeThread else { return }
             AmbientPiPWindow.shared.pin(thread: thread)
+            NSSound(named: "Tink")?.play()
         }
         pinBtn.isBordered = false
         pinBtn.wantsLayer = true
