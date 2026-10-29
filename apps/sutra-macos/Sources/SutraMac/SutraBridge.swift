@@ -41,18 +41,34 @@ public final class SutraBridge {
         task.standardOutput = pipe
         task.standardError = pipe
 
+        // ponytail: 5.0s watchdog circuit breaker — ensures UI never hangs on runaway CLI
+        let watchdog = DispatchWorkItem { [weak task] in
+            if task?.isRunning == true {
+                task?.terminate()
+            }
+        }
+        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 5.0, execute: watchdog)
+
         do {
             try task.run()
-            task.waitUntilExit()
+            // In-order pipe buffer drain before waiting prevents 64KB kernel buffer deadlocks
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            task.waitUntilExit()
+            watchdog.cancel()
             let output = String(data: data, encoding: .utf8) ?? ""
             return (output, task.terminationStatus)
         } catch {
+            watchdog.cancel()
             return ("", -1)
         }
     }
 
     public func list(status: String = "waiting") -> [SutraThread] {
+        if status == "dock" {
+            let later = list(status: "later")
+            let done = list(status: "done")
+            return (later + done).sorted(by: { $0.created_at > $1.created_at })
+        }
         let res = runCLI(args: ["list", "--status", status, "--json"])
         guard res.exitCode == 0, let data = res.output.data(using: .utf8) else {
             return []
@@ -445,14 +461,121 @@ public final class SutraBridge {
         p.standardError = Pipe()
         do {
             try p.run()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             p.waitUntilExit()
             if p.terminationStatus == 0 {
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
                 if let str = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines), !str.isEmpty {
                     return str
                 }
             }
         } catch {}
         return nil
+    }
+
+    // MARK: - Anti-Hoarding Auto-Dock & Reusable Templates (PLAN-029)
+
+    public func autoDockStale(days: Int = 6) -> Int {
+        let cutoff = Int64((Date().timeIntervalSince1970 - Double(days * 86400)) * 1000)
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        // Auto-dock contract:
+        // 1. Threads older than 6 days without future schedule move to 'later' (Dock)
+        // 2. Future-scheduled threads (> now) in 'later' move to 'waiting' (Active)
+        let sql = """
+        UPDATE threads SET status = 'later', updated_at = \(now) WHERE status = 'waiting' AND created_at < \(cutoff) AND (due_at IS NULL OR due_at <= \(now));
+        UPDATE threads SET status = 'waiting', updated_at = \(now) WHERE status = 'later' AND due_at > \(now);
+        """
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/sqlite3")
+        task.arguments = [dbPath, sql]
+        try? task.run()
+        task.waitUntilExit()
+        return 0
+    }
+
+    public func decayStale(days: Int = 6) -> Int {
+        return autoDockStale(days: days)
+    }
+
+    public func initTemplatesTableIfNeeded() {
+        let sql = """
+        CREATE TABLE IF NOT EXISTS cue_templates (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            items_json TEXT NOT NULL,
+            created_at INTEGER NOT NULL
+        );
+        """
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/sqlite3")
+        task.arguments = [dbPath, sql]
+        try? task.run()
+        task.waitUntilExit()
+    }
+
+    public func getTemplates() -> [(id: String, name: String, items: [String])] {
+        initTemplatesTableIfNeeded()
+        let sql = "SELECT id, name, items_json FROM cue_templates ORDER BY created_at ASC;"
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/sqlite3")
+        task.arguments = [dbPath, "-separator", "|||", sql]
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        do {
+            try task.run()
+            task.waitUntilExit()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            guard let out = String(data: data, encoding: .utf8) else { return [] }
+            var list: [(id: String, name: String, items: [String])] = []
+            let lines = out.components(separatedBy: "\n").filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+            for line in lines {
+                let parts = line.components(separatedBy: "|||")
+                if parts.count >= 3 {
+                    let id = parts[0]
+                    let name = parts[1]
+                    let json = parts[2]
+                    let items = (try? JSONDecoder().decode([String].self, from: Data(json.utf8))) ?? []
+                    list.append((id: id, name: name, items: items))
+                }
+            }
+            if list.isEmpty {
+                seedDefaultTemplates()
+                return getTemplates()
+            }
+            return list
+        } catch {
+            return []
+        }
+    }
+
+    private func seedDefaultTemplates() {
+        let defaults: [(String, [String])] = [
+            ("Code Review", ["Inspect git diff", "Run unit tests", "Verify edge cases", "Security & error checks"]),
+            ("Bug Triage", ["Reproduce error locally", "Isolate offending commit", "Write failing test", "Fix root cause"]),
+            ("Deep Focus", ["Silence notifications", "Set single objective", "45-min sprint", "Capture resumption cue"]),
+            ("Daily Wrap-up", ["Commit & push branches", "Review open threads", "Note tomorrow's first step"])
+        ]
+        for (name, items) in defaults {
+            _ = saveTemplate(name: name, items: items)
+        }
+    }
+
+    public func saveTemplate(name: String, items: [String]) -> Bool {
+        initTemplatesTableIfNeeded()
+        let id = "tpl_\(UUID().uuidString.prefix(8).lowercased())"
+        let escapedName = name.replacingOccurrences(of: "'", with: "''")
+        let itemsData = (try? JSONSerialization.data(withJSONObject: items)) ?? Data("[]".utf8)
+        let escapedJson = (String(data: itemsData, encoding: .utf8) ?? "[]").replacingOccurrences(of: "'", with: "''")
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        let sql = "INSERT INTO cue_templates (id, name, items_json, created_at) VALUES ('\(id)', '\(escapedName)', '\(escapedJson)', \(now));"
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/sqlite3")
+        task.arguments = [dbPath, sql]
+        do {
+            try task.run()
+            task.waitUntilExit()
+            return task.terminationStatus == 0
+        } catch {
+            return false
+        }
     }
 }

@@ -26,6 +26,9 @@ final class VerticallyCenteredTextFieldCell: NSTextFieldCell {
 public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     public static let shared = SanctuaryPopover()
 
+    public var isVisible: Bool { panel?.isVisible ?? false }
+    public var window: NSPanel? { panel }
+
     private var panel: KeyFocusPanel!
     private var visualEffect: NSView!
     private var containerView: NSView!
@@ -41,7 +44,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     private var bottomDragBar: BottomResizeHandleView!
     public static var sessionPreferredHeight: CGFloat = 460
     
-    private var currentStatusMode: String = "waiting" // "waiting" or "done"
+    private var currentStatusMode: String = "waiting" // "waiting" or "dock"
     private var allThreads: [SutraThread] = []
     private var filteredThreads: [SutraThread] = []
     private var searchQuery: String = ""
@@ -55,6 +58,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     private var globalEventMonitor: Any?
     private weak var anchorButton: NSStatusBarButton?
 
+    // Keyboard navigation (PLAN-029 Gap 5, Things 3 inspired)
+    private var selectedThreadIndex: Int = 0
+    private var selectedThreadId: String? = nil
+
     public override init() {
         super.init()
         setupPanel()
@@ -67,6 +74,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
             backing: .buffered,
             defer: false
         )
+        panel.onKeyDown = { [weak self] event in
+            guard let self = self else { return false }
+            return self.handleKeyDown(event: event)
+        }
         panel.isFloatingPanel = true
         panel.level = .floating
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
@@ -118,6 +129,9 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
             globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
                 guard let self = self, self.panel.isVisible else { return }
                 let mouseLoc = NSEvent.mouseLocation
+                if ContextPeekDrawer.shared.isVisible && ContextPeekDrawer.shared.frame.contains(mouseLoc) {
+                    return
+                }
                 if let sp = self.stackSelectorPanel, sp.isVisible {
                     if sp.frame.contains(mouseLoc) { return }
                     sp.orderOut(nil)
@@ -131,6 +145,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     }
 
     public func dismiss() {
+        ContextPeekDrawer.shared.dismiss()
         stackSelectorPanel?.orderOut(nil)
         stackSelectorPanel = nil
         panel.orderOut(nil)
@@ -148,9 +163,96 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
     }
 
     private func fetchData() {
+        _ = SutraBridge.shared.autoDockStale(days: 6)
         allThreads = SutraBridge.shared.list(status: currentStatusMode).sorted(by: { $0.created_at > $1.created_at })
         applyFilters()
+        if selectedThreadIndex >= filteredThreads.count {
+            selectedThreadIndex = max(0, filteredThreads.count - 1)
+        }
+        if selectedThreadIndex < filteredThreads.count {
+            selectedThreadId = filteredThreads[selectedThreadIndex].id
+        }
         updateTodayDockBtnTitle()
+    }
+
+    private func handleKeyDown(event: NSEvent) -> Bool {
+        // Cmd+F: Focus search
+        if event.modifierFlags.contains(.command) && event.charactersIgnoringModifiers == "f" {
+            panel.makeFirstResponder(searchField)
+            return true
+        }
+
+        // Escape: Dismiss or unfocus search
+        if event.keyCode == 53 {
+            if panel.firstResponder == searchField?.currentEditor() {
+                panel.makeFirstResponder(panel.contentView)
+                return true
+            }
+            dismiss()
+            return true
+        }
+
+        // If search field is currently typing, let it handle standard keys
+        if panel.firstResponder == searchField?.currentEditor() {
+            if event.keyCode == 36 || event.keyCode == 125 {
+                panel.makeFirstResponder(panel.contentView)
+                return true
+            }
+            return false
+        }
+
+        guard !filteredThreads.isEmpty else { return false }
+
+        switch event.keyCode {
+        case 126: // Up Arrow
+            selectedThreadIndex = max(0, selectedThreadIndex - 1)
+            selectedThreadId = filteredThreads[selectedThreadIndex].id
+            renderThreadList()
+            return true
+
+        case 125: // Down Arrow
+            selectedThreadIndex = min(filteredThreads.count - 1, selectedThreadIndex + 1)
+            selectedThreadId = filteredThreads[selectedThreadIndex].id
+            renderThreadList()
+            return true
+
+        case 36: // Enter: Resume selected thread
+            if selectedThreadIndex < filteredThreads.count {
+                let target = filteredThreads[selectedThreadIndex]
+                _ = SutraBridge.shared.resume(threadId: target.id)
+                dismiss()
+                return true
+            }
+
+        case 49: // Space: Context Peek
+            if selectedThreadIndex < filteredThreads.count {
+                let target = filteredThreads[selectedThreadIndex]
+                if ContextPeekDrawer.shared.isVisible && ContextPeekDrawer.shared.activeThreadId == target.id {
+                    ContextPeekDrawer.shared.dismiss()
+                } else {
+                    ContextPeekDrawer.shared.show(for: target)
+                }
+                return true
+            }
+
+        case 51: // Backspace / Delete: Mark Done (or Undo if Logbook)
+            if selectedThreadIndex < filteredThreads.count {
+                let target = filteredThreads[selectedThreadIndex]
+                if currentStatusMode == "waiting" {
+                    _ = SutraBridge.shared.done(threadId: target.id)
+                } else {
+                    _ = SutraBridge.shared.undo(threadId: target.id)
+                }
+                fetchData()
+                renderThreadList()
+                return true
+            }
+
+        default:
+            break
+        }
+
+        return false
     }
 
     private func applyFilters() {
@@ -183,7 +285,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
 
         let sectionGap: CGFloat = 14
         let bottomDockGap: CGFloat = 16
-        let waitingBarH: CGFloat = 34
+        let waitingBarH: CGFloat = 30
 
         let isSearching = !searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         if isSearching {
@@ -237,7 +339,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         // Logo
         // Logo (Bigger 32x32)
         let logoView = NSImageView(frame: NSRect(x: 16, y: 8, width: 32, height: 32))
-        logoView.image = loadSutraLogo(size: NSSize(width: 32, height: 32))
+        logoView.image = Self.loadSutraLogo(size: NSSize(width: 32, height: 32))
         headerView.addSubview(logoView)
 
         // Title
@@ -256,18 +358,60 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         titleLabel.frame = NSRect(x: 56, y: (48 - titleH) / 2, width: titleLabel.frame.width, height: titleH)
         headerView.addSubview(titleLabel)
 
-        // Dismiss Button
-        let closeBtn = ClosureButton(frame: NSRect(x: width - 36, y: 12, width: 24, height: 24)) { [weak self] in
+        // Standardized 26x26 circular SF Symbol Buttons
+        let btnSize: CGFloat = 26
+        let btnY: CGFloat = (48 - btnSize) / 2
+
+        // Settings Button (⚙) -> SF Symbol gearshape.fill
+        let settingsBtn = ClosureButton(frame: NSRect(x: width - 70, y: btnY, width: btnSize, height: btnSize)) {
+            SettingsWindow.shared.show()
+        }
+        settingsBtn.isBordered = false
+        settingsBtn.wantsLayer = true
+        settingsBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
+        settingsBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        settingsBtn.layer?.borderWidth = 1.0
+        settingsBtn.layer?.cornerRadius = btnSize / 2
+        let gearConfig = NSImage.SymbolConfiguration(pointSize: 12.5, weight: .semibold)
+        if let sym = NSImage(systemSymbolName: "gearshape.fill", accessibilityDescription: "Settings")?.withSymbolConfiguration(gearConfig) {
+            sym.isTemplate = true
+            settingsBtn.image = sym
+        } else {
+            settingsBtn.attributedTitle = NSAttributedString(string: "⚙", attributes: [
+                .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
+                .font: NSFont.systemFont(ofSize: 12)
+            ])
+        }
+        settingsBtn.imageScaling = .scaleProportionallyDown
+        settingsBtn.imagePosition = .imageOnly
+        settingsBtn.contentTintColor = NSColor(calibratedWhite: 0.90, alpha: 1.0)
+        settingsBtn.toolTip = "Sutra Preferences"
+        headerView.addSubview(settingsBtn)
+
+        // Dismiss Button (✕) -> SF Symbol xmark
+        let closeBtn = ClosureButton(frame: NSRect(x: width - 38, y: btnY, width: btnSize, height: btnSize)) { [weak self] in
             self?.dismiss()
         }
         closeBtn.isBordered = false
         closeBtn.wantsLayer = true
         closeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
-        closeBtn.layer?.cornerRadius = 12
-        closeBtn.attributedTitle = NSAttributedString(string: "✕", attributes: [
-            .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
-            .font: NSFont.systemFont(ofSize: 11, weight: .medium)
-        ])
+        closeBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        closeBtn.layer?.borderWidth = 1.0
+        closeBtn.layer?.cornerRadius = btnSize / 2
+        let xConfig = NSImage.SymbolConfiguration(pointSize: 11.5, weight: .semibold)
+        if let sym = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Close")?.withSymbolConfiguration(xConfig) {
+            sym.isTemplate = true
+            closeBtn.image = sym
+        } else {
+            closeBtn.attributedTitle = NSAttributedString(string: "✕", attributes: [
+                .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
+                .font: NSFont.systemFont(ofSize: 11, weight: .medium)
+            ])
+        }
+        closeBtn.imageScaling = .scaleProportionallyDown
+        closeBtn.imagePosition = .imageOnly
+        closeBtn.contentTintColor = NSColor(calibratedWhite: 0.90, alpha: 1.0)
+        closeBtn.toolTip = "Close Sanctuary (Esc)"
         headerView.addSubview(closeBtn)
 
         containerView.addSubview(headerView)
@@ -413,32 +557,69 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         docsBtn.wantsLayer = true
         docsBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
         docsBtn.layer?.cornerRadius = 4
-        docsBtn.attributedTitle = NSAttributedString(string: "📖 Docs", attributes: [
+        docsBtn.attributedTitle = NSAttributedString(string: "Guide", attributes: [
             .foregroundColor: NSColor(calibratedWhite: 0.88, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 10, weight: .regular)
         ])
+        docsBtn.toolTip = "Sutra User Guide"
         footerView.addSubview(docsBtn)
 
-        // Center Archive / Active Toggle Button
-        let isArchive = (currentStatusMode == "done")
-        let archiveTitle = isArchive ? "← Active" : "Archive"
-        let archiveBtn = ClosureButton(frame: NSRect(x: (width - 86) / 2, y: 8, width: 86, height: 22)) { [weak self] in
-            guard let self = self else { return }
-            self.currentStatusMode = (self.currentStatusMode == "waiting") ? "done" : "waiting"
+        // Center Twin-Button: [ Active | Dock ] (Q-capture style with thin separator)
+        let twinW: CGFloat = 118
+        let twinH: CGFloat = 22
+        let twinX: CGFloat = (width - twinW) / 2
+        let twinContainer = NSView(frame: NSRect(x: twinX, y: 8, width: twinW, height: twinH))
+        twinContainer.wantsLayer = true
+        twinContainer.layer?.backgroundColor = NSColor(calibratedWhite: 0.11, alpha: 1.0).cgColor
+        twinContainer.layer?.cornerRadius = twinH / 2
+        twinContainer.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
+        twinContainer.layer?.borderWidth = 1.0
+
+        let isDock = (currentStatusMode == "dock")
+
+        // Active Button (Left)
+        let activeBtn = ClosureButton(frame: NSRect(x: 1, y: 1, width: 57, height: twinH - 2)) { [weak self] in
+            guard let self = self, self.currentStatusMode != "waiting" else { return }
+            self.currentStatusMode = "waiting"
             self.fetchData()
             self.buildUI()
         }
-        archiveBtn.isBordered = false
-        archiveBtn.wantsLayer = true
-        archiveBtn.layer?.backgroundColor = isArchive ? NSColor(calibratedWhite: 0.24, alpha: 1.0).cgColor : NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
-        archiveBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: isArchive ? 0.25 : 0.10).cgColor
-        archiveBtn.layer?.borderWidth = 1.0
-        archiveBtn.layer?.cornerRadius = 4
-        archiveBtn.attributedTitle = NSAttributedString(string: archiveTitle, attributes: [
-            .foregroundColor: isArchive ? NSColor.white : NSColor(calibratedWhite: 0.82, alpha: 1.0),
-            .font: NSFont.systemFont(ofSize: 10, weight: isArchive ? .bold : .medium)
+        activeBtn.isBordered = false
+        activeBtn.wantsLayer = true
+        activeBtn.layer?.cornerRadius = (twinH - 2) / 2
+        activeBtn.layer?.backgroundColor = !isDock ? NSColor(calibratedWhite: 0.24, alpha: 1.0).cgColor : NSColor.clear.cgColor
+        activeBtn.attributedTitle = NSAttributedString(string: "Active", attributes: [
+            .foregroundColor: !isDock ? NSColor.white : NSColor(calibratedWhite: 0.60, alpha: 1.0),
+            .font: NSFont.systemFont(ofSize: 10, weight: !isDock ? .bold : .medium)
         ])
-        footerView.addSubview(archiveBtn)
+        twinContainer.addSubview(activeBtn)
+
+        // Thin Bevel Separator Line
+        let sepLine = NSView(frame: NSRect(x: 58.5, y: 3, width: 1, height: twinH - 6))
+        sepLine.wantsLayer = true
+        sepLine.layer?.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
+        twinContainer.addSubview(sepLine)
+
+        // Dock Button (Right)
+        let dockBtn = ClosureButton(frame: NSRect(x: 60, y: 1, width: 57, height: twinH - 2)) { [weak self] in
+            guard let self = self, self.currentStatusMode != "dock" else { return }
+            self.currentStatusMode = "dock"
+            self.fetchData()
+            self.buildUI()
+        }
+        dockBtn.isBordered = false
+        dockBtn.wantsLayer = true
+        dockBtn.layer?.cornerRadius = (twinH - 2) / 2
+        dockBtn.layer?.backgroundColor = isDock ? NSColor(calibratedRed: 0.26, green: 0.14, blue: 0.10, alpha: 1.0).cgColor : NSColor.clear.cgColor
+        dockBtn.layer?.borderColor = isDock ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.50).cgColor : NSColor.clear.cgColor
+        dockBtn.layer?.borderWidth = isDock ? 1.0 : 0
+        dockBtn.attributedTitle = NSAttributedString(string: "Dock", attributes: [
+            .foregroundColor: isDock ? NSColor(calibratedRed: 0.95, green: 0.70, blue: 0.50, alpha: 1.0) : NSColor(calibratedWhite: 0.60, alpha: 1.0),
+            .font: NSFont.systemFont(ofSize: 10, weight: isDock ? .bold : .medium)
+        ])
+        twinContainer.addSubview(dockBtn)
+
+        footerView.addSubview(twinContainer)
 
         // Restart Button
         let restartBtn = ClosureButton(frame: NSRect(x: width - 150, y: 8, width: 75, height: 22)) { [weak self] in
@@ -531,6 +712,9 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         } else {
             panel.setFrame(targetFrame, display: true)
         }
+        if ContextPeekDrawer.shared.isVisible {
+            ContextPeekDrawer.shared.reposition(relativeTo: targetFrame)
+        }
         if isWaitingSectionExpanded {
             SanctuaryPopover.sessionPreferredHeight = clampedHeight
         }
@@ -596,16 +780,45 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         applyDynamicHeight(newH, animated: true)
     }
 
-    private func createWaitingSectionBar(count: Int, width: CGFloat, height: CGFloat = 34) -> NSView {
+    private func createWaitingSectionBar(count: Int, width: CGFloat, height: CGFloat = 30) -> NSView {
         let bar = NSView(frame: NSRect(x: 0, y: 0, width: width, height: height))
 
-        let barW: CGFloat = width - 32
-        let barH: CGFloat = height
-        let barX: CGFloat = 16
-        let barY: CGFloat = 0
+        // 1. Broad thin white line below the count pill
+        let line = NSView(frame: NSRect(x: 16, y: 2, width: width - 32, height: 1))
+        line.wantsLayer = true
+        line.layer?.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 0.16).cgColor
+        bar.addSubview(line)
 
-        let chevron = isWaitingSectionExpanded ? "▾" : "▸"
-        let btn = ClosureButton(frame: NSRect(x: barX, y: barY, width: barW, height: barH)) { [weak self] in
+        // 2. White Outline Pill (No fill, white boundary, bold white number)
+        let countStr = "\(count)"
+        let textW: CGFloat = (countStr as NSString).size(withAttributes: [.font: NSFont.systemFont(ofSize: 10.5, weight: .bold)]).width
+        let pillW: CGFloat = max(38, textW + 18)
+        let pillH: CGFloat = 20
+        let pillX: CGFloat = (width - pillW) / 2
+        let pillY: CGFloat = 7
+
+        let pillView = NSView(frame: NSRect(x: pillX, y: pillY, width: pillW, height: pillH))
+        pillView.wantsLayer = true
+        pillView.layer?.backgroundColor = NSColor.clear.cgColor
+        pillView.layer?.borderColor = NSColor.white.cgColor
+        pillView.layer?.borderWidth = 1.0
+        pillView.layer?.cornerRadius = pillH / 2
+
+        let countLabel = NSTextField(labelWithString: countStr)
+        countLabel.isBezeled = false
+        countLabel.drawsBackground = false
+        countLabel.isEditable = false
+        countLabel.isSelectable = false
+        countLabel.frame = NSRect(x: 0, y: (pillH - 14) / 2, width: pillW, height: 14)
+        countLabel.font = NSFont.systemFont(ofSize: 10.5, weight: .bold)
+        countLabel.textColor = .white
+        countLabel.alignment = .center
+        pillView.addSubview(countLabel)
+
+        bar.addSubview(pillView)
+
+        // 3. Interactive toggle overlay
+        let btn = ClosureButton(frame: NSRect(x: pillX, y: 0, width: pillW, height: height)) { [weak self] in
             guard let self = self else { return }
             self.isWaitingSectionExpanded.toggle()
             let newH = self.computeFittedHeight()
@@ -613,33 +826,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         }
         btn.isBordered = false
         btn.wantsLayer = true
-        btn.layer?.cornerRadius = 8
-
-        // 3D Tactile Styling: Soothing dark velvet matte with specular highlight rim and soft ambient drop shadow
-        btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.11, alpha: 0.98).cgColor
-        btn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
-        btn.layer?.borderWidth = 1.0
-        btn.layer?.shadowColor = NSColor.black.cgColor
-        btn.layer?.shadowOpacity = 0.50
-        btn.layer?.shadowOffset = CGSize(width: 0, height: -2)
-        btn.layer?.shadowRadius = 4
-
-        let titleStr = NSMutableAttributedString(
-            string: "Waiting   ",
-            attributes: [
-                .foregroundColor: NSColor.white,
-                .font: NSFont.systemFont(ofSize: 11, weight: .bold)
-            ]
-        )
-        let countBadgeStr = NSAttributedString(
-            string: "(\(count))    \(chevron)",
-            attributes: [
-                .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
-                .font: NSFont.systemFont(ofSize: 10.5, weight: .semibold)
-            ]
-        )
-        titleStr.append(countBadgeStr)
-        btn.attributedTitle = titleStr
+        btn.layer?.backgroundColor = NSColor.clear.cgColor
         bar.addSubview(btn)
 
         return bar
@@ -656,7 +843,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
 
         let sectionGap: CGFloat = 14
         let bottomDockGap: CGFloat = 16
-        let waitingBarH: CGFloat = 34
+        let waitingBarH: CGFloat = 30
 
         var contentTotalHeight: CGFloat = 0
 
@@ -702,7 +889,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         scrollView.hasVerticalScroller = canScroll
 
         if filteredThreads.isEmpty {
-            let emptyLabel = NSTextField(labelWithString: allThreads.isEmpty ? "No waiting threads — Mind is clear" : "No matching threads found")
+            let emptyLabel = NSTextField(labelWithString: allThreads.isEmpty ? (currentStatusMode == "dock" ? "No archived threads in Dock" : "No active threads — Mind is clear") : "No matching threads found")
             emptyLabel.frame = NSRect(x: 20, y: totalHeight / 2 - 10, width: width - 40, height: 20)
             emptyLabel.font = NSFont.systemFont(ofSize: 11, weight: .medium)
             emptyLabel.textColor = NSColor(calibratedWhite: 0.5, alpha: 1.0)
@@ -764,6 +951,15 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         row.wantsLayer = true
         let h = frame.height
 
+        // Check if this thread is currently selected via keyboard navigation (PLAN-029 Gap 5)
+        let isSelected = (thread.id == selectedThreadId)
+        if isSelected {
+            row.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.40, blue: 0.18, alpha: 0.15).cgColor
+            row.layer?.borderColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.50).cgColor
+            row.layer?.borderWidth = 1.0
+            row.layer?.cornerRadius = 6
+        }
+
         // Check if this thread is currently in inline editing mode
         if editingThreadId == thread.id {
             return createInlineEditRow(thread: thread, frame: frame)
@@ -789,7 +985,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         row.addSubview(iconView)
 
         // Text Container (expanded width to provide generous breathing room before actions)
-        let textContainer = NSView(frame: NSRect(x: 44, y: h - 42, width: frame.width - 232, height: 36))
+        let textContainer = NSView(frame: NSRect(x: 44, y: h - 42, width: frame.width - 246, height: 36))
 
         // Title button takes full textContainer width; clicking title toggles accordion expand
         let titleBtn = ClosureButton(frame: NSRect(x: 0, y: 17, width: textContainer.bounds.width, height: 18)) { [weak self] in
@@ -843,11 +1039,40 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
 
         row.addSubview(textContainer)
 
-        // Action Buttons: [✎] [Resume] [4h] [✓] (right-aligned with balanced 16px gutter)
+        // Action Buttons: [👁] [✎] [Resume] [4h] [✓] (right-aligned with balanced 16px gutter)
         let doneX = frame.width - 44
         let snoozeX = doneX - 40
         let resumeX = snoozeX - 64
-        let editX = resumeX - 32
+        let editX = resumeX - 30
+        let peekX = editX - 30
+
+        // Context Peek Button (👁) - Inspired by Peek (peek.zone)
+        let peekBtn = ClosureButton(frame: NSRect(x: peekX, y: h - 35, width: 26, height: 22)) {
+            if ContextPeekDrawer.shared.isVisible && ContextPeekDrawer.shared.activeThreadId == thread.id {
+                ContextPeekDrawer.shared.dismiss()
+            } else {
+                ContextPeekDrawer.shared.show(for: thread)
+            }
+        }
+        peekBtn.isBordered = false
+        peekBtn.wantsLayer = true
+        peekBtn.layer?.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 0.05).cgColor
+        peekBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        peekBtn.layer?.borderWidth = 1.0
+        peekBtn.layer?.cornerRadius = 4
+        peekBtn.toolTip = "Peek Context (Space)"
+        if let sym = NSImage(systemSymbolName: "eye", accessibilityDescription: "Peek") {
+            let cfg = NSImage.SymbolConfiguration(pointSize: 10.5, weight: .semibold)
+            peekBtn.image = sym.withSymbolConfiguration(cfg)
+            peekBtn.contentTintColor = NSColor(calibratedWhite: 0.70, alpha: 1.0)
+            peekBtn.imagePosition = .imageOnly
+        } else {
+            peekBtn.attributedTitle = NSAttributedString(string: "👁", attributes: [
+                .foregroundColor: NSColor(calibratedWhite: 0.70, alpha: 1.0),
+                .font: NSFont.systemFont(ofSize: 10)
+            ])
+        }
+        row.addSubview(peekBtn)
 
         // Edit Button (✎) - Ghost Action
         let editBtn = ClosureButton(frame: NSRect(x: editX, y: h - 35, width: 26, height: 22)) { [weak self] in
@@ -907,23 +1132,30 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         ])
         row.addSubview(snoozeBtn)
 
-        // Done Button (✓) - Subdued Ghost Action
+        // Done Button (✓) or Undo (↩) in Dock mode
+        let isArchive = (currentStatusMode == "dock")
+        let doneBtnTitle = isArchive ? "↩" : "✓"
         let doneBtn = ClosureButton(frame: NSRect(x: doneX, y: h - 35, width: 28, height: 22)) { [weak self] in
-            _ = SutraBridge.shared.done(threadId: thread.id)
+            if isArchive {
+                _ = SutraBridge.shared.undo(threadId: thread.id)
+            } else {
+                _ = SutraBridge.shared.done(threadId: thread.id)
+            }
             self?.fetchData()
             self?.renderThreadList()
             NotificationCenter.default.post(name: NSNotification.Name("SutraThreadsUpdated"), object: nil)
         }
         doneBtn.isBordered = false
         doneBtn.wantsLayer = true
-        doneBtn.layer?.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 0.06).cgColor
-        doneBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        doneBtn.layer?.backgroundColor = isArchive ? NSColor(calibratedRed: 0.22, green: 0.14, blue: 0.10, alpha: 1.0).cgColor : NSColor(calibratedWhite: 1.0, alpha: 0.06).cgColor
+        doneBtn.layer?.borderColor = isArchive ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.45).cgColor : NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
         doneBtn.layer?.borderWidth = 1.0
         doneBtn.layer?.cornerRadius = 4
-        doneBtn.attributedTitle = NSAttributedString(string: "✓", attributes: [
-            .foregroundColor: NSColor(calibratedWhite: 0.70, alpha: 1.0),
+        doneBtn.attributedTitle = NSAttributedString(string: doneBtnTitle, attributes: [
+            .foregroundColor: isArchive ? NSColor(calibratedRed: 0.95, green: 0.70, blue: 0.50, alpha: 1.0) : NSColor(calibratedWhite: 0.70, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 10, weight: .bold)
         ])
+        doneBtn.toolTip = isArchive ? "Move back to Active" : "Mark Done"
         row.addSubview(doneBtn)
 
         // Accordion Drawer Content
@@ -1610,7 +1842,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         return card
     }
 
-    private func loadSutraLogo(size: NSSize) -> NSImage {
+    static func loadSutraLogo(size: NSSize) -> NSImage {
         let paths = [
             Bundle.main.path(forResource: "logo", ofType: "png") ?? "",
             Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/logo.png").path,

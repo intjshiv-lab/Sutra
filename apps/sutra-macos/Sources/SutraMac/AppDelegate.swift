@@ -15,6 +15,23 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
     private var rightOptionDownTime: TimeInterval = 0
     private var rightOptionAlone: Bool = false
 
+    // Interruption Prediction Cue Nudge tracking (PLAN-029 Gap 6)
+    private var lastDeepWorkBundleId: String?
+    private var lastDeepWorkAppName: String?
+    private var lastDeepWorkTime: TimeInterval = 0
+
+    private let deepWorkBundles: Set<String> = [
+        "com.microsoft.VSCode", "com.todesktop.230313mzl4w4u92", "com.apple.dt.Xcode",
+        "com.apple.Terminal", "com.googlecode.iterm2", "com.sublimetext.4",
+        "md.obsidian", "com.jetbrains.intellij", "com.apple.Safari",
+        "com.google.Chrome", "company.thebrowser.Browser"
+    ]
+    private let commBundles: Set<String> = [
+        "com.tinyspeck.slackmacgap", "com.apple.MobileSMS", "com.microsoft.teams2",
+        "com.hnc.Discord", "com.apple.mail", "ru.keepcoder.Telegram",
+        "net.whatsapp.WhatsApp", "com.superhuman.electron"
+    ]
+
     public func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
         setupMainMenu()
@@ -37,6 +54,17 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         // Background non-blocking telemetry sync
         DispatchQueue.global(qos: .utility).async {
             LicenseManager.shared.sendHeartbeatIfNeeded()
+        }
+
+        // Background non-blocking anti-hoarding decay & 6-day auto-dock
+        DispatchQueue.global(qos: .utility).async {
+            let decayEnabled = UserDefaults.standard.object(forKey: "SutraEnableDecay") as? Bool ?? true
+            if decayEnabled {
+                _ = SutraBridge.shared.autoDockStale(days: 6)
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: NSNotification.Name("SutraThreadsUpdated"), object: nil)
+                }
+            }
         }
 
         PermissionManager.shared.verifyOrPrompt { [weak self] in
@@ -76,6 +104,11 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         NotificationCenter.default.addObserver(forName: NSNotification.Name("RestartSutraApp"), object: nil, queue: .main) { [weak self] _ in
             self?.restartSutra()
         }
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("SutraShortcutsChanged"), object: nil, queue: .main) { [weak self] _ in
+            self?.registerProfileHotkeys()
+        }
+        SettingsWindow.shared.delegate = self
+        FloatingWakeBar.shared.showPersistentIsland()
     }
 
     @objc private func onStatusButtonClicked() {
@@ -124,6 +157,11 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         let cueItem = NSMenuItem(title: "Leave Quick Cue... (^⌥Space)", action: #selector(openHUD), keyEquivalent: "")
         cueItem.target = self
         menu.addItem(cueItem)
+
+        // 2b. Preferences (⌘,)
+        let prefItem = NSMenuItem(title: "Preferences... (⌘,)", action: #selector(openPreferences), keyEquivalent: ",")
+        prefItem.target = self
+        menu.addItem(prefItem)
 
         menu.addItem(.separator())
 
@@ -359,6 +397,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         QuickCueHUD.shared.show()
     }
 
+    @objc private func openPreferences() {
+        SettingsWindow.shared.show()
+    }
+
     @objc private func restartSutra() {
         let appPath = Bundle.main.bundleURL.path
         let task = Process()
@@ -397,17 +439,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
             return noErr
         }, 1, &eventType, nil, nil)
 
-        // ⌃⌥R -> Restart Sutra (guarded)
-        let hotKeyIDRestart = EventHotKeyID(signature: OSType(0x53545242), id: 2) // 'STRB'
-        RegisterEventHotKey(UInt32(kVK_ANSI_R), UInt32(controlKey | optionKey), hotKeyIDRestart, GetApplicationEventTarget(), 0, &hotKeyRefRestart)
-
-        // ⌥S -> Toggle Sutra Sanctuary
-        let hotKeyIDS = EventHotKeyID(signature: OSType(0x53545243), id: 3) // 'STRC'
-        RegisterEventHotKey(UInt32(kVK_ANSI_S), UInt32(optionKey), hotKeyIDS, GetApplicationEventTarget(), 0, &hotKeyRefSanctuary)
-
-        // ⌥A -> Toggle Floating Wake Bar (Wake Alert)
-        let hotKeyIDWake = EventHotKeyID(signature: OSType(0x53545244), id: 4) // 'STRD'
-        RegisterEventHotKey(UInt32(kVK_ANSI_A), UInt32(optionKey), hotKeyIDWake, GetApplicationEventTarget(), 0, &hotKeyRefWake)
+        registerProfileHotkeys()
 
         // Dedicated Right Option Tap Detector (Global Monitor)
         NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
@@ -424,6 +456,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         }
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             self?.rightOptionAlone = false
+            let profile = UserDefaults.standard.string(forKey: "SutraShortcutProfile") ?? "standard"
+            let wakeKey = (profile == "ergonomic") ? UInt16(kVK_ANSI_W) : UInt16(kVK_ANSI_A)
             let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
             if flags == .option {
                 if event.keyCode == UInt16(kVK_ANSI_S) {
@@ -431,7 +465,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
                         SanctuaryPopover.shared.toggle(relativeTo: btn)
                     }
                     return nil
-                } else if event.keyCode == UInt16(kVK_ANSI_A) {
+                } else if event.keyCode == wakeKey {
                     FloatingWakeBar.shared.toggleForFrontmostApp()
                     return nil
                 }
@@ -441,6 +475,27 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
             }
             return event
         }
+    }
+
+    private func registerProfileHotkeys() {
+        if let ref = hotKeyRefRestart { UnregisterEventHotKey(ref); hotKeyRefRestart = nil }
+        if let ref = hotKeyRefSanctuary { UnregisterEventHotKey(ref); hotKeyRefSanctuary = nil }
+        if let ref = hotKeyRefWake { UnregisterEventHotKey(ref); hotKeyRefWake = nil }
+
+        let profile = UserDefaults.standard.string(forKey: "SutraShortcutProfile") ?? "standard"
+        let wakeKeyCode: UInt32 = (profile == "ergonomic") ? UInt32(kVK_ANSI_W) : UInt32(kVK_ANSI_A)
+
+        // ⌃⌥R -> Restart Sutra (guarded)
+        let hotKeyIDRestart = EventHotKeyID(signature: OSType(0x53545242), id: 2) // 'STRB'
+        RegisterEventHotKey(UInt32(kVK_ANSI_R), UInt32(controlKey | optionKey), hotKeyIDRestart, GetApplicationEventTarget(), 0, &hotKeyRefRestart)
+
+        // ⌥S -> Toggle Sutra Sanctuary
+        let hotKeyIDS = EventHotKeyID(signature: OSType(0x53545243), id: 3) // 'STRC'
+        RegisterEventHotKey(UInt32(kVK_ANSI_S), UInt32(optionKey), hotKeyIDS, GetApplicationEventTarget(), 0, &hotKeyRefSanctuary)
+
+        // ⌥A or ⌥W -> Toggle Floating Wake Bar (Wake Alert)
+        let hotKeyIDWake = EventHotKeyID(signature: OSType(0x53545244), id: 4) // 'STRD'
+        RegisterEventHotKey(wakeKeyCode, UInt32(optionKey), hotKeyIDWake, GetApplicationEventTarget(), 0, &hotKeyRefWake)
     }
 
     private func handleFlagsChanged(event: NSEvent) {
@@ -483,6 +538,20 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         lastActiveBundleId = bundleId
         let appName = app.localizedName ?? ""
 
+        // Interruption Prediction Cue Nudge (PLAN-029 Gap 6)
+        let isNudgeEnabled = UserDefaults.standard.object(forKey: "SutraEnableNudge") as? Bool ?? true
+        if isNudgeEnabled, commBundles.contains(bundleId), let prevName = lastDeepWorkAppName, CACurrentMediaTime() - lastDeepWorkTime >= 60.0 {
+            DispatchQueue.main.async {
+                FloatingWakeBar.shared.presentNudge(fromDeepWorkApp: prevName)
+            }
+        }
+
+        if deepWorkBundles.contains(bundleId) {
+            lastDeepWorkBundleId = bundleId
+            lastDeepWorkAppName = appName
+            lastDeepWorkTime = CACurrentMediaTime()
+        }
+
         DispatchQueue.global(qos: .userInitiated).async {
             let waiting = SutraBridge.shared.list(status: "waiting")
             let matching = waiting.filter { thread in
@@ -492,8 +561,14 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
             }
 
             if !matching.isEmpty {
+                var orderedThreads: [SutraThread] = []
+                let matchingIds = Set(matching.map { $0.id })
+                orderedThreads.append(contentsOf: matching.sorted(by: { $0.created_at > $1.created_at }))
+                let remaining = waiting.filter { !matchingIds.contains($0.id) }.sorted(by: { $0.created_at > $1.created_at })
+                orderedThreads.append(contentsOf: remaining)
+
                 DispatchQueue.main.async {
-                    FloatingWakeBar.shared.presentMultiple(threads: matching)
+                    FloatingWakeBar.shared.presentMultiple(threads: orderedThreads, preserveOrder: true)
                 }
             }
         }
@@ -512,7 +587,18 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
             DispatchQueue.main.async {
                 self?.renderStatusButton(count: count)
                 SanctuaryPopover.shared.refreshIfVisible()
+                FloatingWakeBar.shared.updateScheduledTodayCount()
             }
         }
+    }
+}
+
+extension AppDelegate: SettingsDelegate {
+    public func didChangeFloatingBarPlacement(_ placement: String) {
+        FloatingWakeBar.shared.relayout()
+    }
+
+    public func didChangeShortcutProfile(_ profile: String) {
+        registerProfileHotkeys()
     }
 }

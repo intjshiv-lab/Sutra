@@ -3,6 +3,14 @@ import AppKit
 public final class KeyFocusPanel: NSPanel {
     public override var canBecomeKey: Bool { true }
     public override var canBecomeMain: Bool { true }
+    public var onKeyDown: ((NSEvent) -> Bool)?
+
+    public override func keyDown(with event: NSEvent) {
+        if let handler = onKeyDown, handler(event) {
+            return
+        }
+        super.keyDown(with: event)
+    }
 }
 
 public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
@@ -45,6 +53,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
     private var calendarPopover: NSPopover?
     private var stackBtn: NSButton!
     private var stackPopover: NSPopover?
+    private var templatePopover: NSPopover?
     private var currentStack: String? = nil
 
     public override init() {
@@ -379,10 +388,27 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         checklistFields.removeAll()
 
         let heading = NSTextField(labelWithString: "Tasks")
-        heading.frame = NSRect(x: 0, y: 80, width: width, height: 16)
+        heading.frame = NSRect(x: 0, y: 80, width: 120, height: 16)
         heading.font = NSFont.systemFont(ofSize: 10, weight: .bold)
         heading.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         checklistView.addSubview(heading)
+
+        let isTplEnabled = UserDefaults.standard.object(forKey: "SutraEnableTemplates") as? Bool ?? true
+        if isTplEnabled {
+            let tplBtn = ClosureButton(frame: NSRect(x: width - 96, y: 78, width: 96, height: 18)) { [weak self] in
+                guard let self = self else { return }
+                self.showTemplateSelector(relativeTo: self.checklistView)
+            }
+            tplBtn.isBordered = false
+            tplBtn.wantsLayer = true
+            tplBtn.layer?.cornerRadius = 9
+            tplBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
+            tplBtn.attributedTitle = NSAttributedString(string: "Templates ▾", attributes: [
+                .foregroundColor: NSColor(calibratedRed: 0.90, green: 0.55, blue: 0.25, alpha: 1.0),
+                .font: NSFont.systemFont(ofSize: 9.5, weight: .bold)
+            ])
+            checklistView.addSubview(tplBtn)
+        }
 
         let rowH: CGFloat = 23
         for i in 0..<3 {
@@ -798,6 +824,217 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         }
     }
 
+    // MARK: - Natural Language Snooze Parser (PLAN-029 Gap 1, inspired by Cuewake)
+
+    public static func parseNaturalLanguageDate(from text: String) -> (cleanTitle: String, date: Date?) {
+        let isNLPEnabled = UserDefaults.standard.object(forKey: "SutraEnableNLPSnooze") as? Bool ?? true
+        guard isNLPEnabled else { return (text, nil) }
+
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let now = Date()
+        let cal = Calendar.current
+
+        // Pattern 1: "in X h/hrs/hours" or "in X m/mins/minutes" or "in X d/days"
+        let relPattern = #"(?i)\b(?:in\s+)?(\d+)\s*(m|min|mins|minute|minutes|h|hr|hrs|hour|hours|d|day|days)\b"#
+        if let regex = try? NSRegularExpression(pattern: relPattern),
+           let match = regex.matches(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)).last {
+            if let numRange = Range(match.range(at: 1), in: trimmed),
+               let unitRange = Range(match.range(at: 2), in: trimmed),
+               let num = Double(trimmed[numRange]) {
+                let unit = trimmed[unitRange].lowercased()
+                var seconds: TimeInterval = 0
+                if unit.hasPrefix("m") { seconds = num * 60 }
+                else if unit.hasPrefix("h") { seconds = num * 3600 }
+                else if unit.hasPrefix("d") { seconds = num * 86400 }
+
+                if seconds > 0 {
+                    let date = now.addingTimeInterval(seconds)
+                    let clean = trimmed.replacingCharacters(in: Range(match.range, in: trimmed)!, with: "").trimmingCharacters(in: .whitespaces)
+                    return (clean.isEmpty ? trimmed : clean, date)
+                }
+            }
+        }
+
+        // Pattern 2: "tomorrow at X(am|pm)?" or just "tomorrow"
+        let tomorrowPattern = #"(?i)\btomorrow(?:\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?)?\b"#
+        if let regex = try? NSRegularExpression(pattern: tomorrowPattern),
+           let match = regex.firstMatch(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)) {
+            var targetHour = 9
+            var targetMinute = 0
+            if match.range(at: 1).location != NSNotFound, let hRange = Range(match.range(at: 1), in: trimmed), let h = Int(trimmed[hRange]) {
+                targetHour = h
+                if match.range(at: 3).location != NSNotFound, let ampmRange = Range(match.range(at: 3), in: trimmed) {
+                    let ampm = trimmed[ampmRange].lowercased()
+                    if ampm == "pm" && targetHour < 12 { targetHour += 12 }
+                    if ampm == "am" && targetHour == 12 { targetHour = 0 }
+                }
+            }
+            if match.range(at: 2).location != NSNotFound, let mRange = Range(match.range(at: 2), in: trimmed), let m = Int(trimmed[mRange]) {
+                targetMinute = m
+            }
+
+            if let tomorrow = cal.date(byAdding: .day, value: 1, to: now) {
+                var comps = cal.dateComponents([.year, .month, .day], from: tomorrow)
+                comps.hour = targetHour
+                comps.minute = targetMinute
+                comps.second = 0
+                if let date = cal.date(from: comps) {
+                    let clean = trimmed.replacingCharacters(in: Range(match.range, in: trimmed)!, with: "").trimmingCharacters(in: .whitespaces)
+                    return (clean.isEmpty ? trimmed : clean, date)
+                }
+            }
+        }
+
+        // Pattern 3: "today at X(am|pm)?" or "tonight"
+        let todayPattern = #"(?i)\b(?:today\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?|tonight)\b"#
+        if let regex = try? NSRegularExpression(pattern: todayPattern),
+           let match = regex.firstMatch(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)) {
+            var targetHour = 20
+            var targetMinute = 0
+            if match.range(at: 1).location != NSNotFound, let hRange = Range(match.range(at: 1), in: trimmed), let h = Int(trimmed[hRange]) {
+                targetHour = h
+                if match.range(at: 3).location != NSNotFound, let ampmRange = Range(match.range(at: 3), in: trimmed) {
+                    let ampm = trimmed[ampmRange].lowercased()
+                    if ampm == "pm" && targetHour < 12 { targetHour += 12 }
+                    if ampm == "am" && targetHour == 12 { targetHour = 0 }
+                }
+            }
+            if match.range(at: 2).location != NSNotFound, let mRange = Range(match.range(at: 2), in: trimmed), let m = Int(trimmed[mRange]) {
+                targetMinute = m
+            }
+            var comps = cal.dateComponents([.year, .month, .day], from: now)
+            comps.hour = targetHour
+            comps.minute = targetMinute
+            comps.second = 0
+            if let date = cal.date(from: comps), date > now {
+                let clean = trimmed.replacingCharacters(in: Range(match.range, in: trimmed)!, with: "").trimmingCharacters(in: .whitespaces)
+                return (clean.isEmpty ? trimmed : clean, date)
+            }
+        }
+
+        return (trimmed, nil)
+    }
+
+    // MARK: - Reusable Checklist Templates (PLAN-029 Gap 2, inspired by Cuewake)
+
+    private func showTemplateSelector(relativeTo view: NSView) {
+        if let existing = templatePopover, existing.isShown {
+            existing.performClose(nil)
+            templatePopover = nil
+            return
+        }
+
+        let templates = SutraBridge.shared.getTemplates()
+        let popWidth: CGFloat = 260
+        let rowH: CGFloat = 36
+        let headerH: CGFloat = 36
+        let footerH: CGFloat = 38
+        let popHeight: CGFloat = headerH + CGFloat(templates.count) * rowH + footerH
+
+        let popover = NSPopover()
+        popover.behavior = .transient
+        popover.animates = true
+
+        let popView = NSView(frame: NSRect(x: 0, y: 0, width: popWidth, height: popHeight))
+        popView.wantsLayer = true
+        popView.layer?.backgroundColor = NSColor(calibratedWhite: 0.10, alpha: 0.98).cgColor
+
+        // Header
+        let titleLbl = NSTextField(labelWithString: "CHECKLIST TEMPLATES")
+        titleLbl.font = NSFont.systemFont(ofSize: 9.5, weight: .bold)
+        titleLbl.textColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 1.0)
+        titleLbl.frame = NSRect(x: 14, y: popHeight - 26, width: 230, height: 16)
+        popView.addSubview(titleLbl)
+
+        // Template rows
+        for (i, tpl) in templates.enumerated() {
+            let rowY = popHeight - headerH - CGFloat(i + 1) * rowH
+            let rowView = NSView(frame: NSRect(x: 10, y: rowY, width: popWidth - 20, height: rowH - 4))
+            rowView.wantsLayer = true
+            rowView.layer?.cornerRadius = 6
+            rowView.layer?.backgroundColor = NSColor(calibratedWhite: 0.14, alpha: 1.0).cgColor
+
+            let tName = NSTextField(labelWithString: tpl.name)
+            tName.isBezeled = false
+            tName.drawsBackground = false
+            tName.isEditable = false
+            tName.isSelectable = false
+            tName.font = NSFont.systemFont(ofSize: 11, weight: .bold)
+            tName.textColor = .white
+            tName.frame = NSRect(x: 10, y: 16, width: popWidth - 40, height: 14)
+            rowView.addSubview(tName)
+
+            let tItems = NSTextField(labelWithString: "\(tpl.items.count) steps: " + tpl.items.prefix(2).joined(separator: ", ") + "…")
+            tItems.isBezeled = false
+            tItems.drawsBackground = false
+            tItems.isEditable = false
+            tItems.isSelectable = false
+            tItems.font = NSFont.systemFont(ofSize: 9.5, weight: .regular)
+            tItems.textColor = NSColor(calibratedWhite: 0.60, alpha: 1.0)
+            tItems.frame = NSRect(x: 10, y: 2, width: popWidth - 40, height: 14)
+            tItems.cell?.lineBreakMode = .byTruncatingTail
+            rowView.addSubview(tItems)
+
+            let rowBtn = ClosureButton(frame: NSRect(x: 0, y: 0, width: popWidth - 20, height: rowH - 4)) { [weak self, weak popover] in
+                self?.applyTemplate(tpl)
+                popover?.performClose(nil)
+                self?.templatePopover = nil
+            }
+            rowBtn.title = ""
+            rowBtn.attributedTitle = NSAttributedString(string: "")
+            rowBtn.isBordered = false
+            rowBtn.wantsLayer = true
+            rowBtn.layer?.backgroundColor = NSColor.clear.cgColor
+            rowView.addSubview(rowBtn)
+
+            popView.addSubview(rowView)
+        }
+
+        // Footer: Save Current Checklist Button
+        let saveCurrentBtn = ClosureButton(frame: NSRect(x: 10, y: 8, width: popWidth - 20, height: 24)) { [weak self, weak popover] in
+            guard let self = self else { return }
+            let items = self.checklistFields.map { $0.stringValue.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+            if !items.isEmpty {
+                let name = self.titleField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                let templateName = name.isEmpty ? "Custom Checklist" : name
+                _ = SutraBridge.shared.saveTemplate(name: templateName, items: items)
+                NSSound(named: "Tink")?.play()
+            }
+            popover?.performClose(nil)
+            self.templatePopover = nil
+        }
+        saveCurrentBtn.isBordered = false
+        saveCurrentBtn.wantsLayer = true
+        saveCurrentBtn.layer?.cornerRadius = 4
+        saveCurrentBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.40, blue: 0.18, alpha: 1.0).cgColor
+        saveCurrentBtn.attributedTitle = NSAttributedString(string: "+ Save Current as Template", attributes: [
+            .foregroundColor: NSColor.white,
+            .font: NSFont.systemFont(ofSize: 10, weight: .bold)
+        ])
+        popView.addSubview(saveCurrentBtn)
+
+        let vc = NSViewController()
+        vc.view = popView
+        popover.contentViewController = vc
+        popover.show(relativeTo: view.bounds, of: view, preferredEdge: .maxY)
+        self.templatePopover = popover
+    }
+
+    private func applyTemplate(_ template: (id: String, name: String, items: [String])) {
+        for (i, field) in checklistFields.enumerated() {
+            if i < template.items.count {
+                field.stringValue = template.items[i]
+                checklistBoxes[i].state = .off
+            } else {
+                field.stringValue = ""
+                checklistBoxes[i].state = .off
+            }
+        }
+        if titleField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            titleField.stringValue = template.name
+        }
+    }
+
     private func createInputField(frame: NSRect, placeholder: String, fontSize: CGFloat, weight: NSFont.Weight) -> NSTextField {
         let field = NSTextField(frame: frame)
         field.font = NSFont.systemFont(ofSize: fontSize, weight: weight)
@@ -940,6 +1177,15 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         panel.makeFirstResponder(titleField)
     }
 
+    public func controlTextDidChange(_ obj: Notification) {
+        guard let field = obj.object as? NSTextField, field == titleField else { return }
+        let (_, detectedDate) = QuickCueHUD.parseNaturalLanguageDate(from: field.stringValue)
+        if let date = detectedDate {
+            selectedDueDate = date
+            updateDateButtonTitle()
+        }
+    }
+
     public func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         if commandSelector == #selector(NSResponder.insertNewline(_:)) {
             submit()
@@ -952,7 +1198,16 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
     }
 
     private func submit() {
-        let t = titleField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        var t = titleField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !t.isEmpty else { return }
+
+        let (clean, detectedDate) = QuickCueHUD.parseNaturalLanguageDate(from: t)
+        if selectedDueDate == nil, let date = detectedDate {
+            selectedDueDate = date
+            t = clean
+        } else if selectedDueDate != nil && !clean.isEmpty {
+            t = clean
+        }
         guard !t.isEmpty else { return }
 
         var finalNotes: String? = nil
