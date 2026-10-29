@@ -127,12 +127,16 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         headerView.addSubview(toast)
         self.pinToastLabel = toast
 
-        // Floating Borderless White Pin Button (Zero Shadow, Zero Circle, Hover Gated)
+        // Floating Borderless White Pin Button (Zero Shadow, Zero Circle, Hover Gated, Scale on Hover)
         let pin = ClosureButton(frame: NSRect(x: 284, y: 9, width: 22, height: 22)) { [weak self] in
             self?.togglePin()
         }
         pin.isBordered = false
         pin.wantsLayer = true
+        pin.layer?.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        pin.layer?.position = CGPoint(x: pin.frame.midX, y: pin.frame.midY)
+        (pin.cell as? NSButtonCell)?.highlightsBy = []
+        pin.focusRingType = .none
         pin.shadow = nil
         pin.layer?.shadowOpacity = 0.0
         pin.layer?.backgroundColor = NSColor.clear.cgColor
@@ -140,6 +144,24 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         pin.layer?.borderWidth = 0
         pin.toolTip = "Pin to Dynamic Island Companion (P)"
         pin.alphaValue = 0.0
+
+        // Micro-grow hover interaction: scale up 20% on hover, return to identity on exit
+        pin.onMouseEnter = { [weak pin] in
+            guard let layer = pin?.layer else { return }
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.14
+                ctx.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                layer.transform = CATransform3DMakeScale(1.20, 1.20, 1.0)
+            }
+        }
+        pin.onMouseExit = { [weak pin] in
+            guard let layer = pin?.layer else { return }
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.12
+                ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                layer.transform = CATransform3DIdentity
+            }
+        }
         headerView.addSubview(pin)
         self.pinBtn = pin
 
@@ -150,6 +172,8 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         }
         open.isBordered = false
         open.wantsLayer = true
+        (open.cell as? NSButtonCell)?.highlightsBy = []
+        open.focusRingType = .none
         open.shadow = nil
         open.layer?.shadowOpacity = 0.0
         open.layer?.backgroundColor = NSColor.clear.cgColor
@@ -158,25 +182,46 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         open.toolTip = "Open in Default Browser"
         if let sym = NSImage(systemSymbolName: "arrow.up.right", accessibilityDescription: "Open") {
             let cfg = NSImage.SymbolConfiguration(pointSize: 11, weight: .semibold)
-            open.image = sym.withSymbolConfiguration(cfg)
+            if let configured = sym.withSymbolConfiguration(cfg) {
+                configured.isTemplate = true
+                open.image = configured
+            } else {
+                open.image = sym
+            }
             open.contentTintColor = NSColor(calibratedWhite: 0.90, alpha: 1.0)
             open.imagePosition = .imageOnly
         }
         headerView.addSubview(open)
         self.openBtn = open
 
-        // Close Button
+        // Close Button (Clean, Borderless, Floating)
         let close = ClosureButton(frame: NSRect(x: 344, y: 9, width: 22, height: 22)) { [weak self] in
             self?.dismiss()
         }
         close.isBordered = false
         close.wantsLayer = true
-        close.layer?.cornerRadius = 11
-        close.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
-        close.attributedTitle = NSAttributedString(string: "✕", attributes: [
-            .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
-            .font: NSFont.systemFont(ofSize: 10, weight: .bold)
-        ])
+        (close.cell as? NSButtonCell)?.highlightsBy = []
+        close.focusRingType = .none
+        close.layer?.cornerRadius = 0
+        close.layer?.backgroundColor = NSColor.clear.cgColor
+        close.shadow = nil
+        close.layer?.shadowOpacity = 0.0
+        if let sym = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Close") {
+            let cfg = NSImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+            if let configured = sym.withSymbolConfiguration(cfg) {
+                configured.isTemplate = true
+                close.image = configured
+            } else {
+                close.image = sym
+            }
+            close.contentTintColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
+            close.imagePosition = .imageOnly
+        } else {
+            close.attributedTitle = NSAttributedString(string: "✕", attributes: [
+                .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
+                .font: NSFont.systemFont(ofSize: 10, weight: .bold)
+            ])
+        }
         headerView.addSubview(close)
         self.closeBtn = close
 
@@ -221,18 +266,25 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
 
         if let sym = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Pin") {
             let cfg = NSImage.SymbolConfiguration(pointSize: 12, weight: .medium)
-            pinBtn.image = sym.withSymbolConfiguration(cfg)
+            if let configured = sym.withSymbolConfiguration(cfg) {
+                configured.isTemplate = true
+                pinBtn.image = configured
+            } else {
+                pinBtn.image = sym
+            }
         }
         pinBtn.contentTintColor = .white
         pinBtn.imagePosition = .imageOnly
+        (pinBtn.cell as? NSButtonCell)?.highlightsBy = []
+        pinBtn.focusRingType = .none
         pinBtn.shadow = nil
         pinBtn.layer?.shadowOpacity = 0.0
         pinBtn.layer?.backgroundColor = NSColor.clear.cgColor
         pinBtn.layer?.borderColor = NSColor.clear.cgColor
         pinBtn.layer?.borderWidth = 0
 
-        // Gated Visibility: permanently visible (1.0) when pinned; hover-only (0.85 vs 0.0) when unpinned
-        let targetAlpha: CGFloat = isPinned ? 1.0 : (isHeaderHovered ? 0.85 : 0.0)
+        // Gated Visibility: permanently visible (1.0) when pinned; hover-only (0.90 vs 0.0) when unpinned
+        let targetAlpha: CGFloat = isPinned ? 1.0 : (isHeaderHovered ? 0.90 : 0.0)
 
         if animated {
             NSAnimationContext.runAnimationGroup { ctx in

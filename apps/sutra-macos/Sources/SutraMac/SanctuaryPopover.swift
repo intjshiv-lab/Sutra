@@ -362,23 +362,27 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         let btnSize: CGFloat = 26
         let btnY: CGFloat = (48 - btnSize) / 2
 
-        // Settings Button (⚙) -> SF Symbol gearshape.fill
+        // Settings Button (⚙) -> SF Symbol gearshape.fill (Clean, Borderless, Floating)
         let settingsBtn = ClosureButton(frame: NSRect(x: width - 70, y: btnY, width: btnSize, height: btnSize)) {
             SettingsWindow.shared.show()
         }
         settingsBtn.isBordered = false
         settingsBtn.wantsLayer = true
-        settingsBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
-        settingsBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
-        settingsBtn.layer?.borderWidth = 1.0
-        settingsBtn.layer?.cornerRadius = btnSize / 2
+        settingsBtn.layer?.backgroundColor = NSColor.clear.cgColor
+        settingsBtn.layer?.borderColor = NSColor.clear.cgColor
+        settingsBtn.layer?.borderWidth = 0
+        settingsBtn.layer?.cornerRadius = 0
+        (settingsBtn.cell as? NSButtonCell)?.highlightsBy = []
+        settingsBtn.focusRingType = .none
+        settingsBtn.shadow = nil
+        settingsBtn.layer?.shadowOpacity = 0.0
         let gearConfig = NSImage.SymbolConfiguration(pointSize: 12.5, weight: .semibold)
         if let sym = NSImage(systemSymbolName: "gearshape.fill", accessibilityDescription: "Settings")?.withSymbolConfiguration(gearConfig) {
             sym.isTemplate = true
             settingsBtn.image = sym
         } else {
             settingsBtn.attributedTitle = NSAttributedString(string: "⚙", attributes: [
-                .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
+                .foregroundColor: NSColor(calibratedWhite: 0.90, alpha: 1.0),
                 .font: NSFont.systemFont(ofSize: 12)
             ])
         }
@@ -388,23 +392,27 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         settingsBtn.toolTip = "Sutra Preferences"
         headerView.addSubview(settingsBtn)
 
-        // Dismiss Button (✕) -> SF Symbol xmark
+        // Dismiss Button (✕) -> SF Symbol xmark (Clean, Borderless, Floating)
         let closeBtn = ClosureButton(frame: NSRect(x: width - 38, y: btnY, width: btnSize, height: btnSize)) { [weak self] in
             self?.dismiss()
         }
         closeBtn.isBordered = false
         closeBtn.wantsLayer = true
-        closeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
-        closeBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
-        closeBtn.layer?.borderWidth = 1.0
-        closeBtn.layer?.cornerRadius = btnSize / 2
+        closeBtn.layer?.backgroundColor = NSColor.clear.cgColor
+        closeBtn.layer?.borderColor = NSColor.clear.cgColor
+        closeBtn.layer?.borderWidth = 0
+        closeBtn.layer?.cornerRadius = 0
+        (closeBtn.cell as? NSButtonCell)?.highlightsBy = []
+        closeBtn.focusRingType = .none
+        closeBtn.shadow = nil
+        closeBtn.layer?.shadowOpacity = 0.0
         let xConfig = NSImage.SymbolConfiguration(pointSize: 11.5, weight: .semibold)
         if let sym = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Close")?.withSymbolConfiguration(xConfig) {
             sym.isTemplate = true
             closeBtn.image = sym
         } else {
             closeBtn.attributedTitle = NSAttributedString(string: "✕", attributes: [
-                .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
+                .foregroundColor: NSColor(calibratedWhite: 0.90, alpha: 1.0),
                 .font: NSFont.systemFont(ofSize: 11, weight: .medium)
             ])
         }

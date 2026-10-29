@@ -313,10 +313,12 @@ public final class FloatingWakeBar: NSObject {
         if let pinBtn = pinBtn {
             pinBtn.isBordered = false
             pinBtn.wantsLayer = true
-            pinBtn.layer?.cornerRadius = 11
-            pinBtn.layer?.backgroundColor = isPinned ? NSColor(calibratedWhite: 1.0, alpha: 0.22).cgColor : NSColor.clear.cgColor
-            pinBtn.layer?.borderColor = isPinned ? NSColor(calibratedWhite: 1.0, alpha: 0.45).cgColor : NSColor.clear.cgColor
-            pinBtn.layer?.borderWidth = isPinned ? 1.0 : 0
+            pinBtn.layer?.cornerRadius = 0
+            pinBtn.layer?.backgroundColor = NSColor.clear.cgColor
+            pinBtn.layer?.borderColor = NSColor.clear.cgColor
+            pinBtn.layer?.borderWidth = 0
+            (pinBtn.cell as? NSButtonCell)?.highlightsBy = []
+            pinBtn.focusRingType = .none
             pinBtn.image = pinImg
             pinBtn.imageScaling = .scaleProportionallyDown
             pinBtn.imagePosition = .imageOnly
@@ -328,10 +330,12 @@ public final class FloatingWakeBar: NSObject {
         if let collapsedPinBtn = collapsedPinBtn {
             collapsedPinBtn.isBordered = false
             collapsedPinBtn.wantsLayer = true
-            collapsedPinBtn.layer?.cornerRadius = 11
-            collapsedPinBtn.layer?.backgroundColor = isPinned ? NSColor(calibratedWhite: 1.0, alpha: 0.22).cgColor : NSColor.clear.cgColor
-            collapsedPinBtn.layer?.borderColor = isPinned ? NSColor(calibratedWhite: 1.0, alpha: 0.45).cgColor : NSColor.clear.cgColor
-            collapsedPinBtn.layer?.borderWidth = isPinned ? 1.0 : 0
+            collapsedPinBtn.layer?.cornerRadius = 0
+            collapsedPinBtn.layer?.backgroundColor = NSColor.clear.cgColor
+            collapsedPinBtn.layer?.borderColor = NSColor.clear.cgColor
+            collapsedPinBtn.layer?.borderWidth = 0
+            (collapsedPinBtn.cell as? NSButtonCell)?.highlightsBy = []
+            collapsedPinBtn.focusRingType = .none
             collapsedPinBtn.image = pinImg
             collapsedPinBtn.imageScaling = .scaleProportionallyDown
             collapsedPinBtn.imagePosition = .imageOnly
@@ -1023,6 +1027,10 @@ final class BottomResizeHandleView: NSView {
 
 class ClosureButton: NSButton {
     let onClick: () -> Void
+    var onMouseEnter: (() -> Void)?
+    var onMouseExit: (() -> Void)?
+    private var trackingArea: NSTrackingArea?
+
     init(frame: NSRect, onClick: @escaping () -> Void) {
         self.onClick = onClick
         super.init(frame: frame)
@@ -1032,9 +1040,30 @@ class ClosureButton: NSButton {
         action = #selector(trigger)
         sendAction(on: [.leftMouseUp])
         contentTintColor = .white
+        (cell as? NSButtonCell)?.highlightsBy = []
+        focusRingType = .none
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     @objc func trigger() { onClick() }
+
+    public override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        if let ta = trackingArea { removeTrackingArea(ta) }
+        let opts: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways, .inVisibleRect]
+        let ta = NSTrackingArea(rect: bounds, options: opts, owner: self, userInfo: nil)
+        addTrackingArea(ta)
+        self.trackingArea = ta
+    }
+
+    public override func mouseEntered(with event: NSEvent) {
+        super.mouseEntered(with: event)
+        onMouseEnter?()
+    }
+
+    public override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        onMouseExit?()
+    }
 
     public override var title: String {
         get { super.title }
