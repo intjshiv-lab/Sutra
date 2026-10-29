@@ -9,10 +9,18 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
     public var activeThreadId: String? { activeThread?.id }
 
     private var containerView: NSView!
-    private var headerView: NSView!
+    private var headerView: HoverTrackingView!
     private var logoView: NSImageView!
     private var titleLabel: NSTextField!
     private var contentContainer: NSView!
+
+    // Header Controls
+    private var pinBtn: ClosureButton?
+    private var openBtn: ClosureButton?
+    private var closeBtn: ClosureButton?
+    private var pinToastLabel: NSTextField?
+    private var pinToastTimer: Timer?
+    private var isHeaderHovered: Bool = false
 
     // Ephemeral preview views (Allocated strictly on demand, nil-ed on dismiss)
     private var webView: WKWebView?
@@ -61,10 +69,7 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
             return
         }
         if event.charactersIgnoringModifiers?.lowercased() == "p" { // P: Pin to PiP
-            if let thread = activeThread {
-                AmbientPiPWindow.shared.pin(thread: thread)
-                NSSound(named: "Tink")?.play()
-            }
+            togglePin()
             return
         }
         super.keyDown(with: event)
@@ -79,10 +84,17 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         containerView.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.16).cgColor
         containerView.layer?.borderWidth = 1.0
 
-        // 1. Header (y: 480 - 40 ... 480)
-        headerView = NSView(frame: NSRect(x: 0, y: 440, width: 380, height: 40))
-        headerView.wantsLayer = true
-        headerView.layer?.backgroundColor = NSColor(calibratedWhite: 0.11, alpha: 1.0).cgColor
+        // 1. Header with Mouse Hover Tracking (y: 480 - 40 ... 480)
+        let trackingHeader = HoverTrackingView(frame: NSRect(x: 0, y: 440, width: 380, height: 40))
+        trackingHeader.wantsLayer = true
+        trackingHeader.layer?.backgroundColor = NSColor(calibratedWhite: 0.11, alpha: 1.0).cgColor
+        trackingHeader.onMouseEnter = { [weak self] in
+            self?.handleHeaderHover(entered: true)
+        }
+        trackingHeader.onMouseExit = { [weak self] in
+            self?.handleHeaderHover(entered: false)
+        }
+        headerView = trackingHeader
 
         // Sutra Infinity Logo (left-aligned)
         logoView = NSImageView(frame: NSRect(x: 14, y: 10, width: 20, height: 20))
@@ -96,52 +108,77 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         titleLabel.textColor = .white
         headerView.addSubview(titleLabel)
 
-        // Pin Button
-        let pinBtn = ClosureButton(frame: NSRect(x: 284, y: 9, width: 22, height: 22)) { [weak self] in
-            guard let self = self, let thread = self.activeThread else { return }
-            AmbientPiPWindow.shared.pin(thread: thread)
-            NSSound(named: "Tink")?.play()
-        }
-        pinBtn.isBordered = false
-        pinBtn.wantsLayer = true
-        pinBtn.toolTip = "Pin to Ambient Floating PiP (P)"
-        if let sym = NSImage(systemSymbolName: "pin.fill", accessibilityDescription: "Pin") {
-            let cfg = NSImage.SymbolConfiguration(pointSize: 10, weight: .semibold)
-            pinBtn.image = sym.withSymbolConfiguration(cfg)
-            pinBtn.contentTintColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
-            pinBtn.imagePosition = .imageOnly
-        }
-        headerView.addSubview(pinBtn)
+        // Ephemeral Pin Toast Pill ("PINNED" / "UNPINNED")
+        let toast = NSTextField(labelWithString: "PINNED")
+        toast.frame = NSRect(x: 196, y: 10, width: 78, height: 20)
+        toast.font = NSFont.systemFont(ofSize: 9.5, weight: .bold)
+        toast.textColor = .white
+        toast.alignment = .center
+        toast.isBezeled = false
+        toast.drawsBackground = true
+        toast.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 0.16)
+        toast.wantsLayer = true
+        toast.layer?.cornerRadius = 10
+        toast.layer?.masksToBounds = true
+        toast.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.30).cgColor
+        toast.layer?.borderWidth = 1.0
+        toast.alphaValue = 0.0
+        toast.isHidden = true
+        headerView.addSubview(toast)
+        self.pinToastLabel = toast
 
-        // Open in Browser/App Button
-        let openBtn = ClosureButton(frame: NSRect(x: 314, y: 9, width: 22, height: 22)) { [weak self] in
+        // Floating Borderless White Pin Button (Zero Shadow, Zero Circle, Hover Gated)
+        let pin = ClosureButton(frame: NSRect(x: 284, y: 9, width: 22, height: 22)) { [weak self] in
+            self?.togglePin()
+        }
+        pin.isBordered = false
+        pin.wantsLayer = true
+        pin.shadow = nil
+        pin.layer?.shadowOpacity = 0.0
+        pin.layer?.backgroundColor = NSColor.clear.cgColor
+        pin.layer?.borderColor = NSColor.clear.cgColor
+        pin.layer?.borderWidth = 0
+        pin.toolTip = "Pin to Dynamic Island Companion (P)"
+        pin.alphaValue = 0.0
+        headerView.addSubview(pin)
+        self.pinBtn = pin
+
+        // Open in Default Browser/App Button (Sleek Borderless Arrow)
+        let open = ClosureButton(frame: NSRect(x: 314, y: 9, width: 22, height: 22)) { [weak self] in
             guard let self = self, let thread = self.activeThread else { return }
             self.openCurrentThreadExternal(thread)
         }
-        openBtn.isBordered = false
-        openBtn.wantsLayer = true
-        openBtn.toolTip = "Open in Default App / Browser"
-        if let sym = NSImage(systemSymbolName: "arrow.up.right.square", accessibilityDescription: "Open") {
+        open.isBordered = false
+        open.wantsLayer = true
+        open.shadow = nil
+        open.layer?.shadowOpacity = 0.0
+        open.layer?.backgroundColor = NSColor.clear.cgColor
+        open.layer?.borderColor = NSColor.clear.cgColor
+        open.layer?.borderWidth = 0
+        open.toolTip = "Open in Default Browser"
+        if let sym = NSImage(systemSymbolName: "arrow.up.right", accessibilityDescription: "Open") {
             let cfg = NSImage.SymbolConfiguration(pointSize: 11, weight: .semibold)
-            openBtn.image = sym.withSymbolConfiguration(cfg)
-            openBtn.contentTintColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
-            openBtn.imagePosition = .imageOnly
+            open.image = sym.withSymbolConfiguration(cfg)
+            open.contentTintColor = NSColor(calibratedWhite: 0.90, alpha: 1.0)
+            open.imagePosition = .imageOnly
         }
-        headerView.addSubview(openBtn)
+        headerView.addSubview(open)
+        self.openBtn = open
 
         // Close Button
-        let closeBtn = ClosureButton(frame: NSRect(x: 344, y: 9, width: 22, height: 22)) { [weak self] in
+        let close = ClosureButton(frame: NSRect(x: 344, y: 9, width: 22, height: 22)) { [weak self] in
             self?.dismiss()
         }
-        closeBtn.isBordered = false
-        closeBtn.wantsLayer = true
-        closeBtn.layer?.cornerRadius = 11
-        closeBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
-        closeBtn.attributedTitle = NSAttributedString(string: "✕", attributes: [
+        close.isBordered = false
+        close.wantsLayer = true
+        close.layer?.cornerRadius = 11
+        close.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
+        close.attributedTitle = NSAttributedString(string: "✕", attributes: [
             .foregroundColor: NSColor(calibratedWhite: 0.85, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 10, weight: .bold)
         ])
-        headerView.addSubview(closeBtn)
+        headerView.addSubview(close)
+        self.closeBtn = close
 
         containerView.addSubview(headerView)
 
@@ -150,6 +187,96 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         containerView.addSubview(contentContainer)
 
         contentView = containerView
+    }
+
+    private func isCurrentThreadPinned() -> Bool {
+        guard let thread = activeThread else { return false }
+        return AmbientPiPWindow.shared.isVisible && AmbientPiPWindow.shared.activeThreadId == thread.id
+    }
+
+    private func togglePin() {
+        guard let thread = activeThread else { return }
+        let currentlyPinned = isCurrentThreadPinned()
+        if currentlyPinned {
+            AmbientPiPWindow.shared.dismiss()
+            showPinToast(message: "UNPINNED")
+        } else {
+            AmbientPiPWindow.shared.pin(thread: thread)
+            NSSound(named: "Tink")?.play()
+            showPinToast(message: "PINNED")
+        }
+        applyPinBounceAnimation(to: pinBtn)
+        updatePinAppearance(animated: true)
+    }
+
+    private func handleHeaderHover(entered: Bool) {
+        isHeaderHovered = entered
+        updatePinAppearance(animated: true)
+    }
+
+    private func updatePinAppearance(animated: Bool = false) {
+        guard let pinBtn = pinBtn else { return }
+        let isPinned = isCurrentThreadPinned()
+        let symbolName = isPinned ? "pin.fill" : "pin"
+
+        if let sym = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Pin") {
+            let cfg = NSImage.SymbolConfiguration(pointSize: 12, weight: .medium)
+            pinBtn.image = sym.withSymbolConfiguration(cfg)
+        }
+        pinBtn.contentTintColor = .white
+        pinBtn.imagePosition = .imageOnly
+        pinBtn.shadow = nil
+        pinBtn.layer?.shadowOpacity = 0.0
+        pinBtn.layer?.backgroundColor = NSColor.clear.cgColor
+        pinBtn.layer?.borderColor = NSColor.clear.cgColor
+        pinBtn.layer?.borderWidth = 0
+
+        // Gated Visibility: permanently visible (1.0) when pinned; hover-only (0.85 vs 0.0) when unpinned
+        let targetAlpha: CGFloat = isPinned ? 1.0 : (isHeaderHovered ? 0.85 : 0.0)
+
+        if animated {
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.16
+                pinBtn.animator().alphaValue = targetAlpha
+            }
+        } else {
+            pinBtn.alphaValue = targetAlpha
+        }
+    }
+
+    private func showPinToast(message: String) {
+        pinToastLabel?.stringValue = message
+        pinToastLabel?.isHidden = false
+        pinToastLabel?.alphaValue = 0.0
+
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.18
+            ctx.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            self.pinToastLabel?.animator().alphaValue = 1.0
+        }
+
+        pinToastTimer?.invalidate()
+        pinToastTimer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: false) { [weak self] _ in
+            NSAnimationContext.runAnimationGroup({ ctx in
+                ctx.duration = 0.30
+                ctx.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                self?.pinToastLabel?.animator().alphaValue = 0.0
+            }, completionHandler: {
+                if self?.pinToastLabel?.alphaValue == 0.0 {
+                    self?.pinToastLabel?.isHidden = true
+                }
+            })
+        }
+    }
+
+    private func applyPinBounceAnimation(to view: NSView?) {
+        guard let layer = view?.layer else { return }
+        let bounce = CAKeyframeAnimation(keyPath: "transform.scale")
+        bounce.values = [1.0, 1.25, 0.95, 1.0]
+        bounce.keyTimes = [0, 0.35, 0.7, 1.0]
+        bounce.duration = 0.26
+        bounce.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        layer.add(bounce, forKey: "pinBounce")
     }
 
     private func openCurrentThreadExternal(_ thread: SutraThread) {
@@ -175,6 +302,7 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
 
         guard let sanctuaryPanel = SanctuaryPopover.shared.window else { return }
         reposition(relativeTo: sanctuaryPanel.frame)
+        updatePinAppearance(animated: false)
 
         // Route to content preview
         if let urlStr = thread.anchor?.url, let url = URL(string: urlStr), !urlStr.isEmpty {
@@ -220,7 +348,7 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         showLoading(message: "Fetching live preview...")
 
         let config = WKWebViewConfiguration()
-        // Enforce dark mode preferences and responsive viewport
+        // Enforce dark mode preferences
         let userScript = WKUserScript(
             source: """
             var meta = document.createElement('meta');
@@ -509,6 +637,12 @@ public final class ContextPeekDrawer: NSPanel, WKNavigationDelegate {
         loadTimeoutTimer?.invalidate()
         loadTimeoutTimer = nil
         hideLoading()
+
+        pinToastTimer?.invalidate()
+        pinToastTimer = nil
+        pinToastLabel?.isHidden = true
+        pinToastLabel?.alphaValue = 0.0
+        isHeaderHovered = false
 
         webView?.stopLoading()
         webView?.removeFromSuperview()

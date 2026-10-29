@@ -4,6 +4,7 @@ public final class AmbientPiPWindow: NSPanel {
     public static let shared = AmbientPiPWindow()
 
     private var activeThread: SutraThread?
+    public var activeThreadId: String? { activeThread?.id }
     private var containerView: NSView!
     private var appIconView: NSImageView!
     private var titleLabel: NSTextField!
