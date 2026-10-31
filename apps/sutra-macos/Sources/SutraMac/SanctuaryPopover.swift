@@ -440,8 +440,8 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         todayDockBtn.isBordered = false
         todayDockBtn.wantsLayer = true
         todayDockBtn.layer?.cornerRadius = 14
-        todayDockBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.18, green: 0.14, blue: 0.12, alpha: 1.0).cgColor
-        todayDockBtn.layer?.borderColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.40).cgColor
+        todayDockBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
+        todayDockBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
         todayDockBtn.layer?.borderWidth = 1.0
         todayDockBtn.layer?.shadowColor = NSColor.black.cgColor
         todayDockBtn.layer?.shadowOpacity = 0.40
@@ -459,10 +459,10 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         stackFilterBtn.wantsLayer = true
         stackFilterBtn.layer?.cornerRadius = 14
         stackFilterBtn.layer?.backgroundColor = (selectedStackFilter != nil)
-            ? NSColor(calibratedRed: 0.20, green: 0.14, blue: 0.10, alpha: 1.0).cgColor
+            ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.25).cgColor
             : NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
         stackFilterBtn.layer?.borderColor = (selectedStackFilter != nil)
-            ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.40).cgColor
+            ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.60).cgColor
             : NSColor(calibratedWhite: 1.0, alpha: 0.12).cgColor
         stackFilterBtn.layer?.borderWidth = 1.0
         stackFilterBtn.layer?.shadowColor = NSColor.black.cgColor
@@ -618,11 +618,11 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         dockBtn.isBordered = false
         dockBtn.wantsLayer = true
         dockBtn.layer?.cornerRadius = (twinH - 2) / 2
-        dockBtn.layer?.backgroundColor = isDock ? NSColor(calibratedRed: 0.26, green: 0.14, blue: 0.10, alpha: 1.0).cgColor : NSColor.clear.cgColor
-        dockBtn.layer?.borderColor = isDock ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.50).cgColor : NSColor.clear.cgColor
+        dockBtn.layer?.backgroundColor = isDock ? NSColor(calibratedWhite: 0.24, alpha: 1.0).cgColor : NSColor.clear.cgColor
+        dockBtn.layer?.borderColor = isDock ? NSColor(calibratedWhite: 1.0, alpha: 0.25).cgColor : NSColor.clear.cgColor
         dockBtn.layer?.borderWidth = isDock ? 1.0 : 0
         dockBtn.attributedTitle = NSAttributedString(string: "Dock", attributes: [
-            .foregroundColor: isDock ? NSColor(calibratedRed: 0.95, green: 0.70, blue: 0.50, alpha: 1.0) : NSColor(calibratedWhite: 0.60, alpha: 1.0),
+            .foregroundColor: isDock ? NSColor.white : NSColor(calibratedWhite: 0.60, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 10, weight: isDock ? .bold : .medium)
         ])
         twinContainer.addSubview(dockBtn)
@@ -1155,12 +1155,12 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         }
         doneBtn.isBordered = false
         doneBtn.wantsLayer = true
-        doneBtn.layer?.backgroundColor = isArchive ? NSColor(calibratedRed: 0.22, green: 0.14, blue: 0.10, alpha: 1.0).cgColor : NSColor(calibratedWhite: 1.0, alpha: 0.06).cgColor
-        doneBtn.layer?.borderColor = isArchive ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.45).cgColor : NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        doneBtn.layer?.backgroundColor = isArchive ? NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor : NSColor(calibratedWhite: 1.0, alpha: 0.06).cgColor
+        doneBtn.layer?.borderColor = isArchive ? NSColor(calibratedWhite: 1.0, alpha: 0.18).cgColor : NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
         doneBtn.layer?.borderWidth = 1.0
         doneBtn.layer?.cornerRadius = 4
         doneBtn.attributedTitle = NSAttributedString(string: doneBtnTitle, attributes: [
-            .foregroundColor: isArchive ? NSColor(calibratedRed: 0.95, green: 0.70, blue: 0.50, alpha: 1.0) : NSColor(calibratedWhite: 0.70, alpha: 1.0),
+            .foregroundColor: isArchive ? NSColor.white : NSColor(calibratedWhite: 0.70, alpha: 1.0),
             .font: NSFont.systemFont(ofSize: 10, weight: .bold)
         ])
         doneBtn.toolTip = isArchive ? "Move back to Active" : "Mark Done"
@@ -1281,7 +1281,7 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         let urlLabel = NSTextField(labelWithString: urlStr)
         urlLabel.frame = NSRect(x: 10, y: 10, width: drawerView.bounds.width - 170, height: 18)
         urlLabel.font = NSFont.systemFont(ofSize: 10, weight: .regular)
-        urlLabel.textColor = NSColor(calibratedRed: 0.95, green: 0.6, blue: 0.35, alpha: 1.0)
+        urlLabel.textColor = NSColor(calibratedWhite: 0.85, alpha: 1.0)
         urlLabel.cell?.lineBreakMode = .byTruncatingMiddle
         drawerView.addSubview(urlLabel)
 
@@ -1292,9 +1292,11 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         }
         openBtn.isBordered = false
         openBtn.wantsLayer = true
-        openBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.85).cgColor
+        openBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.22, alpha: 1.0).cgColor
+        openBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.15).cgColor
+        openBtn.layer?.borderWidth = 1.0
         openBtn.layer?.cornerRadius = 4
-        openBtn.attributedTitle = NSAttributedString(string: "🔗 Open Link ↗", attributes: [
+        openBtn.attributedTitle = NSAttributedString(string: "Open Link [↗]", attributes: [
             .foregroundColor: NSColor.white,
             .font: NSFont.systemFont(ofSize: 9.5, weight: .semibold)
         ])
@@ -1332,9 +1334,11 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         }
         revealBtn.isBordered = false
         revealBtn.wantsLayer = true
-        revealBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.85, green: 0.42, blue: 0.15, alpha: 0.85).cgColor
+        revealBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.22, alpha: 1.0).cgColor
+        revealBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.15).cgColor
+        revealBtn.layer?.borderWidth = 1.0
         revealBtn.layer?.cornerRadius = 4
-        revealBtn.attributedTitle = NSAttributedString(string: "📁 In Finder ↗", attributes: [
+        revealBtn.attributedTitle = NSAttributedString(string: "Finder [↗]", attributes: [
             .foregroundColor: NSColor.white,
             .font: NSFont.systemFont(ofSize: 9.5, weight: .semibold)
         ])
@@ -1608,11 +1612,13 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         clearBtn.font = NSFont.systemFont(ofSize: 11, weight: .medium)
         clearBtn.isBordered = false
         clearBtn.wantsLayer = true
-        clearBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.20, alpha: 1.0).cgColor
+        clearBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
+        clearBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        clearBtn.layer?.borderWidth = 1.0
         clearBtn.layer?.cornerRadius = 6
         popoverView.addSubview(clearBtn)
 
-        // Today Button
+        // Today Button (Studio neutral secondary — terracotta reserved for selected date)
         let todayBtn = ClosureButton(frame: NSRect(x: popWidth - 124, y: 12, width: 110, height: 26)) { [weak self, weak popover] in
             guard let self = self else { return }
             self.editingDueDate = Calendar.current.startOfDay(for: Date())
@@ -1626,7 +1632,9 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
         ])
         todayBtn.isBordered = false
         todayBtn.wantsLayer = true
-        todayBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.92, green: 0.44, blue: 0.16, alpha: 0.85).cgColor
+        todayBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.22, alpha: 1.0).cgColor
+        todayBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
+        todayBtn.layer?.borderWidth = 1.0
         todayBtn.layer?.cornerRadius = 6
         popoverView.addSubview(todayBtn)
 
@@ -1766,11 +1774,11 @@ public final class SanctuaryPopover: NSObject, NSTextFieldDelegate {
             df.dateFormat = "MMM d"
             let dateText = Calendar.current.isDateInToday(due) ? "Today" : df.string(from: due)
             scheduleBtn.attributedTitle = NSAttributedString(string: dateText, attributes: [
-                .foregroundColor: NSColor(calibratedRed: 0.95, green: 0.60, blue: 0.35, alpha: 1.0),
+                .foregroundColor: NSColor.white,
                 .font: NSFont.systemFont(ofSize: 10, weight: .semibold)
             ])
-            scheduleBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.20, green: 0.14, blue: 0.10, alpha: 1.0).cgColor
-            scheduleBtn.layer?.borderColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.35).cgColor
+            scheduleBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.20, alpha: 1.0).cgColor
+            scheduleBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.18).cgColor
         } else {
             scheduleBtn.attributedTitle = NSAttributedString(string: "Schedule", attributes: [
                 .foregroundColor: NSColor(calibratedWhite: 0.70, alpha: 1.0),

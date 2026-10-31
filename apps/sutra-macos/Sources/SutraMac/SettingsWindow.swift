@@ -114,7 +114,7 @@ public final class SettingsWindow: NSObject, NSWindowDelegate {
 
         let pHeader = NSTextField(labelWithString: "FLOATING BAR POSITION")
         pHeader.font = NSFont.systemFont(ofSize: 9.5, weight: .bold)
-        pHeader.textColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 1.0)
+        pHeader.textColor = NSColor(calibratedWhite: 0.75, alpha: 1.0)
         pHeader.frame = NSRect(x: 14, y: card1H - 24, width: 280, height: 16)
         placementCard.addSubview(pHeader)
 
@@ -166,7 +166,7 @@ public final class SettingsWindow: NSObject, NSWindowDelegate {
 
         let sHeader = NSTextField(labelWithString: "GLOBAL SHORTCUT PROFILE")
         sHeader.font = NSFont.systemFont(ofSize: 9.5, weight: .bold)
-        sHeader.textColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 1.0)
+        sHeader.textColor = NSColor(calibratedWhite: 0.75, alpha: 1.0)
         sHeader.frame = NSRect(x: 14, y: card2H - 24, width: 280, height: 16)
         shortcutCard.addSubview(sHeader)
 
@@ -218,9 +218,9 @@ public final class SettingsWindow: NSObject, NSWindowDelegate {
         toggleCard.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
         toggleCard.layer?.borderWidth = 1.0
 
-        let tHeader = NSTextField(labelWithString: "FEATURE TOGGLES & AUTOMATION (Vorssaint Inspired)")
+        let tHeader = NSTextField(labelWithString: "FEATURE TOGGLES & AUTOMATION")
         tHeader.font = NSFont.systemFont(ofSize: 9.5, weight: .bold)
-        tHeader.textColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 1.0)
+        tHeader.textColor = NSColor(calibratedWhite: 0.75, alpha: 1.0)
         tHeader.frame = NSRect(x: 14, y: card3H - 24, width: cardW - 28, height: 16)
         toggleCard.addSubview(tHeader)
 
@@ -336,10 +336,10 @@ public final class SettingsWindow: NSObject, NSWindowDelegate {
         for (key, btn) in placementButtons {
             let isSel = (key == currentPlacement)
             btn.layer?.backgroundColor = isSel
-                ? NSColor(calibratedRed: 0.26, green: 0.14, blue: 0.10, alpha: 1.0).cgColor
+                ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.25).cgColor
                 : NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
             btn.layer?.borderColor = isSel
-                ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.80).cgColor
+                ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.75).cgColor
                 : NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
             btn.layer?.borderWidth = 1.0
         }
@@ -348,10 +348,10 @@ public final class SettingsWindow: NSObject, NSWindowDelegate {
         for (key, btn) in profileButtons {
             let isSel = (key == currentProfile)
             btn.layer?.backgroundColor = isSel
-                ? NSColor(calibratedRed: 0.26, green: 0.14, blue: 0.10, alpha: 1.0).cgColor
+                ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.25).cgColor
                 : NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
             btn.layer?.borderColor = isSel
-                ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.80).cgColor
+                ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.75).cgColor
                 : NSColor(calibratedWhite: 1.0, alpha: 0.10).cgColor
             btn.layer?.borderWidth = 1.0
         }
@@ -360,10 +360,10 @@ public final class SettingsWindow: NSObject, NSWindowDelegate {
             let isEnabled = UserDefaults.standard.object(forKey: item.key) as? Bool ?? true
             if let btn = featureToggleButtons[item.key] {
                 btn.layer?.backgroundColor = isEnabled
-                    ? NSColor(calibratedRed: 0.85, green: 0.40, blue: 0.18, alpha: 1.0).cgColor
+                    ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 1.0).cgColor
                     : NSColor(calibratedWhite: 0.20, alpha: 1.0).cgColor
                 btn.layer?.borderColor = isEnabled
-                    ? NSColor(calibratedRed: 0.95, green: 0.50, blue: 0.25, alpha: 0.80).cgColor
+                    ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.90).cgColor
                     : NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
                 btn.layer?.borderWidth = 1.0
                 btn.attributedTitle = NSAttributedString(string: isEnabled ? "ON" : "OFF", attributes: [

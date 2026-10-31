@@ -767,11 +767,13 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         clearBtn.font = NSFont.systemFont(ofSize: 11, weight: .medium)
         clearBtn.isBordered = false
         clearBtn.wantsLayer = true
-        clearBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.20, alpha: 1.0).cgColor
+        clearBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
+        clearBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.08).cgColor
+        clearBtn.layer?.borderWidth = 1.0
         clearBtn.layer?.cornerRadius = 6
         popoverView.addSubview(clearBtn)
 
-        // Today shortcut button
+        // Today shortcut button (Studio neutral secondary — terracotta reserved for selected date)
         let todayBtn = ClosureButton(frame: NSRect(x: popWidth - 124, y: 12, width: 110, height: 26)) { [weak self, weak popover] in
             guard let self = self else { return }
             self.selectedDueDate = Calendar.current.startOfDay(for: Date())
@@ -785,7 +787,9 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         ])
         todayBtn.isBordered = false
         todayBtn.wantsLayer = true
-        todayBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.92, green: 0.44, blue: 0.16, alpha: 0.85).cgColor
+        todayBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.22, alpha: 1.0).cgColor
+        todayBtn.layer?.borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.14).cgColor
+        todayBtn.layer?.borderWidth = 1.0
         todayBtn.layer?.cornerRadius = 6
         popoverView.addSubview(todayBtn)
 
@@ -942,7 +946,7 @@ public final class QuickCueHUD: NSObject, NSTextFieldDelegate {
         // Header
         let titleLbl = NSTextField(labelWithString: "CHECKLIST TEMPLATES")
         titleLbl.font = NSFont.systemFont(ofSize: 9.5, weight: .bold)
-        titleLbl.textColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 1.0)
+        titleLbl.textColor = NSColor(calibratedWhite: 0.75, alpha: 1.0)
         titleLbl.frame = NSRect(x: 14, y: popHeight - 26, width: 230, height: 16)
         popView.addSubview(titleLbl)
 

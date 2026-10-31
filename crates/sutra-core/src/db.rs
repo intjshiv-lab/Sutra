@@ -380,6 +380,20 @@ impl Database {
         Ok(results)
     }
 
+    /// Decay stale `waiting` threads older than `days` days into `later` status.
+    /// Returns the number of threads decayed. Called nightly by the launchctl hook.
+    pub fn decay_stale_to_later(&self, days: u32) -> Result<usize> {
+        let cutoff_ms = chrono::Utc::now().timestamp_millis()
+            - (days as i64 * 24 * 60 * 60 * 1_000);
+        let conn = self.conn.lock().unwrap();
+        let now_ms = chrono::Utc::now().timestamp_millis();
+        let affected = conn.execute(
+            "UPDATE threads SET status = 'later', updated_at = ?1 WHERE status = 'waiting' AND updated_at < ?2;",
+            params![now_ms, cutoff_ms],
+        )?;
+        Ok(affected)
+    }
+
     /// Count threads by status string.
     pub fn count_by_status(&self, status: &str) -> Result<u64> {
         let conn = self.conn.lock().unwrap();

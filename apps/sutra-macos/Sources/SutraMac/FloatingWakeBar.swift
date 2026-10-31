@@ -671,20 +671,21 @@ public final class FloatingWakeBar: NSObject {
     private func makeNudgeRow(fromApp appName: String, frame: NSRect) -> NSView {
         let row = NSView(frame: frame)
         row.wantsLayer = true
-        row.layer?.backgroundColor = NSColor(calibratedRed: 0.22, green: 0.12, blue: 0.08, alpha: 0.90).cgColor
+        row.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 0.98).cgColor
         row.layer?.cornerRadius = 6
-        row.layer?.borderColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.45).cgColor
+        row.layer?.borderColor = NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 0.60).cgColor
         row.layer?.borderWidth = 1.0
 
-        let bulb = NSTextField(labelWithString: "💡")
-        bulb.font = NSFont.systemFont(ofSize: 12)
-        bulb.frame = NSRect(x: 8, y: 7, width: 20, height: 18)
-        row.addSubview(bulb)
+        let tag = NSTextField(labelWithString: "[CUE]")
+        tag.font = NSFont.systemFont(ofSize: 10, weight: .heavy)
+        tag.textColor = NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 1.0)
+        tag.frame = NSRect(x: 8, y: 7, width: 36, height: 18)
+        row.addSubview(tag)
 
         let label = NSTextField(labelWithString: "Switched from \(appName). Leave a thread cue?")
         label.font = NSFont.systemFont(ofSize: 11, weight: .semibold)
         label.textColor = NSColor(calibratedWhite: 0.95, alpha: 1.0)
-        label.frame = NSRect(x: 30, y: 8, width: 260, height: 18)
+        label.frame = NSRect(x: 46, y: 8, width: 244, height: 18)
         label.cell?.lineBreakMode = .byTruncatingTail
         row.addSubview(label)
 
@@ -695,7 +696,7 @@ public final class FloatingWakeBar: NSObject {
         cueBtn.isBordered = false
         cueBtn.wantsLayer = true
         cueBtn.layer?.cornerRadius = 11
-        cueBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 1.0).cgColor
+        cueBtn.layer?.backgroundColor = NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 1.0).cgColor
         cueBtn.attributedTitle = NSAttributedString(string: "Drop Cue ⌥Space", attributes: [
             .foregroundColor: NSColor.white,
             .font: NSFont.systemFont(ofSize: 9.5, weight: .bold)
@@ -773,11 +774,11 @@ public final class FloatingWakeBar: NSObject {
         titleLabel.cell?.lineBreakMode = .byTruncatingTail
         row.addSubview(titleLabel)
 
-        // Time ago (Zinc, or Terracotta Amber if Stale)
+        // Time ago (Zinc, or Terracotta Accent if Stale)
         let timeLabel = NSTextField(labelWithString: thread.timeAgo)
         timeLabel.frame = NSRect(x: 230, y: 7, width: 44, height: 18)
         timeLabel.font = NSFont.systemFont(ofSize: 11.5, weight: isStale ? .bold : .medium)
-        timeLabel.textColor = isStale ? NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.22, alpha: 1.0) : NSColor(calibratedWhite: 0.70, alpha: 1.0)
+        timeLabel.textColor = isStale ? NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 1.0) : NSColor(calibratedWhite: 0.70, alpha: 1.0)
         timeLabel.alignment = .right
         if isStale {
             timeLabel.toolTip = "Stale thread (> 24h old)"
@@ -824,12 +825,12 @@ public final class FloatingWakeBar: NSObject {
         snoozeBtn.wantsLayer = true
         snoozeBtn.layer?.cornerRadius = 10
         snoozeBtn.layer?.backgroundColor = isStale
-            ? NSColor(calibratedRed: 0.30, green: 0.16, blue: 0.10, alpha: 0.95).cgColor
+            ? NSColor(calibratedWhite: 0.22, alpha: 0.95).cgColor
             : NSColor(calibratedWhite: 0.25, alpha: 0.95).cgColor
-        snoozeBtn.layer?.borderColor = isStale ? NSColor(calibratedRed: 0.90, green: 0.45, blue: 0.20, alpha: 0.50).cgColor : NSColor.clear.cgColor
+        snoozeBtn.layer?.borderColor = isStale ? NSColor(calibratedWhite: 1.0, alpha: 0.25).cgColor : NSColor.clear.cgColor
         snoozeBtn.layer?.borderWidth = isStale ? 1.0 : 0
         snoozeBtn.attributedTitle = NSAttributedString(string: snoozeTitle, attributes: [
-            .foregroundColor: isStale ? NSColor(calibratedRed: 0.95, green: 0.75, blue: 0.60, alpha: 1.0) : NSColor.white,
+            .foregroundColor: NSColor.white,
             .font: NSFont.systemFont(ofSize: 10.5, weight: .medium)
         ])
         snoozeBtn.toolTip = isStale ? "Snooze 3 days" : "Snooze 4 hours"

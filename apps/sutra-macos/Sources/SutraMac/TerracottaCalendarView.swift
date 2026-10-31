@@ -24,11 +24,17 @@ public final class TerracottaCalendarView: NSView {
     private func setupUI() {
         wantsLayer = true
 
-        // Top Month Navigation: [◀]  [October 2026]  [▶]
+        // Top Month Navigation: [‹]  [October 2026]  [›]
         let barY = bounds.height - 38
+        let navStyle = NSMutableParagraphStyle()
+        navStyle.alignment = .center
+
         let prevBtn = NSButton(frame: NSRect(x: 10, y: barY, width: 32, height: 28))
-        prevBtn.title = "‹"
-        prevBtn.font = NSFont.systemFont(ofSize: 18, weight: .bold)
+        prevBtn.attributedTitle = NSAttributedString(string: "‹", attributes: [
+            .foregroundColor: NSColor.white,
+            .font: NSFont.systemFont(ofSize: 18, weight: .bold),
+            .paragraphStyle: navStyle
+        ])
         prevBtn.isBordered = false
         prevBtn.wantsLayer = true
         prevBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
@@ -44,8 +50,11 @@ public final class TerracottaCalendarView: NSView {
         addSubview(titleLabel)
 
         let nextBtn = NSButton(frame: NSRect(x: bounds.width - 42, y: barY, width: 32, height: 28))
-        nextBtn.title = "›"
-        nextBtn.font = NSFont.systemFont(ofSize: 18, weight: .bold)
+        nextBtn.attributedTitle = NSAttributedString(string: "›", attributes: [
+            .foregroundColor: NSColor.white,
+            .font: NSFont.systemFont(ofSize: 18, weight: .bold),
+            .paragraphStyle: navStyle
+        ])
         nextBtn.isBordered = false
         nextBtn.wantsLayer = true
         nextBtn.layer?.backgroundColor = NSColor(calibratedWhite: 0.18, alpha: 1.0).cgColor
@@ -107,11 +116,15 @@ public final class TerracottaCalendarView: NSView {
         let sel = selectedDate.map { cal.startOfDay(for: $0) }
 
         var prevMonthDays = [Int]()
-        if let prevMonth = cal.date(byAdding: .month, value: -1, to: displayMonth),
+        if startCol > 0,
+           let prevMonth = cal.date(byAdding: .month, value: -1, to: displayMonth),
            let prevRange = cal.range(of: .day, in: .month, for: prevMonth) {
             let count = prevRange.count
-            for d in (count - startCol + 1)...count {
-                prevMonthDays.append(d)
+            let startDay = count - startCol + 1
+            if startDay <= count {
+                for d in startDay...count {
+                    prevMonthDays.append(d)
+                }
             }
         }
 
@@ -128,7 +141,11 @@ public final class TerracottaCalendarView: NSView {
 
                 if cellIndex < startCol {
                     if cellIndex < prevMonthDays.count {
-                        let btn = createDayButton(day: prevMonthDays[cellIndex], frame: cellFrame, isCurrentMonth: false, isToday: false, isSelected: false)
+                        let prevDay = prevMonthDays[cellIndex]
+                        let btn = createDayButton(day: prevDay, frame: cellFrame, isCurrentMonth: false, isToday: false, isSelected: false)
+                        btn.target = self
+                        btn.action = #selector(onPrevDayClicked(_:))
+                        btn.tag = prevDay
                         gridContainer.addSubview(btn)
                     }
                 } else if dayCounter <= maxDays {
@@ -147,7 +164,11 @@ public final class TerracottaCalendarView: NSView {
 
                     dayCounter += 1
                 } else {
-                    let btn = createDayButton(day: nextMonthDay, frame: cellFrame, isCurrentMonth: false, isToday: false, isSelected: false)
+                    let nextDay = nextMonthDay
+                    let btn = createDayButton(day: nextDay, frame: cellFrame, isCurrentMonth: false, isToday: false, isSelected: false)
+                    btn.target = self
+                    btn.action = #selector(onNextDayClicked(_:))
+                    btn.tag = nextDay
                     gridContainer.addSubview(btn)
                     nextMonthDay += 1
                 }
@@ -161,42 +182,48 @@ public final class TerracottaCalendarView: NSView {
         btn.alignment = .center
         btn.isBordered = false
         btn.wantsLayer = true
-        btn.layer?.cornerRadius = 7
+        btn.layer?.cornerRadius = 6
 
         let centerStyle = NSMutableParagraphStyle()
         centerStyle.alignment = .center
 
         if isSelected {
-            btn.layer?.backgroundColor = NSColor(calibratedRed: 0.92, green: 0.44, blue: 0.16, alpha: 1.0).cgColor
+            // Terracotta highlight EXCLUSIVELY for the selected date
+            btn.layer?.backgroundColor = NSColor(calibratedRed: 0.702, green: 0.337, blue: 0.165, alpha: 1.0).cgColor
+            btn.layer?.borderWidth = 0
             btn.attributedTitle = NSAttributedString(string: "\(day)", attributes: [
                 .foregroundColor: NSColor.white,
-                .font: NSFont.systemFont(ofSize: 14, weight: .heavy),
+                .font: NSFont.systemFont(ofSize: 13, weight: .heavy),
                 .paragraphStyle: centerStyle
             ])
         } else if isToday {
-            btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.22, alpha: 1.0).cgColor
-            btn.layer?.borderColor = NSColor(calibratedRed: 0.92, green: 0.44, blue: 0.16, alpha: 0.9).cgColor
-            btn.layer?.borderWidth = 1.5
+            // Unselected Today: Crisp neutral silver border with pure white text (no terracotta)
+            btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.16, alpha: 1.0).cgColor
+            btn.layer?.borderColor = NSColor(calibratedWhite: 0.55, alpha: 0.85).cgColor
+            btn.layer?.borderWidth = 1.0
             btn.attributedTitle = NSAttributedString(string: "\(day)", attributes: [
-                .foregroundColor: NSColor(calibratedRed: 0.95, green: 0.55, blue: 0.25, alpha: 1.0),
+                .foregroundColor: NSColor.white,
                 .font: NSFont.systemFont(ofSize: 13, weight: .bold),
                 .paragraphStyle: centerStyle
             ])
         } else if isCurrentMonth {
-            btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.13, alpha: 1.0).cgColor
+            // Standard month date: Studio dark background with pure white text
+            btn.layer?.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1.0).cgColor
+            btn.layer?.borderWidth = 0
             btn.attributedTitle = NSAttributedString(string: "\(day)", attributes: [
                 .foregroundColor: NSColor.white,
                 .font: NSFont.systemFont(ofSize: 13, weight: .semibold),
                 .paragraphStyle: centerStyle
             ])
         } else {
+            // Adjacent month dates: Subtle muted white text, clickable for fast navigation
             btn.layer?.backgroundColor = NSColor.clear.cgColor
+            btn.layer?.borderWidth = 0
             btn.attributedTitle = NSAttributedString(string: "\(day)", attributes: [
-                .foregroundColor: NSColor(calibratedWhite: 0.35, alpha: 1.0),
+                .foregroundColor: NSColor(calibratedWhite: 0.38, alpha: 1.0),
                 .font: NSFont.systemFont(ofSize: 12, weight: .regular),
                 .paragraphStyle: centerStyle
             ])
-            btn.isEnabled = false
         }
         return btn
     }
@@ -208,6 +235,32 @@ public final class TerracottaCalendarView: NSView {
         if let targetDate = cal.date(from: comps) {
             selectedDate = cal.startOfDay(for: targetDate)
             onDateSelected?(selectedDate!)
+        }
+    }
+
+    @objc private func onPrevDayClicked(_ sender: NSButton) {
+        let day = sender.tag
+        if let prevMonth = cal.date(byAdding: .month, value: -1, to: displayMonth) {
+            var comps = cal.dateComponents([.year, .month], from: prevMonth)
+            comps.day = day
+            if let targetDate = cal.date(from: comps) {
+                displayMonth = cal.date(from: cal.dateComponents([.year, .month], from: prevMonth)) ?? prevMonth
+                selectedDate = cal.startOfDay(for: targetDate)
+                onDateSelected?(selectedDate!)
+            }
+        }
+    }
+
+    @objc private func onNextDayClicked(_ sender: NSButton) {
+        let day = sender.tag
+        if let nextMonth = cal.date(byAdding: .month, value: 1, to: displayMonth) {
+            var comps = cal.dateComponents([.year, .month], from: nextMonth)
+            comps.day = day
+            if let targetDate = cal.date(from: comps) {
+                displayMonth = cal.date(from: cal.dateComponents([.year, .month], from: nextMonth)) ?? nextMonth
+                selectedDate = cal.startOfDay(for: targetDate)
+                onDateSelected?(selectedDate!)
+            }
         }
     }
 }

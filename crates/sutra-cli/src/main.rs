@@ -118,6 +118,13 @@ enum Commands {
 
     /// Print database location
     DbPath,
+
+    /// Decay stale waiting threads older than N days into Later (anti-hoarding)
+    Decay {
+        /// Number of days after which a waiting thread decays to later (default: 7)
+        #[arg(long, default_value_t = 7)]
+        days: u32,
+    },
 }
 
 fn get_default_db_path() -> PathBuf {
@@ -324,6 +331,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("• [{}] {} - {}", t.id, t.status, t.title);
                 }
             }
+        }
+
+        Commands::Decay { days } => {
+            let count = db.decay_stale_to_later(days)?;
+            println!("🍂 Decayed {} stale waiting thread(s) older than {} day(s) to Later.", count, days);
         }
     }
 
