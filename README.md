@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="bin/Sutra.app/Contents/Resources/logo.png" alt="Sutra Logo" width="128" height="128" />
+<img src="assets/logo.png" alt="Sutra Logo" width="128" height="128" />
 
 # SŪTRA · सूत्र
 ### The Sovereign Attention Thread & Workspace Resurrection Engine
@@ -10,7 +10,7 @@
 
 **Eliminate the 23-minute resumption lag. Capture working memory in < 2 seconds. Restore your exact physical workspace with 1 click.**
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0%20Sovereign%20Production-09090b.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
+[![Release](https://img.shields.io/badge/Release-v1.1.0%20Sovereign%20Production-09090b.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
 [![macOS DMG](https://img.shields.io/badge/macOS%20DMG-v1.0.0%20AppKit-blue.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra/releases)
 [![Windows 11](https://img.shields.io/badge/Windows%2011-WinUI%203%20%7C%20Standalone-0078d4.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
 [![iOS / iPadOS](https://img.shields.io/badge/iOS%20%2F%20iPadOS-SwiftUI-000000.svg?style=flat-square)](https://github.com/intjshiv-lab/Sutra)
@@ -131,9 +131,9 @@ Sutra is governed by 4 uncompromising architectural invariants designed to prote
 
 ---
 
-## 🖥️ The 3 Native Sovereign Surfaces
+## 🖥️ The 5 Native Sovereign Surfaces
 
-Sutra operates across 3 purpose-built AppKit surfaces engineered for sub-10ms response times:
+Sutra operates across 5 purpose-built AppKit surfaces engineered for sub-10ms response times:
 
 ### 1. Quick Cue HUD (<kbd>Right ⌥ Option</kbd> Single Tap)
 Summoned in `< 10ms` from any application. Sniffs frontmost application context, active document paths, line numbers, or browser URLs:
@@ -248,6 +248,56 @@ The sovereign command cockpit for managing active cognitive working memory:
 
 ---
 
+### 4. Context Peek Drawer (<kbd>⌥ Option</kbd> + <kbd>P</kbd> or Sanctuary Left Dock)
+An in-situ, distraction-free inspection drawer anchored directly to the left flank of Sutra Sanctuary for previewing web cues, PRs, and documentation without browser sprawl:
+
+```
+┌───────────────────────────────────────┬────────────────────────────────────────┐
+│  ∞  Peek                    [Pin]  ↗  │  ∞  Sutra Sanctuary                 ✕  │
+├───────────────────────────────────────┼────────────────────────────────────────┤
+│                                       │  [ Today (2) • ]   [ Search... ]       │
+│  [ WebKit Embedded Live Viewport ]    ├────────────────────────────────────────┤
+│                                       │  ● Grid - Base Power 2.5B      [Resume]│
+│  • Desktop macOS Safari User Agent    │    Google Chrome · Wealth              │
+│  • Strict Scheme Interception         │                                        │
+│  • Zero Safari Window Breakout        │  ● Install Unsloth Desktop     [Resume]│
+│  • Ephemeral 1.2s Toast Feedback      │    Local AI Training · Today           │
+│                                       │                                        │
+│                                       │  ▼ WAITING (58) ▾                      │
+├───────────────────────────────────────┴────────────────────────────────────────┤
+│  [ 📖 Docs ]                [ Archive ]              [ ^⌥R Restart ]   [ ⌘Q ]  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **In-Situ Focus Protection:** Renders web targets directly within a high-speed AppKit WebKit container using macOS Safari desktop headers, eliminating cognitive disruption caused by external browser switching.
+- **Hover-Revealed Pinned State & Toast Feedback:** Pin button stays seamlessly invisible until hovered, providing an ephemeral 1.2s `[PINNED]` / `[UNPINNED]` micro-bounce HUD notification.
+- **Unified White Header & Sutra Branding:** Crisp white typographic header featuring the cold platinum Möbius logo and borderless `↗` open-in-default-browser accelerator.
+
+---
+
+### 5. Dynamic Island Ambient PiP Companion Capsule
+A 40px companion pill anchored immediately adjacent to the Floating Wake Bar (`islandFrame.maxX + 10`) for keeping vital reference cues locked in peripheral vision:
+
+```
+      ╭──────────────────────────────╮   ╭────────────────────╮
+      │  ● Grid - Base Power 2.5B    │   │  ∞ PEEK PIN (40px) │
+      ╰──────────────────────────────╯   ╰────────────────────╯
+             [ Floating Island ]             [ Ambient PiP ]
+```
+
+- **Peripheral Anchor:** Positioned alongside the Floating Island with matching 20px curvature geometry and synchronized dynamic expansion.
+- **Zero Occlusion:** Keeps essential reference links or instructions floating above full-screen editors and debuggers without stealing window focus.
+
+---
+
+### 🎛️ Preferences Studio & Defensive Calendar Engine
+
+- **Dedicated Settings Window (<kbd>⌥ Option</kbd> + <kbd>,</kbd>):** Full macOS AppKit settings studio for modifying global hotkeys, toggling audible chime cues upon capture/resumption, and inspecting offline database health.
+- **Defensive Terracotta Calendar Engine:** Patched `ClosedRange` bounds calculations guarding `startCol > 0` and `startDay <= count`, completely eliminating boundary crash traps on Sunday-first months (e.g., November 2026). Features interactive adjacent-month day paging.
+- **Obsidian Chrome De-Saturation:** Removed heavy circular backgrounds and orange drop-shadows across Sanctuary and Wake Bar buttons in favor of anchor-centered scale-only hover transitions (1.2x) and pure white date typography with strict terracotta focus exclusivity (`#b3562a`).
+
+---
+
 ## 🚀 Multi-Platform Native Architecture (Zero Bloat)
 
 Sutra strictly rejects Electron, Chromium runtimes, Node.js sidecars, and web wrappers:
@@ -354,6 +404,8 @@ Sutra adopts a streamlined, zero-chord keyboard architecture centered entirely a
 | **Right Option (Single Tap)** *(Configurable)* | <kbd>Alt</kbd> (Single Tap) or <kbd>Alt</kbd> + <kbd>Space</kbd> | Anywhere | Open **Sutra Cue** HUD (Instant auto-sniff & 2-second capture) |
 | <kbd>⌥ Option</kbd> + <kbd>A</kbd> | <kbd>Alt</kbd> + <kbd>A</kbd> | Anywhere | Wake up ambient **Floating Wake Bar** in between with dynamic drag resize |
 | <kbd>⌥ Option</kbd> + <kbd>S</kbd> | <kbd>Alt</kbd> + <kbd>S</kbd> | Anywhere | Open **Sutra Sanctuary** Popover with 3-Pill Unified Dock & Today queue |
+| <kbd>⌥ Option</kbd> + <kbd>P</kbd> | <kbd>Alt</kbd> + <kbd>P</kbd> | Anywhere | Toggle **Context Peek Drawer** along Sanctuary left flank for live cue preview |
+| <kbd>⌥ Option</kbd> + <kbd>,</kbd> | <kbd>Alt</kbd> + <kbd>,</kbd> | Anywhere / HUD | Open **Settings Studio** (Preferences cockpit for hotkeys and audio feedback) |
 | <kbd>⌃ Control</kbd> + <kbd>⌥ Option</kbd> + <kbd>R</kbd> | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd> | Anywhere | Soft-restart Sutra companion background daemon |
 | <kbd>Esc</kbd> | <kbd>Esc</kbd> | HUD / Popover | Dismiss HUD instantly in `< 10ms` without losing state |
 
@@ -415,6 +467,7 @@ Modern software increasingly acts as spyware masquerading as productivity tools.
 
 | Version | Status | Release Scope |
 | :--- | :--- | :--- |
+| **v1.1.0** | 🟢 **Latest Production** | • **Context Peek Drawer:** Native WebKit live context inspection docked along Sanctuary's left flank; zero-shadow hover-pinned capsule, 1.2s ephemeral PINNED/UNPINNED toast feedback, and Safari breakout prevention.<br/>• **Dynamic Island PiP Capsule:** 40px companion pill anchored immediately right of the Floating Wake Bar with synchronized 20px corner radius and dynamic expansion animations.<br/>• **Dedicated Settings Studio:** Standalone preferences window for hotkey customization, audio feedback chime triggers, and database diagnostic health.<br/>• **Defensive Calendar Navigation Engine:** Patched ClosedRange boundary trap on Sunday-first months (Nov 1, 2026), interactive adjacent-month day paging, and strict terracotta focus exclusivity.<br/>• **Studio Obsidian Neutral Chrome:** De-saturated component chrome, pure white date typography with terracotta focus exclusivity (`#b3562a`), and scale-only hover transitions.<br/>• **Canonical Möbius Branding:** High-resolution satin Möbius logo with golden stitching across peek headers, app icon, and repository assets. |
 | **v1.0.0** | 🟢 **Stable Production** | • **3-Pill Unified Sanctuary Dock:** Discrete `Today (N) ▾`, `[ 🔍 Search ]`, and `[ Stacks ▾ ]` tactile controls with centered typography and downward-aligned popovers.<br/>• **Adaptive Viewport & Dynamic Content-Fitting:** Sanctuary automatically sizes to Today's queue count; backlog collapsed by default with on-demand scroll activation.<br/>• **Inline Cue Card Editor (`✎`):** In-place editing of titles, notes, and `# Stack` tags with polling-safe input protection.<br/>• **520px Quick Cue HUD:** 4-pill tactile dock (`[Note|Task]`, `[Link|File]`, `[Schedule|Stack]`, `[Esc|Leave ↩]`) and centered active window sniffing.<br/>• **Deep Document Sniffing:** Auto-detects active PDF page numbers in Apple Preview and seeks to exact page on resumption.<br/>• **Option-Centered Keyboard Architecture:** Dedicated Right Option tap for Quick Cue HUD, `Option+A` for Wake Bar, and `Option+S` for Sanctuary.<br/>• **Multi-Platform Native Support:** Native macOS AppKit companion, standalone self-contained Windows WinUI 3 + Rust FFI package, and air-gapped SQLite WAL core. |
 
 ---

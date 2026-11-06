@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%">
+  <defs>
+    <!-- Background Squircle Gradient (Obsidian to Midnight Zinc) -->
+    <linearGradient id="pedestal-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#222227" />
+      <stop offset="50%" stop-color="#151518" />
+      <stop offset="100%" stop-color="#0b0b0d" />
+    </linearGradient>
+
+    <!-- Outer Rim Specular Highlight -->
+    <linearGradient id="rim-grad" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+      <stop offset="40%" stop-color="#ffffff" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#b3562a" stop-opacity="0.25" />
+    </linearGradient>
+
+    <!-- Titanium Needle Gradient (Polished Silver & Cold Platinum) -->
+    <linearGradient id="needle-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#e2e8f0" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="75%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+
+    <!-- Needle Bevel Highlight -->
+    <linearGradient id="needle-bevel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#94a3b8" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.8" />
+    </linearGradient>
+
+    <!-- Glowing Terracotta Möbius Silk Thread (Primary Fluid Gradient) -->
+    <linearGradient id="thread-glow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c2d12" />     <!-- Deep Auburn Rust -->
+      <stop offset="28%" stop-color="#b3562a" />    <!-- Signature Terracotta -->
+      <stop offset="58%" stop-color="#ea580c" />    <!-- Vibrant Molten Orange -->
+      <stop offset="82%" stop-color="#f97316" />    <!-- Radiant Coral Flame -->
+      <stop offset="100%" stop-color="#fbbf24" />   <!-- Luminous Golden Sun -->
+    </linearGradient>
+
+    <!-- Inner Thread Shadow / Specular Core -->
+    <linearGradient id="thread-core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
+      <stop offset="25%" stop-color="#fef08a" stop-opacity="0.6" />
+      <stop offset="70%" stop-color="#b3562a" stop-opacity="0.0" />
+      <stop offset="100%" stop-color="#451a03" stop-opacity="0.5" />
+    </linearGradient>
+
+    <!-- Radial Ambient Caustic Glow -->
+    <radialGradient id="caustic-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ea580c" stop-opacity="0.45" />
+      <stop offset="50%" stop-color="#b3562a" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter for Floating Depth -->
+    <filter id="shadow-base" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="32" stdDeviation="36" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#7c2d12" flood-opacity="0.25" />
+    </filter>
+
+    <filter id="glow-thread" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur1" />
+      <feGaussianBlur stdDeviation="28" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 1. BASE SQUIRCLE (Apple macOS 1024x1024 Canvas) -->
+  <g filter="url(#shadow-base)">
+    <!-- Base Squircle Shape with Precision Continuous Curvature -->
+    <rect x="96" y="96" width="832" height="832" rx="198" ry="198" fill="url(#pedestal-grad)" />
+    <!-- Outer Specular Rim Stroke -->
+    <rect x="97.5" y="97.5" width="829" height="829" rx="196.5" ry="196.5" fill="none" stroke="url(#rim-grad)" stroke-width="3" />
+  </g>
+
+  <!-- 2. VOLUMETRIC CAUSTIC GLOW (Radiating from the Thread Core) -->
+  <circle cx="512" cy="520" r="320" fill="url(#caustic-glow)" />
+
+  <!-- 3. BACKGROUND THREAD LOOP (Weaving Under the Needle) -->
+  <g filter="url(#glow-thread)">
+    <!-- Rear infinity arc flowing behind needle -->
+    <path d="M 310,640 C 210,640 190,490 280,390 C 370,290 480,370 540,460 C 610,560 720,670 810,570 C 890,480 820,330 690,340 C 600,348 540,420 512,470" 
+          fill="none" 
+          stroke="url(#thread-glow)" 
+          stroke-width="54" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+    <!-- Inner Luminous Highlight Ridge -->
+    <path d="M 310,640 C 210,640 190,490 280,390 C 370,290 480,370 540,460 C 610,560 720,670 810,570 C 890,480 820,330 690,340 C 600,348 540,420 512,470" 
+          fill="none" 
+          stroke="url(#thread-core)" 
+          stroke-width="16" 
+          stroke-linecap="round" />
+  </g>
+
+  <!-- 4. TITANIUM SURGICAL NEEDLE (Diagonal Pierce from Top-Right to Bottom-Left) -->
+  <g id="needle" transform="rotate(-38 512 512)">
+    <!-- Needle Drop Shadow onto Rear Thread -->
+    <path d="M 500,140 L 524,140 L 522,760 L 512,870 L 502,760 Z" 
+          fill="#000000" 
+          opacity="0.4" 
+          transform="translate(18, 22)" />
+
+    <!-- Needle Main Titanium Blade -->
+    <path d="M 498,140 L 526,140 L 524,760 L 512,880 L 500,760 Z" 
+          fill="url(#needle-body)" />
+
+    <!-- Left Bevel Shading (Chiseled Sharp Edge) -->
+    <path d="M 498,140 L 512,140 L 512,880 L 500,760 Z" 
+          fill="url(#needle-bevel)" />
+
+    <!-- Needle Eye (Pill Aperture at Top) -->
+    <rect x="507" y="195" width="10" height="90" rx="5" ry="5" fill="#0b0b0d" />
+    <!-- Inner Rim of Eye Reflection -->
+    <rect x="506" y="194" width="12" height="92" rx="6" ry="6" fill="none" stroke="url(#rim-grad)" stroke-width="1.5" />
+  </g>
+
+  <!-- 5. FOREGROUND THREAD LOOP (Weaving OVER and Through the Needle) -->
+  <g filter="url(#glow-thread)">
+    <!-- Front loop piercing through and curling out into infinity -->
+    <path d="M 512,470 C 490,510 440,640 330,650 C 220,660 170,520 250,420 C 310,340 430,340 500,430 C 560,510 650,650 760,650 C 850,650 910,540 840,440 C 780,360 670,390 600,480" 
+          fill="none" 
+          stroke="url(#thread-glow)" 
+          stroke-width="50" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+    
+    <!-- Ultra-Bright Core Fiber Highlight -->
+    <path d="M 512,470 C 490,510 440,640 330,650 C 220,660 170,520 250,420 C 310,340 430,340 500,430 C 560,510 650,650 760,650 C 850,650 910,540 840,440 C 780,360 670,390 600,480" 
+          fill="none" 
+          stroke="url(#thread-core)" 
+          stroke-width="14" 
+          stroke-linecap="round" />
+  </g>
+
+  <!-- 6. LUMINESCENT SPARKLE AT NEEDLE APERTURE (The Spark of Attention) -->
+  <circle cx="612" cy="342" r="8" fill="#ffffff" filter="url(#glow-thread)" />
+  <circle cx="612" cy="342" r="3" fill="#fef08a" />
+</svg>
